@@ -17,6 +17,16 @@
     { "id": 2, "name": "Vững vàng", "description": "Ẩn bớt gợi ý, nói theo tranh và điền chỗ trống bằng lời nói." },
     { "id": 3, "name": "Bứt phá", "description": "Tự tạo câu, trả lời tự do trong phạm vi bài học." }
   ],
+  "challenges": {
+    "vocabulary": {
+      "title": "Thử thách từ vựng",
+      "rounds": 10,
+      "tries_per_word": 2,
+      "seconds_by_level": { "1": 20, "2": 15, "3": 10 },
+      "show_meaning_levels": [1],
+      "unlock": "practised_all_words_in_level"
+    }
+  },
   "vocabulary": [
     { "id": "u1-v-uniform", "review": "draft", "word": "uniform", "ipa": "/ˈjuːnɪfɔːm/", "meaning_vi": "đồng phục", "emoji": "👔", "image": null, "audio": null, "example": "We wear our uniform on Monday.", "level": 1, "accepted_variants": ["uniforms"] },
     { "id": "u1-v-school-bag", "review": "draft", "word": "school bag", "ipa": "/ˈskuːl bæɡ/", "meaning_vi": "cặp sách", "emoji": "🎒", "image": null, "audio": null, "example": "My school bag is blue.", "level": 1, "accepted_variants": ["schoolbag", "school bags"] },

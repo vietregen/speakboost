@@ -4,6 +4,7 @@ import * as S from './speech.js';
 import * as M from './match.js';
 import * as P from './progress.js';
 import { h, speakPanel, listenButtons, sentenceOutcome, heardLine, starsText, disposeAll } from './ui.js';
+import * as Challenge from './challenge.js';
 
 const root = document.getElementById('app');
 let unit = null;
@@ -67,6 +68,17 @@ function renderHome() {
       h('span', { class: 'tile-desc' }, disabled ? 'Chưa có nội dung đã duyệt' : a.desc),
       disabled ? null : h('span', { class: 'tile-progress' }, `${sum.done}/${sum.total} · ${sum.stars} ★`));
   });
+
+  const words = byLevel(items('vocabulary'));
+  if (words.length) {
+    const st = Challenge.status({ unitNo: U(), words, preview });
+    const best = P.bestStars(U(), Challenge.challengeId(level()));
+    tiles.push(h('a', { class: `tile challenge-tile ${st.unlocked ? '' : 'locked'}`, href: '#/challenge' },
+      h('span', { class: 'tile-icon' }, st.unlocked ? '🏆' : '🔒'),
+      h('span', { class: 'tile-name' }, `Thử thách Mức ${level()}`),
+      h('span', { class: 'tile-desc' }, st.unlocked ? 'Nhìn hình, nói đúng từ tiếng Anh' : `Luyện hết từ vựng để mở khóa`),
+      h('span', { class: 'tile-progress' }, st.unlocked ? (best ? `Tốt nhất ${starsText(best)}` : 'Đã mở khóa!') : `${st.done}/${st.total} từ`)));
+  }
 
   const anyVisible = ACTIVITIES.some((a) => items(a.key).length);
   root.replaceChildren(shell(null,
@@ -138,15 +150,19 @@ function renderVocab(i) {
       h('p', { class: 'item-stars' }, starsText(P.bestStars(U(), v.id))),
       speakPanel({ text: target, audio: lv === 3 ? null : v.audio, evaluate, meta: meta('vocabulary', v.id) }),
     ),
-    pager(k, list.length, (n) => `#/vocab/${n}`),
+    pager(k, list.length, (n) => `#/vocab/${n}`, { href: '#/challenge', label: '🏆 Thử thách' }),
   ));
 }
 
-function pager(k, n, href) {
+function renderChallenge() {
+  Challenge.render({ root, shell, unitNo: U(), level: level(), preview, unit, words: byLevel(items('vocabulary')) });
+}
+
+function pager(k, n, href, end = { href: '#/', label: 'Xong ✓' }) {
   return h('nav', { class: 'pager' },
     k > 0 ? h('a', { class: 'btn btn-soft', href: href(k - 1) }, '‹ Trước') : h('span'),
     h('span', { class: 'muted' }, `${k + 1} / ${n}`),
-    k < n - 1 ? h('a', { class: 'btn btn-soft', href: href(k + 1) }, 'Tiếp ›') : h('a', { class: 'btn btn-soft', href: '#/' }, 'Xong ✓'));
+    k < n - 1 ? h('a', { class: 'btn btn-soft', href: href(k + 1) }, 'Tiếp ›') : h('a', { class: 'btn btn-main', href: end.href }, end.label));
 }
 
 // ---------------- Mẫu câu ----------------
@@ -362,6 +378,7 @@ function render() {
   switch (route) {
     case 'vocab': return renderVocab(Number(arg) || 0);
     case 'patterns': return renderPatterns(Number(arg) || 0);
+    case 'challenge': return renderChallenge();
     case 'dialogues': return arg ? renderDialogue(decodeURIComponent(arg)) : renderList('dialogues', 'Hội thoại', 'dialogues', (x) => x.title_vi);
     case 'roleplays': return arg ? renderRoleplay(decodeURIComponent(arg)) : renderList('roleplays', 'Đóng vai', 'roleplays', (x) => x.situation_vi);
     case 'pictures': return arg ? renderPicture(decodeURIComponent(arg)) : renderList('picture_tasks', 'Nói qua tranh', 'pictures', (x) => x.title_vi);

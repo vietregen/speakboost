@@ -250,6 +250,7 @@ export async function workbookToUnit(wb, fallback) {
       keywords: list(r['Từ khóa (;)']).map((t) => t.toLowerCase()), prompts });
   });
 
-  const unit = { meta, levels, vocabulary, patterns, dialogues, roleplays, picture_tasks };
+  // Cấu hình thử thách chưa có trong Excel: giữ nguyên từ bản đang có.
+  const unit = { meta, levels, ...(fallback?.challenges ? { challenges: fallback.challenges } : {}), vocabulary, patterns, dialogues, roleplays, picture_tasks };
   return { unit, errors };
 }

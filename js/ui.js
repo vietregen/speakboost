@@ -21,10 +21,14 @@ export function h(tag, attrs = {}, ...children) {
 export const starsText = (n) => '★'.repeat(n) + '☆'.repeat(Math.max(0, 3 - n));
 
 const live = new Set();
+const cleanups = new Set();
+export function addCleanup(fn) { cleanups.add(fn); }
 export function disposeAll() {
   S.stopModel(); S.stopListening();
   for (const r of live) r.dispose();
   live.clear();
+  for (const fn of cleanups) fn();
+  cleanups.clear();
 }
 
 export function listenButtons(text, audio) {
