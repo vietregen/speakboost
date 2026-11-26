@@ -56,7 +56,7 @@ export function render(ctx) {
       h('div', { class: 'card center' },
         h('p', { class: 'big-emoji' }, '🔒'),
         h('h2', {}, `Thử thách Mức ${level} đang khóa`),
-        h('p', {}, `Em luyện nói ít nhất ${st.need} từ của Mức ${level} để mở khóa nhé.`),
+        h('p', {}, `Bạn luyện nói ít nhất ${st.need} từ của Mức ${level} để mở khóa nhé.`),
         h('div', { class: 'meter', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(st.need), 'aria-valuenow': String(st.done) },
           h('span', { style: `width:${st.need ? Math.min(100, Math.round((st.done / st.need) * 100)) : 0}%` })),
         h('p', { class: 'muted' }, `Đã luyện ${st.done}/${st.need} từ`),
@@ -66,7 +66,7 @@ export function render(ctx) {
 
   const seconds = Number(cfg.seconds_by_level[String(level)] || 15);
   const showMeaning = (cfg.show_meaning_levels || []).includes(level);
-  // Chỉ lấy từ em đã luyện. Ở chế độ xem trước của giáo viên, nếu chưa luyện từ nào thì dùng tất cả.
+  // Chỉ lấy từ bạn đã luyện. Ở chế độ xem trước của giáo viên, nếu chưa luyện từ nào thì dùng tất cả.
   let pool = practisedWords(unitNo, words);
   const previewAll = preview && pool.length === 0;
   if (previewAll) pool = words;
@@ -81,12 +81,12 @@ export function render(ctx) {
       h('ul', { class: 'rules' },
         h('li', {}, previewAll
           ? `Có ${rounds} hình, chọn ngẫu nhiên trong ${pool.length} từ (xem trước: chưa luyện từ nào nên dùng tất cả).`
-          : `Có ${rounds} hình, chọn ngẫu nhiên trong ${pool.length} từ em đã luyện.`),
+          : `Có ${rounds} hình, chọn ngẫu nhiên trong ${pool.length} từ bạn đã luyện.`),
         h('li', {}, 'Nhìn hình rồi bấm 🎤 và nói từ tiếng Anh.'),
         h('li', {}, `Mỗi từ được nói ${tries} lần. Có ${seconds} giây để nghĩ trước khi bấm 🎤.`),
         h('li', {}, 'Đúng ở lần 1: 3 điểm · lần 2: 2 điểm · có dùng gợi ý: 1 điểm.'),
         showMeaning ? h('li', {}, 'Ở Mức 1 có nghĩa tiếng Việt đi kèm hình.') : null),
-      h('p', { class: 'note' }, 'Máy kiểm tra em có nói ra đúng từ không. Đây chưa phải chấm phát âm chi tiết.'),
+      h('p', { class: 'note' }, 'Máy kiểm tra bạn có nói ra đúng từ không. Đây chưa phải chấm phát âm chi tiết.'),
       h('button', { class: 'btn btn-main', onclick: () => play() }, '▶ Bắt đầu'))));
 
   function play() {
@@ -121,7 +121,7 @@ export function render(ctx) {
       const hintLine = h('p', { class: 'hint-line', hidden: true });
       const feedback = h('div', { class: 'feedback', 'aria-live': 'polite' });
       const setFeedback = (...nodes) => feedback.replaceChildren(...nodes.filter(Boolean));
-      const sayBtn = h('button', { class: 'btn btn-main' }, S.support.recognition ? '🎤 Nói' : '🗣️ Em đã nói xong');
+      const sayBtn = h('button', { class: 'btn btn-main' }, S.support.recognition ? '🎤 Nói' : '🗣️ Bạn đã nói xong');
       const hintBtn = h('button', { class: 'btn btn-soft' }, '💡 Gợi ý');
       const skipBtn = h('button', { class: 'btn btn-soft' }, 'Bỏ qua');
       const controls = h('div', { class: 'row center' }, sayBtn, hintBtn, skipBtn);
@@ -174,7 +174,7 @@ export function render(ctx) {
         else { hintLine.hidden = false; hintLine.textContent = maskWord(v.word); hintBtn.disabled = true; }
         if (showMeaning) hintBtn.disabled = true;
       });
-      skipBtn.addEventListener('click', () => { if (!busy) reveal('Em bỏ qua từ này.'); });
+      skipBtn.addEventListener('click', () => { if (!busy) reveal('Bạn bỏ qua từ này.'); });
 
       sayBtn.addEventListener('click', async () => {
         if (busy) { S.stopListening(); return; }
@@ -185,8 +185,8 @@ export function render(ctx) {
           feedback.replaceChildren(h('p', {}, 'Từ đúng là:'), h('p', { class: 'word' }, v.word), h('p', { class: 'ipa' }, v.ipa));
           S.playModel(v.word, { audio: v.audio });
           controls.replaceChildren(
-            h('button', { class: 'btn btn-soft', onclick: () => win('') }, '😀 Em nói đúng'),
-            h('button', { class: 'btn btn-soft', onclick: () => reveal('Không sao, lần sau nhé.') }, '🤔 Em nói chưa đúng'));
+            h('button', { class: 'btn btn-soft', onclick: () => win('') }, '😀 Bạn nói đúng'),
+            h('button', { class: 'btn btn-soft', onclick: () => reveal('Không sao, lần sau nhé.') }, '🤔 Bạn nói chưa đúng'));
           return;
         }
         busy = true;
@@ -198,13 +198,13 @@ export function render(ctx) {
         sayBtn.classList.remove('active');
         sayBtn.textContent = '🎤 Nói lại';
         hintBtn.disabled = hintLevel >= 2 || (showMeaning && hintLevel >= 1); skipBtn.disabled = false;
-        if (res.error) { feedback.replaceChildren(h('p', { class: 'warn' }, res.message || 'Máy chưa nghe được, em bấm 🎤 nói lại nhé.')); return; }
+        if (res.error) { feedback.replaceChildren(h('p', { class: 'warn' }, res.message || 'Máy chưa nghe được, bạn bấm 🎤 nói lại nhé.')); return; }
         const m = M.matchWord(v.word, v.accepted_variants, res.alternatives);
         if (m.ok) return win(m.heard);
         attempt += 1;
         if (attempt >= tries) return reveal('Máy chưa nghe ra từ cần nói.', m.heard);
         feedback.replaceChildren(
-          h('p', { class: 'warn' }, `Máy nghe thành “${m.heard || '…'}”. Em thử lần nữa nhé!`),
+          h('p', { class: 'warn' }, `Máy nghe thành “${m.heard || '…'}”. Bạn thử lần nữa nhé!`),
           h('p', { class: 'muted' }, `Còn ${tries - attempt} lần.`));
       });
 
@@ -226,8 +226,8 @@ export function render(ctx) {
           h('h2', {}, title),
           h('p', { class: 'result-stars s' + stars }, starsText(stars)),
           h('p', { class: 'score' }, `${score} / ${max} điểm · đúng ${correct.length}/${results.length} từ`),
-          h('p', { class: 'note' }, 'Kết quả cho biết máy nhận ra đúng bao nhiêu từ em nói. Đây chưa phải điểm phát âm.')),
-        correct.length ? h('div', { class: 'card' }, h('h2', {}, 'Từ em nói đúng'),
+          h('p', { class: 'note' }, 'Kết quả cho biết máy nhận ra đúng bao nhiêu từ bạn nói. Đây chưa phải điểm phát âm.')),
+        correct.length ? h('div', { class: 'card' }, h('h2', {}, 'Từ bạn nói đúng'),
           h('div', { class: 'chips' }, ...correct.map((r) => h('span', { class: 'chip ok' }, thumb(r.v), r.v.word)))) : null,
         missed.length ? h('div', { class: 'card' }, h('h2', {}, 'Từ cần luyện thêm'),
           h('div', { class: 'list' }, ...missed.map((r) => h('div', { class: 'list-item' },

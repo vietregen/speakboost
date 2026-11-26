@@ -47,17 +47,58 @@ function draftBadge(item) {
 function emptyState(msg) { return h('div', { class: 'card center' }, h('p', { class: 'big-emoji' }, '⏳'), h('p', {}, msg)); }
 
 // ---------------- Trang chính ----------------
-function renderHome() {
-  const unitsMap = h('div', { class: 'unit-map' }, ...index.units.map((u) =>
-    h('div', { class: `unit-dot ${u.unit === U() ? 'current' : ''} ${u.file ? '' : 'locked'}`, title: u.title },
-      h('b', {}, String(u.unit)), h('span', {}, u.file ? u.title : `${u.title} · sắp có`))));
+const LEVEL_ICONS = { 1: '🌱', 2: '🌿', 3: '🌳' };
 
-  const levelPicker = h('div', { class: 'levels' }, ...unit.levels.map((l) =>
-    h('button', {
-      class: `level ${l.id === level() ? 'on' : ''}`, 'aria-pressed': String(l.id === level()),
+// Tiến độ của một chặng: số từ vựng + mẫu câu ĐÚNG mức đó đã luyện, và thử thách của mức đó.
+function levelProgress(lv) {
+  const list = [...items('vocabulary'), ...items('patterns')].filter((x) => (x.level || 1) === lv);
+  const done = list.filter((x) => P.bestStars(U(), x.id) > 0).length;
+  return { done, total: list.length, pct: list.length ? Math.round((done / list.length) * 100) : 0, trophy: P.bestStars(U(), Challenge.challengeId(lv)) };
+}
+
+function roadmap() {
+  const cur = level();
+  const stations = unit.levels.map((l) => {
+    const pg = levelProgress(l.id);
+    const on = l.id === cur;
+    return h('button', {
+      class: `station s${l.id} ${on ? 'current' : ''} ${pg.trophy ? 'cleared' : ''}`,
+      'aria-pressed': String(on), 'aria-label': `Mức ${l.id} ${l.name}, đã luyện ${pg.done}/${pg.total}`,
       onclick: () => { P.setLevel(l.id); render(); },
-    }, h('b', {}, `Mức ${l.id} · ${l.name}`), h('small', {}, l.description))));
+    },
+      on ? h('span', { class: 'you' }, 'Bạn ở đây') : null,
+      h('span', { class: 'node', style: `--p:${pg.pct}` }, h('span', { class: 'node-icon' }, LEVEL_ICONS[l.id] || '⭐')),
+      pg.trophy ? h('span', { class: 'cup', title: 'Đã vượt thử thách' }, '🏆') : null,
+      h('span', { class: 'st-name' }, `Mức ${l.id}`),
+      h('span', { class: 'st-sub' }, l.name));
+  });
+  return h('section', { class: 'roadmap', 'aria-label': 'Lộ trình các mức' },
+    road(cur),
+    ...stations,
+    h('span', { class: 'goal', 'aria-hidden': 'true' }, '🏁'));
+}
 
+// Con đường nối 3 chặng; đoạn đã đi qua được tô màu.
+function road(cur) {
+  const ns = 'http://www.w3.org/2000/svg';
+  const svg = document.createElementNS(ns, 'svg');
+  svg.setAttribute('class', 'road');
+  svg.setAttribute('viewBox', '0 0 300 160');
+  svg.setAttribute('preserveAspectRatio', 'none');
+  svg.setAttribute('aria-hidden', 'true');
+  const seg1 = 'M50 44 C100 44 100 116 150 116';
+  const seg2 = 'C200 116 200 44 250 44';
+  const path = (d, cls) => {
+    const p = document.createElementNS(ns, 'path');
+    p.setAttribute('d', d); p.setAttribute('class', cls); p.setAttribute('vector-effect', 'non-scaling-stroke');
+    svg.append(p);
+  };
+  path(`${seg1} ${seg2}`, 'road-base');
+  if (cur >= 2) path(cur >= 3 ? `${seg1} ${seg2}` : seg1, 'road-done');
+  return svg;
+}
+
+function renderHome() {
   const tiles = ACTIVITIES.map((a) => {
     const list = a.key === 'vocabulary' || a.key === 'patterns' ? byLevel(items(a.key)) : items(a.key);
     const sum = P.summary(U(), list.map((x) => x.id));
@@ -65,8 +106,8 @@ function renderHome() {
     return h(disabled ? 'div' : 'a', { class: `tile ${disabled ? 'disabled' : ''}`, href: disabled ? null : `#/${a.route}` },
       h('span', { class: 'tile-icon' }, a.icon),
       h('span', { class: 'tile-name' }, a.name),
-      h('span', { class: 'tile-desc' }, disabled ? 'Chưa có nội dung đã duyệt' : a.desc),
-      disabled ? null : h('span', { class: 'tile-progress' }, `${sum.done}/${sum.total} · ${sum.stars} ★`));
+      disabled ? null : h('span', { class: 'tile-bar' }, h('span', { style: `width:${sum.total ? Math.round((sum.done / sum.total) * 100) : 0}%` })),
+      disabled ? null : h('span', { class: 'tile-progress' }, `${sum.done}/${sum.total}`));
   });
 
   const words = byLevel(items('vocabulary'));
@@ -75,30 +116,27 @@ function renderHome() {
     const best = P.bestStars(U(), Challenge.challengeId(level()));
     tiles.push(h('a', { class: `tile challenge-tile ${st.unlocked ? '' : 'locked'}`, href: '#/challenge' },
       h('span', { class: 'tile-icon' }, st.unlocked ? '🏆' : '🔒'),
-      h('span', { class: 'tile-name' }, `Thử thách Mức ${level()}`),
-      h('span', { class: 'tile-desc' }, st.unlocked ? 'Nhìn hình, nói đúng từ tiếng Anh' : `Luyện ${st.need} từ vựng để mở khóa`),
-      h('span', { class: 'tile-progress' }, st.unlocked ? (best ? `Tốt nhất ${starsText(best)}` : 'Đã mở khóa!') : `${st.done}/${st.need} từ`)));
+      h('span', { class: 'tile-name' }, 'Thử thách'),
+      st.unlocked ? null : h('span', { class: 'tile-bar' }, h('span', { style: `width:${Math.min(100, Math.round((st.done / st.need) * 100))}%` })),
+      h('span', { class: 'tile-progress' }, st.unlocked ? (best ? starsText(best) : 'Mở rồi!') : `${st.done}/${st.need}`)));
   }
 
   const anyVisible = ACTIVITIES.some((a) => items(a.key).length);
+  const totalStars = P.summary(U(), ACTIVITIES.flatMap((a) => items(a.key).map((x) => x.id))).stars;
   root.replaceChildren(shell(null,
     h('section', { class: 'hero' },
-      h('p', { class: 'eyebrow' }, `${unit.meta.book} · Unit ${U()}`),
+      h('p', { class: 'eyebrow' }, `Unit ${U()}`),
       h('h1', {}, unit.meta.title),
-      h('p', { class: 'muted' }, unit.meta.title_vi),
-      h('p', { class: 'stat' }, `Em đã luyện ${P.daysPractised()} ngày · Ghi âm và nghe lại có trong mọi hoạt động`)),
+      h('div', { class: 'pills' },
+        h('span', { class: 'pill' }, `🔥 ${P.daysPractised()} ngày`),
+        h('span', { class: 'pill' }, `⭐ ${totalStars}`))),
     supportNotice(),
-    anyVisible ? null : emptyState('Thầy cô chưa duyệt nội dung bài này. Em chờ thầy cô nhé!'),
-    h('h2', {}, 'Chọn mức độ'),
-    levelPicker,
-    h('h2', {}, 'Hoạt động'),
+    anyVisible ? null : emptyState('Thầy cô chưa duyệt nội dung bài này. Bạn chờ thầy cô nhé!'),
+    roadmap(),
     h('div', { class: 'tiles' }, ...tiles),
-    h('h2', {}, 'Các bài'),
-    unitsMap,
     h('footer', { class: 'foot' },
-      h('p', {}, '🔒 SpeakBoost không hỏi tên em. Giọng nói và bản ghi âm không được lưu lên mạng.'),
-      h('p', {}, 'Ngôi sao cho biết máy nhận diện được bao nhiêu chữ em nói. Đó không phải điểm phát âm.'),
-      h('a', { href: 'teacher.html', class: 'muted' }, 'Dành cho giáo viên')),
+      h('span', {}, '🔒 Không hỏi tên · không lưu giọng nói'),
+      h('a', { href: 'teacher.html', class: 'muted' }, 'Giáo viên')),
   ));
 }
 
@@ -108,7 +146,7 @@ function supportNotice() {
   if (S.support.recognition) return null;
   return h('div', { class: 'notice' },
     h('b', {}, 'Trình duyệt này chưa nhận diện được lời nói. '),
-    'Em vẫn nghe mẫu, ghi âm và tự đánh giá được. Để máy nghe em nói, hãy mở bằng Chrome hoặc Edge.');
+    'Bạn vẫn nghe mẫu, ghi âm và tự đánh giá được. Để máy nghe bạn nói, hãy mở bằng Chrome hoặc Edge.');
 }
 
 // ---------------- Từ vựng ----------------
@@ -125,7 +163,7 @@ function renderVocab(i) {
     const r = M.matchWord(v.word, v.accepted_variants, alts);
     return r.ok
       ? { stars: 3, title: `Máy nghe rõ từ “${v.word}”. Giỏi lắm!`, body: [heardLine(r.heard)], detail: 'khop_tu' }
-      : { stars: alts.length ? 1 : 0, title: `Máy chưa nghe ra từ “${lv === 2 ? '…' : v.word}”. Em nghe mẫu rồi thử lại nhé.`, body: [heardLine(r.heard)], detail: 'chua_khop_tu' };
+      : { stars: alts.length ? 1 : 0, title: `Máy chưa nghe ra từ “${lv === 2 ? '…' : v.word}”. Bạn nghe mẫu rồi thử lại nhé.`, body: [heardLine(r.heard)], detail: 'chua_khop_tu' };
   };
 
   if (lv === 1) {
@@ -181,7 +219,7 @@ function renderPatterns(i) {
   } else if (lv === 2) {
     text = p.text;
     const candidates = p.slot_options.map((o) => p.frame.replace('___', o));
-    body = [h('p', { class: 'task' }, 'Nói cả câu, điền vào chỗ trống một từ em chọn:'), h('p', { class: 'sentence' }, p.frame),
+    body = [h('p', { class: 'task' }, 'Nói cả câu, điền vào chỗ trống một từ bạn chọn:'), h('p', { class: 'sentence' }, p.frame),
       h('div', { class: 'chips' }, ...p.slot_options.map((o) => h('span', { class: 'chip' }, o))), h('p', { class: 'meaning' }, p.meaning_vi)];
     evaluate = (alts) => sentenceOutcome(M.bestSentenceMatch(candidates, alts));
   } else {
@@ -193,7 +231,7 @@ function renderPatterns(i) {
       const r = M.checkRequired(p.free_required, alts);
       const n = p.free_required.length;
       const stars = r.score === n ? 3 : r.score >= n / 2 ? 2 : alts.length ? 1 : 0;
-      const title = stars === 3 ? 'Câu của em có đủ các phần của khung câu. Rất tốt!'
+      const title = stars === 3 ? 'Câu của bạn có đủ các phần của khung câu. Rất tốt!'
         : 'Máy chưa nghe đủ các phần của khung câu. Xem câu gợi ý rồi thử lại nhé.';
       return { stars, title, body: [heardLine(r.heard)], detail: `du_y=${r.score}/${n}` };
     };
@@ -227,7 +265,7 @@ function renderDialogue(id) {
   const d = items('dialogues').find((x) => x.id === id);
   if (!d) return renderList('dialogues', 'Hội thoại', 'dialogues', (x) => x.title_vi);
   const pick = h('div', { class: 'card center' },
-    draftBadge(d), h('h2', {}, d.title), h('p', { class: 'muted' }, d.title_vi), h('p', {}, 'Em muốn đóng vai ai?'),
+    draftBadge(d), h('h2', {}, d.title), h('p', { class: 'muted' }, d.title_vi), h('p', {}, 'Bạn muốn đóng vai ai?'),
     h('div', { class: 'row center' }, ...d.roles.map((r) => h('button', { class: 'btn btn-main', onclick: () => play(r) }, r))),
     h('button', { class: 'btn btn-soft', onclick: () => S.playModel(d.turns.map((t) => t.text).join(' ')) }, '🔊 Nghe cả bài'));
   root.replaceChildren(shell('Hội thoại', pick));
@@ -237,14 +275,14 @@ function renderDialogue(id) {
     const stage = h('div', { class: 'stage' });
     const turnStars = [];
     let sources = new Set();
-    root.replaceChildren(shell('Hội thoại', h('p', { class: 'muted' }, `${d.title} · Em là ${role}`), log, stage));
+    root.replaceChildren(shell('Hội thoại', h('p', { class: 'muted' }, `${d.title} · Bạn là ${role}`), log, stage));
 
     const step = (k) => {
       disposeAll();
       if (k >= d.turns.length) {
         const avg = turnStars.length ? Math.max(1, Math.round(turnStars.reduce((a, b) => a + b, 0) / turnStars.length)) : 1;
         P.record({ ...meta('dialogues', d.id), source: sources.has('asr_match') ? 'asr_match' : 'self_check', stars: avg, detail: `vai=${role}` });
-        stage.replaceChildren(h('div', { class: 'card center' }, h('p', { class: 'big-emoji' }, '🎉'), h('p', {}, 'Em đã hoàn thành hội thoại!'),
+        stage.replaceChildren(h('div', { class: 'card center' }, h('p', { class: 'big-emoji' }, '🎉'), h('p', {}, 'Bạn đã hoàn thành hội thoại!'),
           h('p', { class: 'item-stars' }, starsText(avg)),
           h('div', { class: 'row center' }, h('button', { class: 'btn btn-soft', onclick: () => play(role) }, 'Làm lại'),
             h('button', { class: 'btn btn-soft', onclick: () => renderDialogue(d.id) }, 'Đổi vai'),
@@ -258,7 +296,7 @@ function renderDialogue(id) {
       log.append(bubble);
       const next = h('button', { class: 'btn btn-main', onclick: () => { bubble.querySelector('p').textContent = t.text; step(k + 1); } }, 'Tiếp ›');
       if (mine) {
-        stage.replaceChildren(h('div', { class: 'card' }, h('p', { class: 'task' }, 'Đến lượt em nói:'),
+        stage.replaceChildren(h('div', { class: 'card' }, h('p', { class: 'task' }, 'Đến lượt bạn nói:'),
           speakPanel({
             text: t.text, audio: t.audio, meta: meta('dialogues', `${d.id}#${k}`),
             evaluate: (alts) => sentenceOutcome(M.bestSentenceMatch(t.text, alts)),
@@ -321,13 +359,13 @@ function renderRoleplay(id) {
           const m = M.anyTerm(t.expect_any, alts);
           return m.ok
             ? { stars: 3, title: 'Câu trả lời đúng ý. Cùng nói tiếp nhé!', body: [heardLine(m.heard)], detail: 'dung_y' }
-            : { stars: 1, title: 'Máy chưa nghe ra ý trả lời cho câu hỏi này. Em xem gợi ý rồi thử lại nhé.', body: [heardLine(m.heard)], detail: 'chua_dung_y' };
+            : { stars: 1, title: 'Máy chưa nghe ra ý trả lời cho câu hỏi này. Bạn xem gợi ý rồi thử lại nhé.', body: [heardLine(m.heard)], detail: 'chua_dung_y' };
         },
         onResult: (o, src) => {
           if (src === 'self_check') selfUsed = true;
           if (o.stars >= 2) {
             if (firstTry || src === 'self_check') okCount++;
-            log.append(h('div', { class: 'bubble me' }, h('b', {}, 'Em'), h('p', {}, src === 'self_check' ? '(em đã trả lời)' : o.body[0].querySelector('q').textContent)));
+            log.append(h('div', { class: 'bubble me' }, h('b', {}, 'Bạn'), h('p', {}, src === 'self_check' ? '(bạn đã trả lời)' : o.body[0].querySelector('q').textContent)));
             next.textContent = 'Tiếp ›';
             next.className = 'btn btn-main';
           } else { firstTry = false; hint.hidden = false; }
@@ -358,9 +396,9 @@ function renderPicture(id) {
           const kwOk = r.found.length >= cfg.min_keywords;
           const lenOk = r.wordCount >= cfg.min_words;
           const stars = kwOk && lenOk ? 3 : kwOk || lenOk ? 2 : alts.length ? 1 : 0;
-          const title = stars === 3 ? 'Em đã nói đủ ý về bức tranh. Tuyệt!'
-            : !kwOk ? 'Em thử nói thêm tên các đồ vật, hoạt động trong tranh nhé.'
-            : 'Em thử nói dài hơn, thêm một câu nữa nhé.';
+          const title = stars === 3 ? 'Bạn đã nói đủ ý về bức tranh. Tuyệt!'
+            : !kwOk ? 'Bạn thử nói thêm tên các đồ vật, hoạt động trong tranh nhé.'
+            : 'Bạn thử nói dài hơn, thêm một câu nữa nhé.';
           return {
             stars, title, detail: `tu_khoa=${r.found.length};so_tu=${r.wordCount}`,
             body: [h('div', { class: 'chips' }, ...(r.found.length ? r.found.map((k) => h('span', { class: 'chip ok' }, '✓ ', k)) : [h('span', { class: 'muted' }, 'Chưa nghe thấy từ khóa nào')])),

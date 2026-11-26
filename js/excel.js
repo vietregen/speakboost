@@ -178,7 +178,7 @@ export async function workbookToUnit(wb, fallback) {
     const groups = str(r['Từ bắt buộc (nhóm | , từ ;)']).split(GROUP).map((g) => list(g).map((t) => t.toLowerCase())).filter((g) => g.length);
     patterns.push({ id: makeId(r.id, 'p', r['Câu mẫu'], w), review: status(r['Trạng thái'], w), level: level(r['Mức (1-3)'], w),
       text: str(r['Câu mẫu']), meaning_vi: str(r['Nghĩa']), audio: str(r['Âm thanh']) || null, frame, slot_options: list(r['Từ điền vào khung (;)']),
-      free_prompt_vi: str(r['Đề nói tự do (mức 3)']) || 'Nói một câu của em theo khung câu.',
+      free_prompt_vi: str(r['Đề nói tự do (mức 3)']) || 'Nói một câu của bạn theo khung câu.',
       // Không khai báo từ bắt buộc: câu tự do chỉ cần chứa một trong các từ điền vào khung.
       free_required: groups.length ? groups : [list(r['Từ điền vào khung (;)']).map((t) => t.toLowerCase())],
       free_example: str(r['Câu gợi ý (mức 3)']) || str(r['Câu mẫu']) });

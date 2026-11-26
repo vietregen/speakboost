@@ -5,7 +5,7 @@
     "grade": 6,
     "unit": 1,
     "title": "My New School",
-    "title_vi": "Ngôi trường mới của em",
+    "title_vi": "Ngôi trường mới của bạn",
     "version": "0.1.0-draft",
     "status": "draft",
     "reviewed_by": null,
@@ -52,7 +52,7 @@
       "id": "u1-p-have-subject", "review": "draft", "level": 1,
       "text": "I have English on Monday.", "meaning_vi": "Mình có môn tiếng Anh vào thứ Hai.", "audio": null,
       "frame": "I have ___ on Monday.", "slot_options": ["English", "maths", "science", "music", "history", "art"],
-      "free_prompt_vi": "Nói một câu về môn học của em vào một ngày trong tuần.",
+      "free_prompt_vi": "Nói một câu về môn học của bạn vào một ngày trong tuần.",
       "free_required": [["have"], ["english", "maths", "math", "science", "music", "history", "art", "literature", "geography"], ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]],
       "free_example": "I have music on Thursday."
     },
@@ -60,7 +60,7 @@
       "id": "u1-p-wear-uniform", "review": "draft", "level": 1,
       "text": "We wear our uniform every day.", "meaning_vi": "Chúng mình mặc đồng phục mỗi ngày.", "audio": null,
       "frame": "We wear our uniform ___.", "slot_options": ["every day", "on Monday", "at school"],
-      "free_prompt_vi": "Nói một câu về đồng phục hoặc cặp sách của em.",
+      "free_prompt_vi": "Nói một câu về đồng phục hoặc cặp sách của bạn.",
       "free_required": [["uniform", "school bag", "schoolbag", "bag"]],
       "free_example": "My uniform is white and blue."
     },
@@ -68,7 +68,7 @@
       "id": "u1-p-do-homework", "review": "draft", "level": 2,
       "text": "I do my homework in the evening.", "meaning_vi": "Mình làm bài tập về nhà vào buổi tối.", "audio": null,
       "frame": "I do my homework ___.", "slot_options": ["in the evening", "after dinner", "every day", "in the afternoon"],
-      "free_prompt_vi": "Nói khi nào em làm bài tập về nhà.",
+      "free_prompt_vi": "Nói khi nào bạn làm bài tập về nhà.",
       "free_required": [["do", "does"], ["homework"]],
       "free_example": "I usually do my homework after dinner."
     },
@@ -76,7 +76,7 @@
       "id": "u1-p-what-lessons", "review": "draft", "level": 2,
       "text": "What lessons do you have today?", "meaning_vi": "Hôm nay bạn có những môn gì?", "audio": null,
       "frame": "What ___ do you have today?", "slot_options": ["lessons", "subjects"],
-      "free_prompt_vi": "Trả lời: Hôm nay em có những môn gì?",
+      "free_prompt_vi": "Trả lời: Hôm nay bạn có những môn gì?",
       "free_required": [["have"], ["english", "maths", "math", "science", "music", "history", "art", "literature", "geography"]],
       "free_example": "Today I have maths, English and science."
     },
@@ -84,7 +84,7 @@
       "id": "u1-p-doing-now", "review": "draft", "level": 3,
       "text": "I'm reading a book in the library now.", "meaning_vi": "Bây giờ mình đang đọc sách trong thư viện.", "audio": null,
       "frame": "I'm ___ in the library now.", "slot_options": ["reading a book", "doing my homework", "studying English"],
-      "free_prompt_vi": "Nói em đang làm gì ngay lúc này (dùng thì hiện tại tiếp diễn).",
+      "free_prompt_vi": "Nói bạn đang làm gì ngay lúc này (dùng thì hiện tại tiếp diễn).",
       "free_required": [["i'm", "i am", "im"], ["*ing"]],
       "free_example": "I'm studying English now."
     },
@@ -92,7 +92,7 @@
       "id": "u1-p-school-has", "review": "draft", "level": 3,
       "text": "My school has a big library and a nice playground.", "meaning_vi": "Trường mình có một thư viện lớn và một sân chơi đẹp.", "audio": null,
       "frame": "My school has a big ___.", "slot_options": ["library", "playground", "garden", "computer room"],
-      "free_prompt_vi": "Tả ngôi trường của em bằng một câu có “has”.",
+      "free_prompt_vi": "Tả ngôi trường của bạn bằng một câu có “has”.",
       "free_required": [["school"], ["has", "have"]],
       "free_example": "My new school has a big garden."
     }
@@ -126,7 +126,7 @@
   "roleplays": [
     {
       "id": "u1-r-new-classmate", "review": "draft", "level": 2,
-      "title": "Talk to a new classmate", "situation_vi": "Alex là bạn mới chuyển đến lớp em. Hãy trò chuyện với Alex về trường mới.",
+      "title": "Talk to a new classmate", "situation_vi": "Alex là học sinh mới chuyển đến lớp bạn. Hãy trò chuyện với Alex về trường mới.",
       "bot_name": "Alex",
       "ai_role": "Alex, a new student in class 6A",
       "goal": "Talk about school, subjects and school things.",
@@ -141,7 +141,7 @@
     },
     {
       "id": "u1-r-school-shop", "review": "draft", "level": 3,
-      "title": "Buying school things", "situation_vi": "Em vào cửa hàng mua đồ dùng học tập cho năm học mới. Máy đóng vai người bán hàng.",
+      "title": "Buying school things", "situation_vi": "Bạn vào cửa hàng mua đồ dùng học tập cho năm học mới. Máy đóng vai người bán hàng.",
       "bot_name": "Shop assistant",
       "ai_role": "a shop assistant",
       "goal": "Ask for and buy school things.",
@@ -161,9 +161,9 @@
       "scene_emoji": ["🎒", "📓", "📘", "✏️", "assets/img/calculator.svg"], "image": null,
       "keywords": ["school bag", "bag", "notebook", "textbook", "book", "pencil", "calculator"],
       "prompts": {
-        "1": { "prompt_vi": "Gọi tên các đồ vật em thấy trong tranh.", "min_keywords": 2, "min_words": 2, "model_answer": "school bag, notebook, textbook, pencil, calculator" },
+        "1": { "prompt_vi": "Gọi tên các đồ vật bạn thấy trong tranh.", "min_keywords": 2, "min_words": 2, "model_answer": "school bag, notebook, textbook, pencil, calculator" },
         "2": { "prompt_vi": "Nói 1–2 câu: Trong cặp có gì?", "min_keywords": 2, "min_words": 6, "model_answer": "There is a notebook and a pencil in my school bag." },
-        "3": { "prompt_vi": "Tả cặp sách của em bằng 3 câu trở lên.", "min_keywords": 3, "min_words": 15, "model_answer": "This is my school bag. There are two notebooks and a textbook in it. I also have a pencil and a calculator for maths." }
+        "3": { "prompt_vi": "Tả cặp sách của bạn bằng 3 câu trở lên.", "min_keywords": 3, "min_words": 15, "model_answer": "This is my school bag. There are two notebooks and a textbook in it. I also have a pencil and a calculator for maths." }
       }
     },
     {
@@ -172,9 +172,9 @@
       "scene_emoji": ["🔔", "⚽", "📚", "🧑‍🤝‍🧑", "🤩"], "image": null,
       "keywords": ["break time", "break", "football", "play", "library", "read", "book", "friends", "classmates", "happy", "excited"],
       "prompts": {
-        "1": { "prompt_vi": "Gọi tên những gì em thấy trong tranh.", "min_keywords": 2, "min_words": 2, "model_answer": "football, library, books, friends" },
+        "1": { "prompt_vi": "Gọi tên những gì bạn thấy trong tranh.", "min_keywords": 2, "min_words": 2, "model_answer": "football, library, books, friends" },
         "2": { "prompt_vi": "Nói 1–2 câu: Các bạn làm gì giờ ra chơi?", "min_keywords": 2, "min_words": 6, "model_answer": "At break time, we play football with our friends." },
-        "3": { "prompt_vi": "Kể em thường làm gì giờ ra chơi, 3 câu trở lên.", "min_keywords": 3, "min_words": 15, "model_answer": "At break time I usually play football with my classmates. Sometimes I go to the library and read books. I am always happy at break time." }
+        "3": { "prompt_vi": "Kể bạn thường làm gì giờ ra chơi, 3 câu trở lên.", "min_keywords": 3, "min_words": 15, "model_answer": "At break time I usually play football with my classmates. Sometimes I go to the library and read books. I am always happy at break time." }
       }
     }
   ]

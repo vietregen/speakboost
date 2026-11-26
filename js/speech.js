@@ -72,7 +72,7 @@ export function environment() {
 export function micHelp() {
   switch (environment()) {
     case 'in-app':
-      return 'Em đang mở trang trong Zalo hoặc Facebook, nơi này không cho dùng micro. Bấm nút ⋯ ở góc màn hình, chọn “Mở bằng trình duyệt” (Chrome hoặc Safari) rồi thử lại.';
+      return 'Bạn đang mở trang trong Zalo hoặc Facebook, nơi này không cho dùng micro. Bấm nút ⋯ ở góc màn hình, chọn “Mở bằng trình duyệt” (Chrome hoặc Safari) rồi thử lại.';
     case 'embedded':
       return 'Khung trình duyệt này không cho dùng micro. Hãy mở trang bằng Chrome hoặc Edge trên máy tính, hoặc bằng điện thoại.';
     case 'ios':
@@ -87,9 +87,9 @@ export function micHelp() {
 const ERROR_VI = {
   'not-allowed': 'MIC_HELP',
   'service-not-allowed': 'Trình duyệt chưa cho phép nhận diện lời nói. Hãy thử Chrome hoặc Edge.',
-  'no-speech': 'Máy chưa nghe thấy tiếng. Em nói to và rõ hơn một chút nhé.',
-  'audio-capture': 'Không tìm thấy micro. Em kiểm tra lại micro nhé.',
-  network: 'Nhận diện lời nói cần mạng Internet. Em kiểm tra kết nối nhé.',
+  'no-speech': 'Máy chưa nghe thấy tiếng. Bạn nói to và rõ hơn một chút nhé.',
+  'audio-capture': 'Không tìm thấy micro. Bạn kiểm tra lại micro nhé.',
+  network: 'Nhận diện lời nói cần mạng Internet. Bạn kiểm tra kết nối nhé.',
   aborted: 'Đã dừng nghe.',
 };
 
@@ -126,13 +126,13 @@ export function listen({ lang = 'en-GB', onStart, continuous = false } = {}) {
     rec.onerror = (e) => {
       if (continuous && pieces.length && e.error !== 'not-allowed') return;
       const msg = ERROR_VI[e.error] === 'MIC_HELP' ? micHelp() : ERROR_VI[e.error];
-      finish({ alternatives: [], error: e.error, message: msg || 'Có lỗi khi nghe, em thử lại nhé.' });
+      finish({ alternatives: [], error: e.error, message: msg || 'Có lỗi khi nghe, bạn thử lại nhé.' });
     };
     rec.onend = () => {
       if (pieces.length) finish({ alternatives: [pieces.join(' ')], error: null });
       else finish({ alternatives: [], error: 'no-speech', message: ERROR_VI['no-speech'] });
     };
-    try { rec.start(); } catch (err) { finish({ alternatives: [], error: 'start-failed', message: 'Chưa bắt đầu nghe được, em bấm lại nhé.' }); }
+    try { rec.start(); } catch (err) { finish({ alternatives: [], error: 'start-failed', message: 'Chưa bắt đầu nghe được, bạn bấm lại nhé.' }); }
   });
 }
 

@@ -70,13 +70,13 @@ export function speakPanel({ text, audio, evaluate, meta, continuous = false, on
     listening = true;
     sayBtn.classList.add('active');
     sayBtn.textContent = continuous ? '⏹ Nói xong thì bấm dừng' : '👂 Máy đang nghe… (bấm để dừng)';
-    result.replaceChildren(h('p', { class: 'muted' }, continuous ? 'Em nói hết các câu, rồi bấm dừng.' : 'Em nói to, rõ nhé.'));
+    result.replaceChildren(h('p', { class: 'muted' }, continuous ? 'Bạn nói hết các câu, rồi bấm dừng.' : 'Bạn nói to, rõ nhé.'));
     const res = await S.listen({ continuous });
     listening = false;
     sayBtn.classList.remove('active');
     sayBtn.textContent = '🎤 Nói lại';
     if (res.error) {
-      result.replaceChildren(h('p', { class: 'warn' }, res.message || 'Máy chưa nghe được, em thử lại nhé.'));
+      result.replaceChildren(h('p', { class: 'warn' }, res.message || 'Máy chưa nghe được, bạn thử lại nhé.'));
       return;
     }
     const outcome = evaluate(res.alternatives);
@@ -85,10 +85,10 @@ export function speakPanel({ text, audio, evaluate, meta, continuous = false, on
   });
 
   // --- Ghi âm và nghe lại ---
-  const playBtn = h('button', { class: 'btn btn-soft', disabled: true, onclick: () => rec.play() }, '▶ Nghe lại giọng em');
+  const playBtn = h('button', { class: 'btn btn-soft', disabled: true, onclick: () => rec.play() }, '▶ Nghe lại giọng bạn');
   const recBtn = h('button', { class: 'btn btn-soft' }, '⏺ Ghi âm');
   const selfCheck = h('div', { class: 'self-check', hidden: true },
-    h('p', {}, 'Em nghe lại và tự so với mẫu:'),
+    h('p', {}, 'Bạn nghe lại và tự so với mẫu:'),
     h('div', { class: 'row' },
       h('button', { class: 'btn btn-soft', onclick: () => selfRate(2) }, '😀 Giống mẫu'),
       h('button', { class: 'btn btn-soft', onclick: () => selfRate(1) }, '🤔 Chưa giống, tập thêm'),
@@ -96,9 +96,9 @@ export function speakPanel({ text, audio, evaluate, meta, continuous = false, on
   );
   function selfRate(stars) {
     selfCheck.hidden = true;
-    const outcome = { stars, title: stars === 2 ? 'Em tự đánh giá: giống mẫu.' : 'Em tự đánh giá: cần tập thêm.', detail: 'tu_danh_gia' };
+    const outcome = { stars, title: stars === 2 ? 'Bạn tự đánh giá: giống mẫu.' : 'Bạn tự đánh giá: cần tập thêm.', detail: 'tu_danh_gia' };
     result.replaceChildren(
-      h('div', { class: 'result-label' }, 'Em tự đánh giá · máy không chấm'),
+      h('div', { class: 'result-label' }, 'Bạn tự đánh giá · máy không chấm'),
       h('div', { class: `result-stars s${stars}` }, starsText(stars)),
       h('p', { class: 'result-title' }, outcome.title),
     );
@@ -147,7 +147,7 @@ export function sentenceOutcome(best) {
   const miss = best.missing.slice(0, 4).join(', ');
   const title = stars === 3 ? 'Máy nghe rõ cả câu. Tuyệt vời!'
     : stars === 2 ? `Máy nghe được gần hết. Chưa nghe rõ: ${miss}.`
-    : stars === 1 ? `Máy mới nghe được một phần. Em nghe mẫu rồi thử lại nhé.`
-    : 'Máy chưa nghe ra câu này. Em nghe mẫu rồi thử lại nhé.';
+    : stars === 1 ? `Máy mới nghe được một phần. Bạn nghe mẫu rồi thử lại nhé.`
+    : 'Máy chưa nghe ra câu này. Bạn nghe mẫu rồi thử lại nhé.';
   return { stars, title, body: [wordLine(best.words), heardLine(best.heard)], detail: `ty_le_khop=${r.toFixed(2)}` };
 }
