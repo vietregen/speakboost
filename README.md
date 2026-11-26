@@ -47,7 +47,7 @@ Thêm một từ vựng: chép một khối trong `"vocabulary"`, đổi `id` (k
 | --- | --- |
 | `word`, `ipa`, `meaning_vi`, `example` | Từ, phiên âm, nghĩa, câu ví dụ |
 | `level` | 1, 2 hoặc 3: học sinh ở mức thấp hơn sẽ không thấy từ này |
-| `accepted_variants` | Cách nói khác vẫn chấp nhận, ví dụ số nhiều |
+| `accepted_variants` | Cách viết khác của chính từ đó vẫn chấp nhận: số nhiều, viết liền/tách, Anh–Mỹ (`math`). Không ghi từ đồng nghĩa như `soccer`, `bike` |
 | `emoji` / `image` | Hình tạm bằng emoji; muốn dùng ảnh thật thì đặt ảnh vào `assets/` và ghi `"image": "assets/uniform.webp"` |
 | `audio` | Tệp ghi âm mẫu, ví dụ `"assets/audio/uniform.mp3"`; để `null` thì dùng giọng máy |
 | `review` | `draft` / `approved` / `needs_fix` |

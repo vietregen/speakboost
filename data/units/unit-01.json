@@ -24,7 +24,7 @@
       "tries_per_word": 2,
       "seconds_by_level": { "1": 20, "2": 15, "3": 10 },
       "show_meaning_levels": [1],
-      "unlock": "practised_all_words_in_level"
+      "unlock": "practised_at_least_rounds"
     }
   },
   "vocabulary": [
@@ -33,18 +33,18 @@
     { "id": "u1-v-notebook", "review": "draft", "word": "notebook", "ipa": "/ˈnəʊtbʊk/", "meaning_vi": "vở, sổ ghi chép", "emoji": "📓", "image": null, "audio": null, "example": "I write new words in my notebook.", "level": 1, "accepted_variants": ["notebooks", "note book"] },
     { "id": "u1-v-textbook", "review": "draft", "word": "textbook", "ipa": "/ˈtekstbʊk/", "meaning_vi": "sách giáo khoa", "emoji": "📘", "image": null, "audio": null, "example": "Open your textbook, please.", "level": 1, "accepted_variants": ["textbooks", "text book"] },
     { "id": "u1-v-pencil", "review": "draft", "word": "pencil", "ipa": "/ˈpensl/", "meaning_vi": "bút chì", "emoji": "✏️", "image": null, "audio": null, "example": "Can I borrow your pencil?", "level": 1, "accepted_variants": ["pencils"] },
-    { "id": "u1-v-calculator", "review": "draft", "word": "calculator", "ipa": "/ˈkælkjuleɪtə(r)/", "meaning_vi": "máy tính bỏ túi", "emoji": "🧮", "image": null, "audio": null, "example": "I need a calculator for maths.", "level": 2, "accepted_variants": ["calculators"] },
-    { "id": "u1-v-bicycle", "review": "draft", "word": "bicycle", "ipa": "/ˈbaɪsɪkl/", "meaning_vi": "xe đạp", "emoji": "🚲", "image": null, "audio": null, "example": "I go to school by bicycle.", "level": 1, "accepted_variants": ["bicycles", "bike"] },
+    { "id": "u1-v-calculator", "review": "draft", "word": "calculator", "ipa": "/ˈkælkjuleɪtə(r)/", "meaning_vi": "máy tính bỏ túi", "emoji": "🧮", "image": "assets/img/calculator.svg", "audio": null, "example": "I need a calculator for maths.", "level": 2, "accepted_variants": ["calculators"] },
+    { "id": "u1-v-bicycle", "review": "draft", "word": "bicycle", "ipa": "/ˈbaɪsɪkl/", "meaning_vi": "xe đạp", "emoji": "🚲", "image": null, "audio": null, "example": "I go to school by bicycle.", "level": 1, "accepted_variants": ["bicycles"] },
     { "id": "u1-v-homework", "review": "draft", "word": "homework", "ipa": "/ˈhəʊmwɜːk/", "meaning_vi": "bài tập về nhà", "emoji": "📝", "image": null, "audio": null, "example": "I do my homework after dinner.", "level": 1, "accepted_variants": ["home work"] },
     { "id": "u1-v-library", "review": "draft", "word": "library", "ipa": "/ˈlaɪbrəri/", "meaning_vi": "thư viện", "emoji": "📚", "image": null, "audio": null, "example": "Our school has a big library.", "level": 2, "accepted_variants": ["libraries"] },
     { "id": "u1-v-classmate", "review": "draft", "word": "classmate", "ipa": "/ˈklɑːsmeɪt/", "meaning_vi": "bạn cùng lớp", "emoji": "🧑‍🤝‍🧑", "image": null, "audio": null, "example": "My classmates are very friendly.", "level": 2, "accepted_variants": ["classmates", "class mate"] },
-    { "id": "u1-v-lesson", "review": "draft", "word": "lesson", "ipa": "/ˈlesn/", "meaning_vi": "bài học, tiết học", "emoji": "👩‍🏫", "image": null, "audio": null, "example": "We have five lessons today.", "level": 1, "accepted_variants": ["lessons"] },
-    { "id": "u1-v-maths", "review": "draft", "word": "maths", "ipa": "/mæθs/", "meaning_vi": "môn toán", "emoji": "➗", "image": null, "audio": null, "example": "I have maths on Tuesday.", "level": 1, "accepted_variants": ["math", "mathematics"] },
+    { "id": "u1-v-lesson", "review": "draft", "word": "lesson", "ipa": "/ˈlesn/", "meaning_vi": "bài học, tiết học", "emoji": "👩‍🏫", "image": "assets/img/lesson.svg", "audio": null, "example": "We have five lessons today.", "level": 1, "accepted_variants": ["lessons"] },
+    { "id": "u1-v-maths", "review": "draft", "word": "maths", "ipa": "/mæθs/", "meaning_vi": "môn toán", "emoji": "➗", "image": null, "audio": null, "example": "I have maths on Tuesday.", "level": 1, "accepted_variants": ["math"] },
     { "id": "u1-v-science", "review": "draft", "word": "science", "ipa": "/ˈsaɪəns/", "meaning_vi": "môn khoa học", "emoji": "🔬", "image": null, "audio": null, "example": "Science is my favourite subject.", "level": 2, "accepted_variants": [] },
     { "id": "u1-v-music", "review": "draft", "word": "music", "ipa": "/ˈmjuːzɪk/", "meaning_vi": "môn âm nhạc", "emoji": "🎵", "image": null, "audio": null, "example": "We sing songs in music lessons.", "level": 1, "accepted_variants": [] },
     { "id": "u1-v-history", "review": "draft", "word": "history", "ipa": "/ˈhɪstri/", "meaning_vi": "môn lịch sử", "emoji": "🏛️", "image": null, "audio": null, "example": "We learn about the past in history.", "level": 2, "accepted_variants": [] },
-    { "id": "u1-v-break-time", "review": "draft", "word": "break time", "ipa": "/ˈbreɪk taɪm/", "meaning_vi": "giờ ra chơi", "emoji": "🔔", "image": null, "audio": null, "example": "We play football at break time.", "level": 2, "accepted_variants": ["breaktime", "break"] },
-    { "id": "u1-v-football", "review": "draft", "word": "football", "ipa": "/ˈfʊtbɔːl/", "meaning_vi": "bóng đá", "emoji": "⚽", "image": null, "audio": null, "example": "The boys play football in the playground.", "level": 1, "accepted_variants": ["foot ball", "soccer"] },
+    { "id": "u1-v-break-time", "review": "draft", "word": "break time", "ipa": "/ˈbreɪk taɪm/", "meaning_vi": "giờ ra chơi", "emoji": "🔔", "image": "assets/img/break-time.svg", "audio": null, "example": "We play football at break time.", "level": 2, "accepted_variants": ["breaktime"] },
+    { "id": "u1-v-football", "review": "draft", "word": "football", "ipa": "/ˈfʊtbɔːl/", "meaning_vi": "bóng đá", "emoji": "⚽", "image": null, "audio": null, "example": "The boys play football in the playground.", "level": 1, "accepted_variants": ["foot ball", "footballs"] },
     { "id": "u1-v-excited", "review": "draft", "word": "excited", "ipa": "/ɪkˈsaɪtɪd/", "meaning_vi": "háo hức, phấn khởi", "emoji": "🤩", "image": null, "audio": null, "example": "I am excited about my new school.", "level": 3, "accepted_variants": [] }
   ],
   "patterns": [
@@ -158,7 +158,7 @@
     {
       "id": "u1-pic-school-bag", "review": "draft",
       "title": "Inside my school bag", "title_vi": "Trong cặp sách",
-      "scene_emoji": ["🎒", "📓", "📘", "✏️", "🧮"], "image": null,
+      "scene_emoji": ["🎒", "📓", "📘", "✏️", "assets/img/calculator.svg"], "image": null,
       "keywords": ["school bag", "bag", "notebook", "textbook", "book", "pencil", "calculator"],
       "prompts": {
         "1": { "prompt_vi": "Gọi tên các đồ vật em thấy trong tranh.", "min_keywords": 2, "min_words": 2, "model_answer": "school bag, notebook, textbook, pencil, calculator" },

@@ -6,16 +6,24 @@ import * as M from './match.js';
 import * as P from './progress.js';
 import { h, starsText, addCleanup } from './ui.js';
 
-const DEFAULTS = { title: 'Thử thách từ vựng', rounds: 10, tries_per_word: 2, seconds_by_level: { 1: 20, 2: 15, 3: 10 }, show_meaning_levels: [1] };
+const DEFAULTS = { title: 'Thử thách từ vựng', rounds: 10, tries_per_word: 2, seconds_by_level: { 1: 20, 2: 15, 3: 10 }, show_meaning_levels: [1], unlock: 'practised_at_least_rounds' };
 
 export function config(unit) {
   return { ...DEFAULTS, ...((unit.challenges && unit.challenges.vocabulary) || {}) };
 }
 
-// Mở khóa khi đã luyện (ít nhất 1 sao) mọi từ của mức đang chọn.
-export function status({ unitNo, words, preview }) {
-  const done = words.filter((v) => P.bestStars(unitNo, v.id) > 0).length;
-  return { done, total: words.length, unlocked: words.length > 0 && (preview || done === words.length) };
+// Từ "đã luyện" = từ có ít nhất 1 sao trong phần Từ vựng, tính trên dữ liệu bài hiện tại
+// (nhập Excel mới thì danh sách tự đổi; từ đã bị xóa khỏi bài không còn được tính).
+export const practisedWords = (unitNo, words) => words.filter((v) => P.bestStars(unitNo, v.id) > 0);
+
+// Luật mở khóa đặt trong dữ liệu bài (challenges.vocabulary.unlock):
+//  - "practised_at_least_rounds": đã luyện đủ số từ của một ván (mặc định)
+//  - "practised_all_words_in_level": đã luyện hết từ của mức
+export function status({ unitNo, words, preview, unit }) {
+  const cfg = config(unit);
+  const done = practisedWords(unitNo, words).length;
+  const need = cfg.unlock === 'practised_all_words_in_level' ? words.length : Math.min(cfg.rounds, words.length);
+  return { done, need, total: words.length, unlocked: words.length > 0 && (preview || done >= need) };
 }
 
 export const challengeId = (lv) => `challenge-vocab-L${lv}`;
@@ -30,6 +38,8 @@ const picture = (v, cls) => (v.image
   ? h('img', { class: `pic ${cls || ''}`, src: v.image, alt: 'tranh của từ cần nói' })
   : h('div', { class: `pic-emoji ${cls || ''}`, role: 'img', 'aria-label': 'tranh của từ cần nói' }, v.emoji || '🖼️'));
 
+const thumb = (v) => (v.image ? h('img', { class: 'thumb', src: v.image, alt: '' }) : `${v.emoji || ''} `);
+
 const maskWord = (w) => w.split(' ').map((part) => part[0] + ' _'.repeat(Math.max(0, part.length - 1))).join('   ');
 
 /**
@@ -38,7 +48,7 @@ const maskWord = (w) => w.split(' ').map((part) => part[0] + ' _'.repeat(Math.ma
 export function render(ctx) {
   const { root, shell, unitNo, level, words, preview, unit } = ctx;
   const cfg = config(unit);
-  const st = status({ unitNo, words, preview });
+  const st = status({ unitNo, words, preview, unit });
   const best = P.bestStars(unitNo, challengeId(level));
 
   if (!st.unlocked) {
@@ -46,17 +56,21 @@ export function render(ctx) {
       h('div', { class: 'card center' },
         h('p', { class: 'big-emoji' }, '🔒'),
         h('h2', {}, `Thử thách Mức ${level} đang khóa`),
-        h('p', {}, `Em luyện nói hết các từ của Mức ${level} để mở khóa nhé.`),
-        h('div', { class: 'meter', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(st.total), 'aria-valuenow': String(st.done) },
-          h('span', { style: `width:${st.total ? Math.round((st.done / st.total) * 100) : 0}%` })),
-        h('p', { class: 'muted' }, `Đã luyện ${st.done}/${st.total} từ`),
+        h('p', {}, `Em luyện nói ít nhất ${st.need} từ của Mức ${level} để mở khóa nhé.`),
+        h('div', { class: 'meter', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(st.need), 'aria-valuenow': String(st.done) },
+          h('span', { style: `width:${st.need ? Math.min(100, Math.round((st.done / st.need) * 100)) : 0}%` })),
+        h('p', { class: 'muted' }, `Đã luyện ${st.done}/${st.need} từ`),
         h('a', { class: 'btn btn-main', href: '#/vocab' }, '🔤 Luyện từ vựng'))));
     return;
   }
 
   const seconds = Number(cfg.seconds_by_level[String(level)] || 15);
   const showMeaning = (cfg.show_meaning_levels || []).includes(level);
-  const rounds = Math.min(cfg.rounds, words.length);
+  // Chỉ lấy từ em đã luyện. Ở chế độ xem trước của giáo viên, nếu chưa luyện từ nào thì dùng tất cả.
+  let pool = practisedWords(unitNo, words);
+  const previewAll = preview && pool.length === 0;
+  if (previewAll) pool = words;
+  const rounds = Math.min(cfg.rounds, pool.length);
   const tries = Math.max(1, cfg.tries_per_word);
 
   root.replaceChildren(shell(cfg.title,
@@ -65,7 +79,10 @@ export function render(ctx) {
       h('h2', {}, `${cfg.title} · Mức ${level}`),
       best ? h('p', { class: 'item-stars' }, `Kết quả tốt nhất: ${starsText(best)}`) : null,
       h('ul', { class: 'rules' },
-        h('li', {}, `Có ${rounds} hình. Nhìn hình rồi bấm 🎤 và nói từ tiếng Anh.`),
+        h('li', {}, previewAll
+          ? `Có ${rounds} hình, chọn ngẫu nhiên trong ${pool.length} từ (xem trước: chưa luyện từ nào nên dùng tất cả).`
+          : `Có ${rounds} hình, chọn ngẫu nhiên trong ${pool.length} từ em đã luyện.`),
+        h('li', {}, 'Nhìn hình rồi bấm 🎤 và nói từ tiếng Anh.'),
         h('li', {}, `Mỗi từ được nói ${tries} lần. Có ${seconds} giây để nghĩ trước khi bấm 🎤.`),
         h('li', {}, 'Đúng ở lần 1: 3 điểm · lần 2: 2 điểm · có dùng gợi ý: 1 điểm.'),
         showMeaning ? h('li', {}, 'Ở Mức 1 có nghĩa tiếng Việt đi kèm hình.') : null),
@@ -73,7 +90,7 @@ export function render(ctx) {
       h('button', { class: 'btn btn-main', onclick: () => play() }, '▶ Bắt đầu'))));
 
   function play() {
-    const deck = shuffle(words).slice(0, rounds);
+    const deck = shuffle(pool).slice(0, rounds);
     const results = [];
     let score = 0;
     let combo = 0;
@@ -211,10 +228,10 @@ export function render(ctx) {
           h('p', { class: 'score' }, `${score} / ${max} điểm · đúng ${correct.length}/${results.length} từ`),
           h('p', { class: 'note' }, 'Kết quả cho biết máy nhận ra đúng bao nhiêu từ em nói. Đây chưa phải điểm phát âm.')),
         correct.length ? h('div', { class: 'card' }, h('h2', {}, 'Từ em nói đúng'),
-          h('div', { class: 'chips' }, ...correct.map((r) => h('span', { class: 'chip ok' }, `${r.v.emoji || ''} ${r.v.word}`)))) : null,
+          h('div', { class: 'chips' }, ...correct.map((r) => h('span', { class: 'chip ok' }, thumb(r.v), r.v.word)))) : null,
         missed.length ? h('div', { class: 'card' }, h('h2', {}, 'Từ cần luyện thêm'),
           h('div', { class: 'list' }, ...missed.map((r) => h('div', { class: 'list-item' },
-            h('span', {}, `${r.v.emoji || ''} `, h('b', {}, r.v.word), ` ${r.v.ipa} · ${r.v.meaning_vi}`),
+            h('span', {}, thumb(r.v), h('b', {}, r.v.word), ` ${r.v.ipa} · ${r.v.meaning_vi}`),
             h('button', { class: 'btn btn-soft', onclick: () => S.playModel(r.v.word, { audio: r.v.audio }) }, '🔊'))))) : null,
         h('div', { class: 'row center' },
           h('button', { class: 'btn btn-main', onclick: () => play() }, '🔁 Chơi lại'),

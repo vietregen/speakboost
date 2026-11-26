@@ -44,6 +44,7 @@ const GUIDE = [
   ['2. Giữ nguyên dòng tiêu đề (dòng 1) và tên trang tính. Mỗi dòng bên dưới là một mục.'],
   ['3. Cột id có thể để trống: ứng dụng tự tạo. Nếu điền, id không được trùng trong cả bài.'],
   ['4. Ô có nhiều mục thì cách nhau bằng dấu chấm phẩy ;  Ví dụ: uniforms; school uniform'],
+  ['   Cột “Cách nói khác” chỉ ghi cách viết khác của CHÍNH từ đó (số nhiều, viết liền/tách, Anh–Mỹ như math). Không ghi từ đồng nghĩa (soccer, bike): nếu ghi, máy sẽ chấm đúng khi học sinh nói từ đồng nghĩa.'],
   ['5. Từ bắt buộc ở MauCau: các nhóm cách nhau bằng | , các từ trong một nhóm cách nhau bằng ;'],
   ['   Ví dụ: have | English; maths; music | Monday; Tuesday  (câu phải có "have", một môn học và một ngày).'],
   ['   Viết *ing nghĩa là câu phải có một từ đuôi -ing.'],

@@ -71,13 +71,13 @@ function renderHome() {
 
   const words = byLevel(items('vocabulary'));
   if (words.length) {
-    const st = Challenge.status({ unitNo: U(), words, preview });
+    const st = Challenge.status({ unitNo: U(), words, preview, unit });
     const best = P.bestStars(U(), Challenge.challengeId(level()));
     tiles.push(h('a', { class: `tile challenge-tile ${st.unlocked ? '' : 'locked'}`, href: '#/challenge' },
       h('span', { class: 'tile-icon' }, st.unlocked ? '🏆' : '🔒'),
       h('span', { class: 'tile-name' }, `Thử thách Mức ${level()}`),
-      h('span', { class: 'tile-desc' }, st.unlocked ? 'Nhìn hình, nói đúng từ tiếng Anh' : `Luyện hết từ vựng để mở khóa`),
-      h('span', { class: 'tile-progress' }, st.unlocked ? (best ? `Tốt nhất ${starsText(best)}` : 'Đã mở khóa!') : `${st.done}/${st.total} từ`)));
+      h('span', { class: 'tile-desc' }, st.unlocked ? 'Nhìn hình, nói đúng từ tiếng Anh' : `Luyện ${st.need} từ vựng để mở khóa`),
+      h('span', { class: 'tile-progress' }, st.unlocked ? (best ? `Tốt nhất ${starsText(best)}` : 'Đã mở khóa!') : `${st.done}/${st.need} từ`)));
   }
 
   const anyVisible = ACTIVITIES.some((a) => items(a.key).length);
@@ -347,7 +347,7 @@ function renderPicture(id) {
   root.replaceChildren(shell('Nói qua tranh',
     h('div', { class: 'card' }, draftBadge(p),
       h('h2', {}, p.title), h('p', { class: 'muted' }, p.title_vi),
-      p.image ? h('img', { class: 'pic', src: p.image, alt: p.title }) : h('div', { class: 'scene', role: 'img', 'aria-label': 'tranh minh họa' }, ...p.scene_emoji.map((e) => h('span', {}, e))),
+      p.image ? h('img', { class: 'pic', src: p.image, alt: p.title }) : h('div', { class: 'scene', role: 'img', 'aria-label': 'tranh minh họa' }, ...p.scene_emoji.map((e) => (e.includes('/') ? h('img', { src: e, alt: '' }) : h('span', {}, e)))),
       h('p', { class: 'task' }, cfg.prompt_vi),
       h('button', { class: 'link-btn', onclick: (e) => { model.hidden = false; e.target.remove(); } }, '💡 Xem câu mẫu'), model,
       h('p', { class: 'item-stars' }, starsText(P.bestStars(U(), p.id))),

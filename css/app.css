@@ -77,6 +77,8 @@ h2 { font-size: 19px; margin: 24px 0 10px; }
 .pic-emoji { font-size: 96px; text-align: center; line-height: 1.2; }
 .pic { display: block; max-width: 100%; max-height: 260px; margin: 0 auto; border-radius: 12px; }
 .scene { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; font-size: 56px; padding: 12px; background: var(--brand-soft); border-radius: 12px; margin: 12px 0; }
+.scene img { height: 64px; width: auto; }
+.thumb { height: 1.4em; width: auto; vertical-align: middle; margin-right: 4px; }
 .word-box { text-align: center; }
 .word { font-size: 34px; font-weight: 800; margin: 4px 0 0; }
 .hidden-word { letter-spacing: 6px; color: var(--muted); }

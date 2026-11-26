@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 200" role="img" aria-label="lesson">
+  <!-- bảng -->
+  <rect x="20" y="16" width="150" height="96" rx="6" fill="#2f6b4f" stroke="#8a5a2b" stroke-width="6"/>
+  <g stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none" opacity=".9">
+    <path d="M40 46 h40"/><path d="M40 64 h70"/><path d="M40 82 h55"/>
+  </g>
+  <g fill="none" stroke="#ffe066" stroke-width="3"><circle cx="134" cy="50" r="10"/><path d="M124 92 l12 -20 l12 20z"/></g>
+  <!-- giáo viên -->
+  <circle cx="198" cy="62" r="16" fill="#f2c9a0"/>
+  <path d="M182 56 q16 -22 32 0 q-4 -12 -16 -12 q-12 0 -16 12z" fill="#4a2f1d"/>
+  <path d="M176 132 q2 -46 22 -46 q20 0 22 46z" fill="#2f6fde"/>
+  <path d="M184 98 L150 74" stroke="#2f6fde" stroke-width="9" stroke-linecap="round"/>
+  <path d="M152 75 L128 60" stroke="#8a5a2b" stroke-width="3" stroke-linecap="round"/>
+  <rect x="184" y="132" width="8" height="30" fill="#3b4a63"/><rect x="204" y="132" width="8" height="30" fill="#3b4a63"/>
+  <!-- học sinh và bàn -->
+  <g>
+    <circle cx="52" cy="140" r="12" fill="#f2c9a0"/><path d="M40 136 q12 -16 24 0 q-2 -10 -12 -10 q-10 0 -12 10z" fill="#1d1d1d"/>
+    <path d="M38 172 q2 -22 14 -22 q12 0 14 22z" fill="#f59f00"/>
+    <circle cx="108" cy="140" r="12" fill="#e0b48a"/><path d="M96 138 q12 -18 24 0 q-2 -10 -12 -10 q-10 0 -12 10z" fill="#5a3b22"/>
+    <path d="M94 172 q2 -22 14 -22 q12 0 14 22z" fill="#d9480f"/>
+    <rect x="26" y="168" width="120" height="10" rx="3" fill="#b07a45"/>
+    <rect x="34" y="178" width="6" height="16" fill="#8a5a2b"/><rect x="132" y="178" width="6" height="16" fill="#8a5a2b"/>
+  </g>
+</svg>

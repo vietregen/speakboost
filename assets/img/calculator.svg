@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" role="img" aria-label="calculator">
+  <rect x="45" y="12" width="110" height="176" rx="16" fill="#3b4a63"/>
+  <rect x="45" y="12" width="110" height="176" rx="16" fill="none" stroke="#1f2a3c" stroke-width="4"/>
+  <rect x="58" y="26" width="84" height="34" rx="6" fill="#c9f2d4"/>
+  <text x="134" y="52" text-anchor="end" font-family="Consolas, monospace" font-size="22" font-weight="700" fill="#1f3d2a">128</text>
+  <g fill="#e9eef6">
+    <rect x="58" y="72" width="18" height="18" rx="4"/><rect x="83" y="72" width="18" height="18" rx="4"/><rect x="108" y="72" width="18" height="18" rx="4"/>
+    <rect x="58" y="98" width="18" height="18" rx="4"/><rect x="83" y="98" width="18" height="18" rx="4"/><rect x="108" y="98" width="18" height="18" rx="4"/>
+    <rect x="58" y="124" width="18" height="18" rx="4"/><rect x="83" y="124" width="18" height="18" rx="4"/><rect x="108" y="124" width="18" height="18" rx="4"/>
+    <rect x="58" y="150" width="43" height="18" rx="4"/><rect x="108" y="150" width="18" height="18" rx="4"/>
+  </g>
+  <g fill="#f59f00">
+    <rect x="132" y="72" width="12" height="18" rx="4"/><rect x="132" y="98" width="12" height="18" rx="4"/>
+    <rect x="132" y="124" width="12" height="44" rx="4"/>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#3b4a63" text-anchor="middle">
+    <text x="67" y="86">7</text><text x="92" y="86">8</text><text x="117" y="86">9</text>
+    <text x="67" y="112">4</text><text x="92" y="112">5</text><text x="117" y="112">6</text>
+    <text x="67" y="138">1</text><text x="92" y="138">2</text><text x="117" y="138">3</text>
+    <text x="79" y="164">0</text><text x="117" y="164">.</text>
+  </g>
+  <g font-family="Arial, sans-serif" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">
+    <text x="138" y="86">+</text><text x="138" y="112">−</text><text x="138" y="150">=</text>
+  </g>
+</svg>
