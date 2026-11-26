@@ -6,11 +6,11 @@
     "unit": 1,
     "title": "My New School",
     "title_vi": "Ngôi trường mới của bạn",
-    "version": "1.0.0-draft",
-    "status": "approved",
+    "version": "0.1.0-draft",
+    "status": "in_review",
     "reviewed_by": "Giáo viên (điền tên khi lưu trữ)",
     "reviewed_at": "2026-11-26",
-    "note": "Dữ liệu biên soạn phục vụ luyện nói theo Unit 1: My New School, tham chiếu tài liệu Unit 1_GV.pdf. Nội dung hội thoại, đóng vai, câu ví dụ và đề nói được biên soạn mới theo chủ đề; giáo viên cần kiểm tra và chuyển trạng thái sang approved trước khi học sinh sử dụng. Tranh đang dùng emoji làm gợi ý, chưa có tệp ảnh riêng."
+    "note": "BẢN NHÁP do Claude soạn theo chủ đề bài học, KHÔNG chép từ sách giáo khoa. Giáo viên cần đối chiếu SGK và duyệt từng mục trước khi cho học sinh dùng. Hình minh họa hiện là emoji tạm thời."
   },
   "levels": [
     {
@@ -47,331 +47,42 @@
   },
   "vocabulary": [
     {
-      "id": "u1-v-bicycle",
-      "review": "approved",
-      "word": "bicycle",
-      "ipa": "/ˈbaɪsɪkl/",
-      "meaning_vi": "xe đạp",
-      "emoji": "🚲",
+      "id": "u1-v-uniform",
+      "review": "draft",
+      "word": "uniform",
+      "ipa": "/ˈjuːnɪfɔːm/",
+      "meaning_vi": "đồng phục",
+      "emoji": "🏫👕",
       "image": null,
       "audio": null,
-      "example": "I go to school by bicycle.",
+      "example": "We wear our uniform on Monday.",
       "level": 1,
       "accepted_variants": [
-        "bicycles"
+        "uniforms"
       ]
     },
     {
-      "id": "u1-v-bin",
-      "review": "approved",
-      "word": "bin",
-      "ipa": "/bɪn/",
-      "meaning_vi": "thùng rác",
-      "emoji": "🗑️",
+      "id": "u1-v-school-bag",
+      "review": "draft",
+      "word": "school bag",
+      "ipa": "/ˈskuːl bæɡ/",
+      "meaning_vi": "cặp sách",
+      "emoji": "🎒",
       "image": null,
       "audio": null,
-      "example": "Please put the paper in the bin.",
+      "example": "My school bag is blue.",
       "level": 1,
       "accepted_variants": [
-        "bins"
+        "schoolbag",
+        "school bags"
       ]
-    },
-    {
-      "id": "u1-v-bookcase",
-      "review": "approved",
-      "word": "bookcase",
-      "ipa": "/ˈbʊkkeɪs/",
-      "meaning_vi": "tủ sách",
-      "emoji": "📚",
-      "image": null,
-      "audio": null,
-      "example": "There is a bookcase in our classroom.",
-      "level": 2,
-      "accepted_variants": [
-        "bookcases"
-      ]
-    },
-    {
-      "id": "u1-v-calculator",
-      "review": "approved",
-      "word": "calculator",
-      "ipa": "/ˈkælkjuleɪtə(r)/",
-      "meaning_vi": "máy tính bỏ túi",
-      "emoji": "🧮",
-      "image": null,
-      "audio": null,
-      "example": "I use a calculator in maths lessons.",
-      "level": 2,
-      "accepted_variants": [
-        "calculators"
-      ]
-    },
-    {
-      "id": "u1-v-clock",
-      "review": "approved",
-      "word": "clock",
-      "ipa": "/klɒk/",
-      "meaning_vi": "đồng hồ treo tường",
-      "emoji": "🕒",
-      "image": null,
-      "audio": null,
-      "example": "There is a clock on the classroom wall.",
-      "level": 1,
-      "accepted_variants": [
-        "clocks"
-      ]
-    },
-    {
-      "id": "u1-v-coloured-pencils",
-      "review": "approved",
-      "word": "coloured pencils",
-      "ipa": "/ˈkʌləd ˈpenslz/",
-      "meaning_vi": "bút chì màu",
-      "emoji": "🖍️",
-      "image": null,
-      "audio": null,
-      "example": "I draw pictures with coloured pencils.",
-      "level": 1,
-      "accepted_variants": [
-        "coloured pencil",
-        "colored pencils",
-        "colored pencil"
-      ]
-    },
-    {
-      "id": "u1-v-compass",
-      "review": "approved",
-      "word": "compass",
-      "ipa": "/ˈkʌmpəs/",
-      "meaning_vi": "com-pa",
-      "emoji": "📐",
-      "image": null,
-      "audio": null,
-      "example": "I need a compass for this circle.",
-      "level": 2,
-      "accepted_variants": [
-        "compasses"
-      ]
-    },
-    {
-      "id": "u1-v-computer",
-      "review": "approved",
-      "word": "computer",
-      "ipa": "/kəmˈpjuːtə(r)/",
-      "meaning_vi": "máy vi tính",
-      "emoji": "💻",
-      "image": null,
-      "audio": null,
-      "example": "We learn about computers in the computer room.",
-      "level": 1,
-      "accepted_variants": [
-        "computers"
-      ]
-    },
-    {
-      "id": "u1-v-desk",
-      "review": "approved",
-      "word": "desk",
-      "ipa": "/desk/",
-      "meaning_vi": "bàn học",
-      "emoji": "🪑",
-      "image": null,
-      "audio": null,
-      "example": "My books are on the desk.",
-      "level": 1,
-      "accepted_variants": [
-        "desks"
-      ]
-    },
-    {
-      "id": "u1-v-dictionary",
-      "review": "approved",
-      "word": "dictionary",
-      "ipa": "/ˈdɪkʃənəri/",
-      "meaning_vi": "từ điển",
-      "emoji": "📖",
-      "image": null,
-      "audio": null,
-      "example": "I look up new words in a dictionary.",
-      "level": 2,
-      "accepted_variants": [
-        "dictionaries"
-      ]
-    },
-    {
-      "id": "u1-v-english",
-      "review": "approved",
-      "word": "English",
-      "ipa": "/ˈɪŋɡlɪʃ/",
-      "meaning_vi": "môn tiếng Anh",
-      "emoji": "🇬🇧",
-      "image": null,
-      "audio": null,
-      "example": "I have English on Monday.",
-      "level": 1,
-      "accepted_variants": []
-    },
-    {
-      "id": "u1-v-exercise",
-      "review": "approved",
-      "word": "exercise",
-      "ipa": "/ˈeksəsaɪz/",
-      "meaning_vi": "bài tập",
-      "emoji": "✍️",
-      "image": null,
-      "audio": null,
-      "example": "We do an English exercise in class.",
-      "level": 1,
-      "accepted_variants": [
-        "exercises"
-      ]
-    },
-    {
-      "id": "u1-v-football",
-      "review": "approved",
-      "word": "football",
-      "ipa": "/ˈfʊtbɔːl/",
-      "meaning_vi": "bóng đá",
-      "emoji": "⚽",
-      "image": null,
-      "audio": null,
-      "example": "We play football at break time.",
-      "level": 1,
-      "accepted_variants": []
-    },
-    {
-      "id": "u1-v-globe",
-      "review": "approved",
-      "word": "globe",
-      "ipa": "/ɡləʊb/",
-      "meaning_vi": "quả địa cầu",
-      "emoji": "🌍",
-      "image": null,
-      "audio": null,
-      "example": "There is a globe in our classroom.",
-      "level": 2,
-      "accepted_variants": [
-        "globes"
-      ]
-    },
-    {
-      "id": "u1-v-glue",
-      "review": "approved",
-      "word": "glue",
-      "ipa": "/ɡluː/",
-      "meaning_vi": "keo, hồ dán",
-      "emoji": "🧴",
-      "image": null,
-      "audio": null,
-      "example": "I need glue for my art project.",
-      "level": 1,
-      "accepted_variants": []
-    },
-    {
-      "id": "u1-v-history",
-      "review": "approved",
-      "word": "History",
-      "ipa": "/ˈhɪstri/",
-      "meaning_vi": "môn lịch sử",
-      "emoji": "🏛️",
-      "image": null,
-      "audio": null,
-      "example": "History is an interesting subject.",
-      "level": 2,
-      "accepted_variants": []
-    },
-    {
-      "id": "u1-v-homework",
-      "review": "approved",
-      "word": "homework",
-      "ipa": "/ˈhəʊmwɜːk/",
-      "meaning_vi": "bài tập về nhà",
-      "emoji": "📝",
-      "image": null,
-      "audio": null,
-      "example": "I do my homework after dinner.",
-      "level": 1,
-      "accepted_variants": []
-    },
-    {
-      "id": "u1-v-judo",
-      "review": "approved",
-      "word": "judo",
-      "ipa": "/ˈdʒuːdəʊ/",
-      "meaning_vi": "môn võ Judo",
-      "emoji": "🥋",
-      "image": null,
-      "audio": null,
-      "example": "I do judo after school.",
-      "level": 2,
-      "accepted_variants": []
-    },
-    {
-      "id": "u1-v-lesson",
-      "review": "approved",
-      "word": "lesson",
-      "ipa": "/ˈlesn/",
-      "meaning_vi": "bài học, tiết học",
-      "emoji": "📚",
-      "image": null,
-      "audio": null,
-      "example": "We have four lessons today.",
-      "level": 1,
-      "accepted_variants": [
-        "lessons"
-      ]
-    },
-    {
-      "id": "u1-v-lunch-box",
-      "review": "approved",
-      "word": "lunch box",
-      "ipa": "/ˈlʌntʃ bɒks/",
-      "meaning_vi": "hộp cơm trưa",
-      "emoji": "🍱",
-      "image": null,
-      "audio": null,
-      "example": "I bring my lunch box to school.",
-      "level": 1,
-      "accepted_variants": [
-        "lunch boxes",
-        "lunchbox",
-        "lunchboxes"
-      ]
-    },
-    {
-      "id": "u1-v-map",
-      "review": "approved",
-      "word": "map",
-      "ipa": "/mæp/",
-      "meaning_vi": "bản đồ",
-      "emoji": "🗺️",
-      "image": null,
-      "audio": null,
-      "example": "There is a map on the wall.",
-      "level": 1,
-      "accepted_variants": [
-        "maps"
-      ]
-    },
-    {
-      "id": "u1-v-music",
-      "review": "approved",
-      "word": "Music",
-      "ipa": "/ˈmjuːzɪk/",
-      "meaning_vi": "môn âm nhạc",
-      "emoji": "🎵",
-      "image": null,
-      "audio": null,
-      "example": "I have Music on Friday.",
-      "level": 1,
-      "accepted_variants": []
     },
     {
       "id": "u1-v-notebook",
-      "review": "approved",
+      "review": "draft",
       "word": "notebook",
       "ipa": "/ˈnəʊtbʊk/",
-      "meaning_vi": "vở ghi chép",
+      "meaning_vi": "vở, sổ ghi chép",
       "emoji": "📓",
       "image": null,
       "audio": null,
@@ -383,197 +94,8 @@
       ]
     },
     {
-      "id": "u1-v-paper-clip",
-      "review": "approved",
-      "word": "paper clip",
-      "ipa": "/ˈpeɪpə klɪp/",
-      "meaning_vi": "kẹp giấy",
-      "emoji": "📎",
-      "image": null,
-      "audio": null,
-      "example": "Can I borrow a paper clip?",
-      "level": 2,
-      "accepted_variants": [
-        "paper clips"
-      ]
-    },
-    {
-      "id": "u1-v-pen",
-      "review": "approved",
-      "word": "pen",
-      "ipa": "/pen/",
-      "meaning_vi": "bút mực",
-      "emoji": "🖊️",
-      "image": null,
-      "audio": null,
-      "example": "I write with a blue pen.",
-      "level": 1,
-      "accepted_variants": [
-        "pens"
-      ]
-    },
-    {
-      "id": "u1-v-pencil-case",
-      "review": "approved",
-      "word": "pencil case",
-      "ipa": "/ˈpensl keɪs/",
-      "meaning_vi": "hộp bút",
-      "emoji": "👝",
-      "image": null,
-      "audio": null,
-      "example": "My pencil case is in my school bag.",
-      "level": 1,
-      "accepted_variants": [
-        "pencil cases"
-      ]
-    },
-    {
-      "id": "u1-v-pencil-sharpener",
-      "review": "approved",
-      "word": "pencil sharpener",
-      "ipa": "/ˈpensl ˌʃɑːpənə(r)/",
-      "meaning_vi": "gọt bút chì",
-      "emoji": "✏️",
-      "image": null,
-      "audio": null,
-      "example": "I have a pencil sharpener.",
-      "level": 2,
-      "accepted_variants": [
-        "pencil sharpeners"
-      ]
-    },
-    {
-      "id": "u1-v-physics",
-      "review": "approved",
-      "word": "Physics",
-      "ipa": "/ˈfɪzɪks/",
-      "meaning_vi": "môn vật lý",
-      "emoji": "⚛️",
-      "image": null,
-      "audio": null,
-      "example": "We study Physics at school.",
-      "level": 2,
-      "accepted_variants": []
-    },
-    {
-      "id": "u1-v-projector",
-      "review": "approved",
-      "word": "projector",
-      "ipa": "/prəˈdʒektə(r)/",
-      "meaning_vi": "máy chiếu",
-      "emoji": "📽️",
-      "image": null,
-      "audio": null,
-      "example": "Our classroom has a projector.",
-      "level": 2,
-      "accepted_variants": [
-        "projectors"
-      ]
-    },
-    {
-      "id": "u1-v-rubber",
-      "review": "approved",
-      "word": "rubber",
-      "ipa": "/ˈrʌbə(r)/",
-      "meaning_vi": "cục tẩy, gôm",
-      "emoji": "🧽",
-      "image": null,
-      "audio": null,
-      "example": "Can I use your rubber?",
-      "level": 1,
-      "accepted_variants": [
-        "rubbers"
-      ]
-    },
-    {
-      "id": "u1-v-ruler",
-      "review": "approved",
-      "word": "ruler",
-      "ipa": "/ˈruːlə(r)/",
-      "meaning_vi": "thước kẻ",
-      "emoji": "📏",
-      "image": null,
-      "audio": null,
-      "example": "I draw a straight line with a ruler.",
-      "level": 1,
-      "accepted_variants": [
-        "rulers"
-      ]
-    },
-    {
-      "id": "u1-v-school-bag",
-      "review": "approved",
-      "word": "school bag",
-      "ipa": "/ˈskuːl bæɡ/",
-      "meaning_vi": "cặp sách",
-      "emoji": "🎒",
-      "image": null,
-      "audio": null,
-      "example": "My school bag is blue.",
-      "level": 1,
-      "accepted_variants": [
-        "school bags",
-        "schoolbag",
-        "schoolbags"
-      ]
-    },
-    {
-      "id": "u1-v-school-lunch",
-      "review": "approved",
-      "word": "school lunch",
-      "ipa": "/ˌskuːl ˈlʌntʃ/",
-      "meaning_vi": "bữa trưa ở trường",
-      "emoji": "🍽️",
-      "image": null,
-      "audio": null,
-      "example": "We have school lunch at twelve.",
-      "level": 2,
-      "accepted_variants": []
-    },
-    {
-      "id": "u1-v-science",
-      "review": "approved",
-      "word": "Science",
-      "ipa": "/ˈsaɪəns/",
-      "meaning_vi": "môn khoa học",
-      "emoji": "🔬",
-      "image": null,
-      "audio": null,
-      "example": "Science is my favourite subject.",
-      "level": 2,
-      "accepted_variants": []
-    },
-    {
-      "id": "u1-v-scissors",
-      "review": "approved",
-      "word": "scissors",
-      "ipa": "/ˈsɪzəz/",
-      "meaning_vi": "cái kéo",
-      "emoji": "✂️",
-      "image": null,
-      "audio": null,
-      "example": "Be careful with the scissors.",
-      "level": 2,
-      "accepted_variants": []
-    },
-    {
-      "id": "u1-v-student",
-      "review": "approved",
-      "word": "student",
-      "ipa": "/ˈstjuːdnt/",
-      "meaning_vi": "học sinh",
-      "emoji": "🧑‍🎓",
-      "image": null,
-      "audio": null,
-      "example": "There are thirty students in my class.",
-      "level": 1,
-      "accepted_variants": [
-        "students"
-      ]
-    },
-    {
       "id": "u1-v-textbook",
-      "review": "approved",
+      "review": "draft",
       "word": "textbook",
       "ipa": "/ˈtekstbʊk/",
       "meaning_vi": "sách giáo khoa",
@@ -588,23 +110,214 @@
       ]
     },
     {
-      "id": "u1-v-vocabulary",
-      "review": "approved",
-      "word": "vocabulary",
-      "ipa": "/vəˈkæbjələri/",
-      "meaning_vi": "từ vựng",
-      "emoji": "🔤",
+      "id": "u1-v-pencil",
+      "review": "draft",
+      "word": "pencil",
+      "ipa": "/ˈpensl/",
+      "meaning_vi": "bút chì",
+      "emoji": "✏️",
       "image": null,
       "audio": null,
-      "example": "I learn new vocabulary every day.",
+      "example": "Can I borrow your pencil?",
+      "level": 1,
+      "accepted_variants": [
+        "pencils"
+      ]
+    },
+    {
+      "id": "u1-v-calculator",
+      "review": "draft",
+      "word": "calculator",
+      "ipa": "/ˈkælkjuleɪtə(r)/",
+      "meaning_vi": "máy tính bỏ túi",
+      "emoji": "🔢",
+      "image": "assets/img/calculator.svg",
+      "audio": null,
+      "example": "I need a calculator for maths.",
       "level": 2,
+      "accepted_variants": [
+        "calculators"
+      ]
+    },
+    {
+      "id": "u1-v-bicycle",
+      "review": "draft",
+      "word": "bicycle",
+      "ipa": "/ˈbaɪsɪkl/",
+      "meaning_vi": "xe đạp",
+      "emoji": "🚲",
+      "image": null,
+      "audio": null,
+      "example": "I go to school by bicycle.",
+      "level": 1,
+      "accepted_variants": [
+        "bicycles"
+      ]
+    },
+    {
+      "id": "u1-v-homework",
+      "review": "draft",
+      "word": "homework",
+      "ipa": "/ˈhəʊmwɜːk/",
+      "meaning_vi": "bài tập về nhà",
+      "emoji": "🏠📝",
+      "image": null,
+      "audio": null,
+      "example": "I do my homework after dinner.",
+      "level": 1,
+      "accepted_variants": [
+        "home work"
+      ]
+    },
+    {
+      "id": "u1-v-library",
+      "review": "draft",
+      "word": "library",
+      "ipa": "/ˈlaɪbrəri/",
+      "meaning_vi": "thư viện",
+      "emoji": "📚🏫",
+      "image": null,
+      "audio": null,
+      "example": "Our school has a big library.",
+      "level": 2,
+      "accepted_variants": [
+        "libraries"
+      ]
+    },
+    {
+      "id": "u1-v-classmate",
+      "review": "draft",
+      "word": "classmate",
+      "ipa": "/ˈklɑːsmeɪt/",
+      "meaning_vi": "bạn cùng lớp",
+      "emoji": "👫",
+      "image": null,
+      "audio": null,
+      "example": "My classmates are very friendly.",
+      "level": 2,
+      "accepted_variants": [
+        "classmates",
+        "class mate"
+      ]
+    },
+    {
+      "id": "u1-v-lesson",
+      "review": "draft",
+      "word": "lesson",
+      "ipa": "/ˈlesn/",
+      "meaning_vi": "bài học, tiết học",
+      "emoji": "📖",
+      "image": "assets/img/lesson.svg",
+      "audio": null,
+      "example": "We have five lessons today.",
+      "level": 1,
+      "accepted_variants": [
+        "lessons"
+      ]
+    },
+    {
+      "id": "u1-v-maths",
+      "review": "draft",
+      "word": "maths",
+      "ipa": "/mæθs/",
+      "meaning_vi": "môn toán",
+      "emoji": "➗",
+      "image": null,
+      "audio": null,
+      "example": "I have maths on Tuesday.",
+      "level": 1,
+      "accepted_variants": [
+        "math"
+      ]
+    },
+    {
+      "id": "u1-v-science",
+      "review": "draft",
+      "word": "science",
+      "ipa": "/ˈsaɪəns/",
+      "meaning_vi": "môn khoa học",
+      "emoji": "🔬",
+      "image": null,
+      "audio": null,
+      "example": "Science is my favourite subject.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u1-v-music",
+      "review": "draft",
+      "word": "music",
+      "ipa": "/ˈmjuːzɪk/",
+      "meaning_vi": "môn âm nhạc",
+      "emoji": "🎵",
+      "image": null,
+      "audio": null,
+      "example": "We sing songs in music lessons.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u1-v-history",
+      "review": "draft",
+      "word": "history",
+      "ipa": "/ˈhɪstri/",
+      "meaning_vi": "môn lịch sử",
+      "emoji": "🏛️",
+      "image": null,
+      "audio": null,
+      "example": "We learn about the past in history.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u1-v-break-time",
+      "review": "draft",
+      "word": "break time",
+      "ipa": "/ˈbreɪk taɪm/",
+      "meaning_vi": "giờ ra chơi",
+      "emoji": "🛝",
+      "image": "assets/img/break-time.svg",
+      "audio": null,
+      "example": "We play football at break time.",
+      "level": 2,
+      "accepted_variants": [
+        "breaktime"
+      ]
+    },
+    {
+      "id": "u1-v-football",
+      "review": "draft",
+      "word": "football",
+      "ipa": "/ˈfʊtbɔːl/",
+      "meaning_vi": "bóng đá",
+      "emoji": "⚽",
+      "image": null,
+      "audio": null,
+      "example": "The boys play football in the playground.",
+      "level": 1,
+      "accepted_variants": [
+        "foot ball",
+        "footballs"
+      ]
+    },
+    {
+      "id": "u1-v-excited",
+      "review": "draft",
+      "word": "excited",
+      "ipa": "/ɪkˈsaɪtɪd/",
+      "meaning_vi": "háo hức, phấn khởi",
+      "emoji": "🤩",
+      "image": null,
+      "audio": null,
+      "example": "I am excited about my new school.",
+      "level": 3,
       "accepted_variants": []
     }
   ],
   "patterns": [
     {
       "id": "u1-p-have-subject",
-      "review": "approved",
+      "review": "draft",
       "level": 1,
       "text": "I have English on Monday.",
       "meaning_vi": "Mình có môn tiếng Anh vào thứ Hai.",
@@ -613,14 +326,12 @@
       "slot_options": [
         "English",
         "maths",
-        "math",
         "science",
         "music",
         "history",
-        "Physics",
         "art"
       ],
-      "free_prompt_vi": "Nói môn học bạn có vào một ngày trong tuần.",
+      "free_prompt_vi": "Nói một câu về môn học của bạn vào một ngày trong tuần.",
       "free_required": [
         [
           "have"
@@ -632,8 +343,9 @@
           "science",
           "music",
           "history",
-          "physics",
-          "art"
+          "art",
+          "literature",
+          "geography"
         ],
         [
           "monday",
@@ -644,78 +356,11 @@
           "saturday"
         ]
       ],
-      "free_example": "I have Science on Wednesday."
-    },
-    {
-      "id": "u1-p-favourite-subject",
-      "review": "approved",
-      "level": 1,
-      "text": "My favourite subject is English.",
-      "meaning_vi": "Môn học yêu thích của mình là tiếng Anh.",
-      "audio": null,
-      "frame": "My favourite subject is ___.",
-      "slot_options": [
-        "English",
-        "maths",
-        "math",
-        "science",
-        "music",
-        "history",
-        "Physics",
-        "art"
-      ],
-      "free_prompt_vi": "Nói về môn học yêu thích của bạn.",
-      "free_required": [
-        [
-          "my favourite subject"
-        ],
-        [
-          "is"
-        ],
-        [
-          "english",
-          "maths",
-          "math",
-          "science",
-          "music",
-          "history",
-          "physics",
-          "art"
-        ]
-      ],
-      "free_example": "My favourite subject is Music."
-    },
-    {
-      "id": "u1-p-ask-favourite-subject",
-      "review": "approved",
-      "level": 1,
-      "text": "What's your favourite subject?",
-      "meaning_vi": "Môn học yêu thích của bạn là gì?",
-      "audio": null,
-      "frame": "What's your favourite ___?",
-      "slot_options": [
-        "subject",
-        "lesson"
-      ],
-      "free_prompt_vi": "Hỏi bạn về môn học yêu thích.",
-      "free_required": [
-        [
-          "what's",
-          "what is"
-        ],
-        [
-          "your favourite"
-        ],
-        [
-          "subject",
-          "lesson"
-        ]
-      ],
-      "free_example": "What's your favourite subject?"
+      "free_example": "I have music on Thursday."
     },
     {
       "id": "u1-p-wear-uniform",
-      "review": "approved",
+      "review": "draft",
       "level": 1,
       "text": "We wear our uniform every day.",
       "meaning_vi": "Chúng mình mặc đồng phục mỗi ngày.",
@@ -726,208 +371,77 @@
         "on Monday",
         "at school"
       ],
-      "free_prompt_vi": "Nói về đồng phục ở trường bạn.",
+      "free_prompt_vi": "Nói một câu về đồng phục hoặc cặp sách của bạn.",
       "free_required": [
-        [
-          "we"
-        ],
-        [
-          "wear"
-        ],
         [
           "uniform",
-          "uniforms"
+          "school bag",
+          "schoolbag",
+          "bag"
         ]
       ],
-      "free_example": "We wear our uniforms every day."
+      "free_example": "My uniform is white and blue."
     },
     {
-      "id": "u1-p-school-has",
-      "review": "approved",
+      "id": "u1-p-do-homework",
+      "review": "draft",
       "level": 2,
-      "text": "My school has a big library.",
-      "meaning_vi": "Trường mình có một thư viện lớn.",
+      "text": "I do my homework in the evening.",
+      "meaning_vi": "Mình làm bài tập về nhà vào buổi tối.",
       "audio": null,
-      "frame": "My school has a big ___.",
+      "frame": "I do my homework ___.",
       "slot_options": [
-        "library",
-        "playground",
-        "computer room",
-        "classroom"
+        "in the evening",
+        "after dinner",
+        "every day",
+        "in the afternoon"
       ],
-      "free_prompt_vi": "Giới thiệu một cơ sở vật chất ở trường.",
+      "free_prompt_vi": "Nói khi nào bạn làm bài tập về nhà.",
       "free_required": [
         [
-          "my school"
+          "do",
+          "does"
         ],
         [
-          "has"
-        ],
-        [
-          "library",
-          "playground",
-          "computer room",
-          "classroom"
+          "homework"
         ]
       ],
-      "free_example": "My school has a big playground."
-    },
-    {
-      "id": "u1-p-there-are",
-      "review": "approved",
-      "level": 2,
-      "text": "There are thirty students in my class.",
-      "meaning_vi": "Có ba mươi học sinh trong lớp mình.",
-      "audio": null,
-      "frame": "There are ___ students in my class.",
-      "slot_options": [
-        "twenty",
-        "twenty-five",
-        "twenty-seven",
-        "thirty",
-        "thirty-five"
-      ],
-      "free_prompt_vi": "Nói số học sinh trong lớp bạn.",
-      "free_required": [
-        [
-          "there are"
-        ],
-        [
-          "students"
-        ],
-        [
-          "in my class"
-        ]
-      ],
-      "free_example": "There are twenty-seven students in my class."
+      "free_example": "I usually do my homework after dinner."
     },
     {
       "id": "u1-p-what-lessons",
-      "review": "approved",
+      "review": "draft",
       "level": 2,
       "text": "What lessons do you have today?",
-      "meaning_vi": "Hôm nay bạn có những tiết học nào?",
+      "meaning_vi": "Hôm nay bạn có những môn gì?",
       "audio": null,
       "frame": "What ___ do you have today?",
       "slot_options": [
         "lessons",
         "subjects"
       ],
-      "free_prompt_vi": "Hỏi và trả lời về thời khóa biểu hôm nay.",
+      "free_prompt_vi": "Trả lời: Hôm nay bạn có những môn gì?",
       "free_required": [
         [
-          "what"
-        ],
-        [
-          "lessons",
-          "subjects"
-        ],
-        [
-          "do you have"
-        ]
-      ],
-      "free_example": "What lessons do you have today?"
-    },
-    {
-      "id": "u1-p-when-have",
-      "review": "approved",
-      "level": 2,
-      "text": "When do you have English?",
-      "meaning_vi": "Khi nào bạn có môn tiếng Anh?",
-      "audio": null,
-      "frame": "When do you have ___?",
-      "slot_options": [
-        "English",
-        "maths",
-        "science",
-        "music",
-        "history"
-      ],
-      "free_prompt_vi": "Hỏi ngày học một môn cụ thể.",
-      "free_required": [
-        [
-          "when"
-        ],
-        [
-          "do you have"
+          "have"
         ],
         [
           "english",
           "maths",
+          "math",
           "science",
           "music",
-          "history"
+          "history",
+          "art",
+          "literature",
+          "geography"
         ]
       ],
-      "free_example": "When do you have Music?"
+      "free_example": "Today I have maths, English and science."
     },
     {
-      "id": "u1-p-frequency",
-      "review": "approved",
-      "level": 2,
-      "text": "I usually do my homework after dinner.",
-      "meaning_vi": "Mình thường làm bài tập sau bữa tối.",
-      "audio": null,
-      "frame": "I ___ do my homework after dinner.",
-      "slot_options": [
-        "always",
-        "usually",
-        "often",
-        "sometimes",
-        "rarely",
-        "never"
-      ],
-      "free_prompt_vi": "Nói về tần suất bạn làm bài tập.",
-      "free_required": [
-        [
-          "i"
-        ],
-        [
-          "always",
-          "usually",
-          "often",
-          "sometimes",
-          "rarely",
-          "never"
-        ],
-        [
-          "do my homework"
-        ]
-      ],
-      "free_example": "I usually do my homework after dinner."
-    },
-    {
-      "id": "u1-p-like-activity",
-      "review": "approved",
-      "level": 2,
-      "text": "I like playing football at break time.",
-      "meaning_vi": "Mình thích chơi bóng đá vào giờ ra chơi.",
-      "audio": null,
-      "frame": "I like ___ at break time.",
-      "slot_options": [
-        "playing football",
-        "reading books",
-        "talking with friends"
-      ],
-      "free_prompt_vi": "Nói hoạt động bạn thích làm giờ ra chơi.",
-      "free_required": [
-        [
-          "i like"
-        ],
-        [
-          "playing",
-          "reading",
-          "talking"
-        ],
-        [
-          "at break time"
-        ]
-      ],
-      "free_example": "I like reading books at break time."
-    },
-    {
-      "id": "u1-p-present-continuous",
-      "review": "approved",
+      "id": "u1-p-doing-now",
+      "review": "draft",
       "level": 3,
       "text": "I'm reading a book in the library now.",
       "meaning_vi": "Bây giờ mình đang đọc sách trong thư viện.",
@@ -935,125 +449,56 @@
       "frame": "I'm ___ in the library now.",
       "slot_options": [
         "reading a book",
-        "studying English",
-        "doing my homework"
+        "doing my homework",
+        "studying English"
       ],
-      "free_prompt_vi": "Nói bạn đang làm gì lúc này.",
+      "free_prompt_vi": "Nói bạn đang làm gì ngay lúc này (dùng thì hiện tại tiếp diễn).",
       "free_required": [
         [
           "i'm",
-          "i am"
+          "i am",
+          "im"
         ],
         [
           "*ing"
         ]
       ],
-      "free_example": "I'm studying English in the library now."
+      "free_example": "I'm studying English now."
     },
     {
-      "id": "u1-p-describe-school",
-      "review": "approved",
+      "id": "u1-p-school-has",
+      "review": "draft",
       "level": 3,
-      "text": "My new school is big and beautiful.",
-      "meaning_vi": "Ngôi trường mới của mình rộng và đẹp.",
+      "text": "My school has a big library and a nice playground.",
+      "meaning_vi": "Trường mình có một thư viện lớn và một sân chơi đẹp.",
       "audio": null,
-      "frame": "My new school is ___ and ___.",
+      "frame": "My school has a big ___.",
       "slot_options": [
-        "big",
-        "small",
-        "modern",
-        "beautiful",
-        "nice",
-        "clean"
+        "library",
+        "playground",
+        "garden",
+        "computer room"
       ],
-      "free_prompt_vi": "Miêu tả ngôi trường của bạn bằng hai tính từ.",
+      "free_prompt_vi": "Tả ngôi trường của bạn bằng một câu có “has”.",
       "free_required": [
         [
-          "my new school"
+          "school"
         ],
         [
-          "is"
-        ],
-        [
-          "big",
-          "small",
-          "modern",
-          "beautiful",
-          "nice",
-          "clean"
+          "has",
+          "have"
         ]
       ],
-      "free_example": "My new school is big and modern."
-    },
-    {
-      "id": "u1-p-go-to-school",
-      "review": "approved",
-      "level": 2,
-      "text": "I go to school by bicycle.",
-      "meaning_vi": "Mình đi học bằng xe đạp.",
-      "audio": null,
-      "frame": "I go to school by ___.",
-      "slot_options": [
-        "bicycle",
-        "bus",
-        "car"
-      ],
-      "free_prompt_vi": "Nói phương tiện bạn dùng để đến trường.",
-      "free_required": [
-        [
-          "i go to school"
-        ],
-        [
-          "by"
-        ],
-        [
-          "bicycle",
-          "bus",
-          "car"
-        ]
-      ],
-      "free_example": "I go to school by bicycle."
-    },
-    {
-      "id": "u1-p-be-interested",
-      "review": "approved",
-      "level": 3,
-      "text": "I am interested in Science.",
-      "meaning_vi": "Mình hứng thú với môn Khoa học.",
-      "audio": null,
-      "frame": "I am interested in ___.",
-      "slot_options": [
-        "Science",
-        "English",
-        "Music",
-        "History",
-        "reading",
-        "football"
-      ],
-      "free_prompt_vi": "Nói về điều bạn hứng thú.",
-      "free_required": [
-        [
-          "i am interested in"
-        ],
-        [
-          "science",
-          "english",
-          "music",
-          "history",
-          "reading",
-          "football"
-        ]
-      ],
-      "free_example": "I am interested in learning English."
+      "free_example": "My new school has a big garden."
     }
   ],
   "dialogues": [
     {
-      "id": "u1-d-meet-new-friend",
-      "review": "approved",
+      "id": "u1-d-first-day",
+      "review": "draft",
       "level": 1,
-      "title": "Meeting a new friend",
-      "title_vi": "Làm quen bạn mới",
+      "title": "First day at school",
+      "title_vi": "Ngày đầu đến trường",
       "roles": [
         "Nam",
         "Mai"
@@ -1061,42 +506,42 @@
       "turns": [
         {
           "speaker": "Nam",
-          "text": "Hi! I'm Nam. What's your name?",
-          "hint_vi": "Chào bạn! Mình là Nam. Bạn tên gì?",
+          "text": "Hi, Mai. Are you excited about our new school?",
+          "hint_vi": "Chào Mai. Bạn có háo hức về trường mới không?",
           "audio": null
         },
         {
           "speaker": "Mai",
-          "text": "Hello, I'm Mai. Nice to meet you.",
-          "hint_vi": "Xin chào, mình là Mai. Rất vui được gặp bạn.",
+          "text": "Yes, I am! I love my new uniform.",
+          "hint_vi": "Có chứ! Mình thích bộ đồng phục mới.",
           "audio": null
         },
         {
           "speaker": "Nam",
-          "text": "Nice to meet you, too. Are you new here?",
-          "hint_vi": "Mình cũng rất vui được gặp bạn. Bạn mới đến đây à?",
+          "text": "Me too. What lessons do we have today?",
+          "hint_vi": "Mình cũng vậy. Hôm nay chúng ta học môn gì?",
           "audio": null
         },
         {
           "speaker": "Mai",
-          "text": "Yes. I'm in class 6A.",
-          "hint_vi": "Đúng vậy. Mình học lớp 6A.",
+          "text": "We have maths, English and music.",
+          "hint_vi": "Chúng ta có toán, tiếng Anh và âm nhạc.",
           "audio": null
         },
         {
           "speaker": "Nam",
-          "text": "Great! Welcome to our school.",
-          "hint_vi": "Tuyệt! Chào mừng bạn đến trường chúng mình.",
+          "text": "Great! Let's go to the classroom.",
+          "hint_vi": "Tuyệt! Mình vào lớp thôi.",
           "audio": null
         }
       ]
     },
     {
-      "id": "u1-d-favourite-subject",
-      "review": "approved",
+      "id": "u1-d-library",
+      "review": "draft",
       "level": 2,
-      "title": "Favourite subjects",
-      "title_vi": "Môn học yêu thích",
+      "title": "In the library",
+      "title_vi": "Trong thư viện",
       "roles": [
         "Lan",
         "Tom"
@@ -1104,118 +549,32 @@
       "turns": [
         {
           "speaker": "Lan",
-          "text": "What's your favourite subject, Tom?",
-          "hint_vi": "Tom, môn học yêu thích của bạn là gì?",
+          "text": "Hello. Is this your notebook?",
+          "hint_vi": "Chào bạn. Đây có phải vở của bạn không?",
           "audio": null
         },
         {
           "speaker": "Tom",
-          "text": "I like Science. What about you?",
-          "hint_vi": "Mình thích môn Khoa học. Còn bạn thì sao?",
+          "text": "Yes, it is. Thank you!",
+          "hint_vi": "Đúng rồi. Cảm ơn bạn!",
           "audio": null
         },
         {
           "speaker": "Lan",
-          "text": "My favourite subject is English.",
-          "hint_vi": "Môn học yêu thích của mình là tiếng Anh.",
+          "text": "Do you often come to the library?",
+          "hint_vi": "Bạn có hay đến thư viện không?",
           "audio": null
         },
         {
           "speaker": "Tom",
-          "text": "When do you have English?",
-          "hint_vi": "Bạn có môn tiếng Anh khi nào?",
+          "text": "Yes. I usually read books here at break time.",
+          "hint_vi": "Có. Mình thường đọc sách ở đây vào giờ ra chơi.",
           "audio": null
         },
         {
           "speaker": "Lan",
-          "text": "I have it on Monday and Friday.",
-          "hint_vi": "Mình học môn đó vào thứ Hai và thứ Sáu.",
-          "audio": null
-        }
-      ]
-    },
-    {
-      "id": "u1-d-at-break",
-      "review": "approved",
-      "level": 2,
-      "title": "At break time",
-      "title_vi": "Giờ ra chơi",
-      "roles": [
-        "Mai",
-        "Phong"
-      ],
-      "turns": [
-        {
-          "speaker": "Mai",
-          "text": "What do you usually do at break time?",
-          "hint_vi": "Bạn thường làm gì vào giờ ra chơi?",
-          "audio": null
-        },
-        {
-          "speaker": "Phong",
-          "text": "I often play football with my classmates.",
-          "hint_vi": "Mình thường chơi bóng đá với các bạn cùng lớp.",
-          "audio": null
-        },
-        {
-          "speaker": "Mai",
-          "text": "I sometimes read books in the library.",
-          "hint_vi": "Thỉnh thoảng mình đọc sách trong thư viện.",
-          "audio": null
-        },
-        {
-          "speaker": "Phong",
-          "text": "That sounds nice. Do you like our library?",
-          "hint_vi": "Nghe hay đấy. Bạn có thích thư viện trường mình không?",
-          "audio": null
-        },
-        {
-          "speaker": "Mai",
-          "text": "Yes. It's big and quiet.",
-          "hint_vi": "Có. Thư viện rộng và yên tĩnh.",
-          "audio": null
-        }
-      ]
-    },
-    {
-      "id": "u1-d-school-things",
-      "review": "approved",
-      "level": 1,
-      "title": "Borrowing school things",
-      "title_vi": "Mượn đồ dùng học tập",
-      "roles": [
-        "An",
-        "Binh"
-      ],
-      "turns": [
-        {
-          "speaker": "An",
-          "text": "Can I borrow your ruler, please?",
-          "hint_vi": "Mình có thể mượn thước kẻ của bạn được không?",
-          "audio": null
-        },
-        {
-          "speaker": "Binh",
-          "text": "Sure. Here you are.",
-          "hint_vi": "Được chứ. Của bạn đây.",
-          "audio": null
-        },
-        {
-          "speaker": "An",
-          "text": "Thank you. Do you have an extra pencil, too?",
-          "hint_vi": "Cảm ơn bạn. Bạn có bút chì dự phòng không?",
-          "audio": null
-        },
-        {
-          "speaker": "Binh",
-          "text": "Yes, I do. Here you are.",
-          "hint_vi": "Có. Của bạn đây.",
-          "audio": null
-        },
-        {
-          "speaker": "An",
-          "text": "Thanks a lot!",
-          "hint_vi": "Cảm ơn bạn nhiều!",
+          "text": "Me too. See you later!",
+          "hint_vi": "Mình cũng thế. Hẹn gặp lại nhé!",
           "audio": null
         }
       ]
@@ -1223,38 +582,30 @@
   ],
   "roleplays": [
     {
-      "id": "u1-r-new-student",
-      "review": "approved",
+      "id": "u1-r-new-classmate",
+      "review": "draft",
       "level": 2,
-      "title": "Welcome a new student",
-      "situation_vi": "Bạn là học sinh trong lớp. Alex mới chuyển đến. Hãy chào hỏi và giới thiệu trường, lớp, môn học yêu thích.",
+      "title": "Talk to a new classmate",
+      "situation_vi": "Alex là học sinh mới chuyển đến lớp bạn. Hãy trò chuyện với Alex về trường mới.",
       "bot_name": "Alex",
       "ai_role": "Alex, a new student in class 6A",
-      "goal": "Greet a new classmate and talk about school and favourite subjects.",
+      "goal": "Talk about school, subjects and school things.",
       "mode": "scripted",
       "turns": [
         {
-          "bot": "Hi! I'm Alex. What's your name?",
-          "expect_any": [
-            "name",
-            "hi",
-            "hello"
-          ],
-          "hint": "Hi, I'm Minh. Nice to meet you."
-        },
-        {
-          "bot": "Nice to meet you! Do you like our school?",
+          "bot": "Hi! I'm Alex. I'm new in this class. Do you like our school?",
           "expect_any": [
             "yes",
             "like",
             "love",
+            "no",
             "great",
             "nice"
           ],
-          "hint": "Yes, I do. It's big and beautiful."
+          "hint": "Yes, I do. I love our school."
         },
         {
-          "bot": "What's your favourite subject?",
+          "bot": "Cool! What's your favourite subject?",
           "expect_any": [
             "english",
             "maths",
@@ -1262,7 +613,10 @@
             "science",
             "music",
             "history",
-            "art"
+            "art",
+            "literature",
+            "geography",
+            "pe"
           ],
           "hint": "My favourite subject is English."
         },
@@ -1273,231 +627,86 @@
             "tuesday",
             "wednesday",
             "thursday",
-            "friday"
+            "friday",
+            "saturday",
+            "every day"
           ],
-          "hint": "I have it on Monday and Friday."
-        }
-      ],
-      "closing": "It was nice talking to you. See you in class!"
-    },
-    {
-      "id": "u1-r-school-tour",
-      "review": "approved",
-      "level": 2,
-      "title": "Show a friend around school",
-      "situation_vi": "Bạn dẫn một người bạn mới đi tham quan trường. Hãy giới thiệu thư viện, sân chơi và phòng học.",
-      "bot_name": "Sam",
-      "ai_role": "Sam, a new student",
-      "goal": "Describe places and facilities at school.",
-      "mode": "scripted",
-      "turns": [
-        {
-          "bot": "Can you show me around the school?",
-          "expect_any": [
-            "yes",
-            "sure",
-            "library",
-            "playground",
-            "classroom"
-          ],
-          "hint": "Sure! This is our school."
+          "hint": "I have it on Monday and Thursday."
         },
         {
-          "bot": "What is that room?",
-          "expect_any": [
-            "library",
-            "computer room",
-            "classroom",
-            "music room"
-          ],
-          "hint": "It's our library."
-        },
-        {
-          "bot": "Is there a playground?",
-          "expect_any": [
-            "yes",
-            "there",
-            "playground",
-            "big"
-          ],
-          "hint": "Yes, there is. It's big."
-        },
-        {
-          "bot": "What do you like best?",
-          "expect_any": [
-            "like",
-            "favourite",
-            "library",
-            "playground"
-          ],
-          "hint": "I like the library best."
-        }
-      ],
-      "closing": "Thank you for showing me around!"
-    },
-    {
-      "id": "u1-r-buy-school-things",
-      "review": "approved",
-      "level": 2,
-      "title": "Buy school supplies",
-      "situation_vi": "Bạn đến cửa hàng mua đồ dùng học tập. Máy đóng vai nhân viên bán hàng.",
-      "bot_name": "Shop assistant",
-      "ai_role": "A shop assistant",
-      "goal": "Ask for school supplies and respond politely.",
-      "mode": "scripted",
-      "turns": [
-        {
-          "bot": "Good morning. What do you need?",
+          "bot": "What do you need for that lesson?",
           "expect_any": [
             "notebook",
             "textbook",
             "pencil",
-            "pen",
-            "ruler",
-            "school bag"
-          ],
-          "hint": "I need two notebooks and a pencil, please."
-        },
-        {
-          "bot": "Anything else?",
-          "expect_any": [
             "calculator",
-            "rubber",
-            "ruler",
-            "no",
-            "yes"
+            "book",
+            "pen",
+            "ruler"
           ],
-          "hint": "Yes, I need a ruler, too."
-        },
-        {
-          "bot": "Here you are. Is that all?",
-          "expect_any": [
-            "thank",
-            "yes",
-            "that's all",
-            "no"
-          ],
-          "hint": "That's all, thank you."
-        },
-        {
-          "bot": "Have a nice day!",
-          "expect_any": [
-            "thank",
-            "you",
-            "goodbye"
-          ],
-          "hint": "Thank you. Goodbye!"
+          "hint": "I need my notebook and my textbook."
         }
       ],
-      "closing": "Have a great school year!"
+      "closing": "Thanks! See you at break time."
     },
     {
-      "id": "u1-r-talk-routine",
-      "review": "approved",
+      "id": "u1-r-school-shop",
+      "review": "draft",
       "level": 3,
-      "title": "Talk about your school routine",
-      "situation_vi": "Bạn và Alex nói về thói quen học tập và hoạt động sau giờ học.",
-      "bot_name": "Alex",
-      "ai_role": "Alex, your classmate",
-      "goal": "Ask and answer about daily routines and frequency.",
+      "title": "Buying school things",
+      "situation_vi": "Bạn vào cửa hàng mua đồ dùng học tập cho năm học mới. Máy đóng vai người bán hàng.",
+      "bot_name": "Shop assistant",
+      "ai_role": "a shop assistant",
+      "goal": "Ask for and buy school things.",
       "mode": "scripted",
       "turns": [
         {
-          "bot": "What time do you usually go to school?",
+          "bot": "Good morning! What do you need for school?",
           "expect_any": [
-            "seven",
-            "seven thirty",
-            "eight",
-            "morning"
+            "notebook",
+            "textbook",
+            "pencil",
+            "calculator",
+            "school bag",
+            "bag",
+            "pen",
+            "ruler",
+            "uniform"
           ],
-          "hint": "I usually go to school at seven."
+          "hint": "I need some notebooks and a pencil, please."
         },
         {
-          "bot": "What do you do after school?",
+          "bot": "Here you are. Anything else?",
           "expect_any": [
-            "homework",
-            "play football",
-            "read",
-            "judo"
+            "yes",
+            "no",
+            "calculator",
+            "bag",
+            "pencil",
+            "notebook",
+            "that's all",
+            "thank"
           ],
-          "hint": "I usually do my homework."
+          "hint": "Yes, I need a calculator for maths."
         },
         {
-          "bot": "How often do you read books?",
+          "bot": "Do you need a new school bag too?",
           "expect_any": [
-            "always",
-            "usually",
-            "often",
-            "sometimes",
-            "rarely",
-            "never"
+            "yes",
+            "no",
+            "thank",
+            "please"
           ],
-          "hint": "I often read books."
-        },
-        {
-          "bot": "What do you do at break time?",
-          "expect_any": [
-            "play",
-            "read",
-            "talk",
-            "friends",
-            "classmates"
-          ],
-          "hint": "I sometimes play football with my friends."
+          "hint": "No, thank you. I have a new school bag."
         }
       ],
-      "closing": "See you tomorrow at school!"
+      "closing": "Great. Have a nice school year!"
     }
   ],
   "picture_tasks": [
     {
-      "id": "u1-pic-classroom",
-      "review": "approved",
-      "title": "My classroom",
-      "title_vi": "Lớp học của tôi",
-      "scene_emoji": [
-        "🏫",
-        "🪑",
-        "🕒",
-        "📚",
-        "💻",
-        "🌍"
-      ],
-      "image": null,
-      "keywords": [
-        "classroom",
-        "desk",
-        "clock",
-        "bookcase",
-        "computer",
-        "globe",
-        "students",
-        "teacher"
-      ],
-      "prompts": {
-        "1": {
-          "prompt_vi": "Gọi tên các đồ vật và người em nhìn thấy trong lớp học.",
-          "model_answer": "classroom, desks, clock, books, computer",
-          "min_keywords": 2,
-          "min_words": 2
-        },
-        "2": {
-          "prompt_vi": "Nói 1–2 câu về lớp học của em.",
-          "model_answer": "There are desks, books and a computer in my classroom.",
-          "min_keywords": 3,
-          "min_words": 7
-        },
-        "3": {
-          "prompt_vi": "Miêu tả lớp học của em bằng ít nhất 3 câu.",
-          "model_answer": "My classroom is big and bright. There are thirty desks and a big bookcase. There is a computer and a clock, too.",
-          "min_keywords": 4,
-          "min_words": 18
-        }
-      }
-    },
-    {
       "id": "u1-pic-school-bag",
-      "review": "approved",
+      "review": "draft",
       "title": "Inside my school bag",
       "title_vi": "Trong cặp sách",
       "scene_emoji": [
@@ -1505,45 +714,42 @@
         "📓",
         "📘",
         "✏️",
-        "🖊️",
-        "🧮",
-        "📏"
+        "assets/img/calculator.svg"
       ],
       "image": null,
       "keywords": [
         "school bag",
+        "bag",
         "notebook",
         "textbook",
+        "book",
         "pencil",
-        "pen",
-        "calculator",
-        "ruler",
-        "pencil case"
+        "calculator"
       ],
       "prompts": {
         "1": {
-          "prompt_vi": "Gọi tên các đồ dùng học tập trong cặp.",
-          "model_answer": "school bag, notebook, textbook, pencil, pen",
+          "prompt_vi": "Gọi tên các đồ vật bạn thấy trong tranh.",
+          "model_answer": "school bag, notebook, textbook, pencil, calculator",
           "min_keywords": 2,
           "min_words": 2
         },
         "2": {
-          "prompt_vi": "Nói 1–2 câu về những thứ có trong cặp.",
-          "model_answer": "There is a notebook, a textbook and a pencil in my school bag.",
-          "min_keywords": 3,
-          "min_words": 7
+          "prompt_vi": "Nói 1–2 câu: Trong cặp có gì?",
+          "model_answer": "There is a notebook and a pencil in my school bag.",
+          "min_keywords": 2,
+          "min_words": 6
         },
         "3": {
-          "prompt_vi": "Tả cặp sách của em bằng ít nhất 3 câu.",
-          "model_answer": "This is my school bag. I have two notebooks, a textbook and a pencil case. I also have a ruler and a calculator.",
-          "min_keywords": 4,
-          "min_words": 18
+          "prompt_vi": "Tả cặp sách của bạn bằng 3 câu trở lên.",
+          "model_answer": "This is my school bag. There are two notebooks and a textbook in it. I also have a pencil and a calculator for maths.",
+          "min_keywords": 3,
+          "min_words": 15
         }
       }
     },
     {
       "id": "u1-pic-break-time",
-      "review": "approved",
+      "review": "draft",
       "title": "At break time",
       "title_vi": "Giờ ra chơi",
       "scene_emoji": [
@@ -1551,86 +757,40 @@
         "⚽",
         "📚",
         "🧑‍🤝‍🧑",
-        "😊"
+        "🤩"
       ],
       "image": null,
       "keywords": [
         "break time",
+        "break",
         "football",
+        "play",
         "library",
         "read",
         "book",
         "friends",
         "classmates",
-        "play",
-        "talk"
+        "happy",
+        "excited"
       ],
       "prompts": {
         "1": {
-          "prompt_vi": "Gọi tên hoạt động em nhìn thấy.",
+          "prompt_vi": "Gọi tên những gì bạn thấy trong tranh.",
           "model_answer": "football, library, books, friends",
           "min_keywords": 2,
           "min_words": 2
         },
         "2": {
-          "prompt_vi": "Nói 1–2 câu về hoạt động giờ ra chơi.",
-          "model_answer": "At break time, I play football with my friends.",
-          "min_keywords": 3,
-          "min_words": 7
-        },
-        "3": {
-          "prompt_vi": "Kể về những việc em thường làm giờ ra chơi.",
-          "model_answer": "At break time, I usually talk with my classmates. Sometimes I play football. I also like reading books in the library.",
-          "min_keywords": 4,
-          "min_words": 18
-        }
-      }
-    },
-    {
-      "id": "u1-pic-school-subjects",
-      "review": "approved",
-      "title": "My school subjects",
-      "title_vi": "Các môn học ở trường",
-      "scene_emoji": [
-        "📚",
-        "➗",
-        "🔬",
-        "🎵",
-        "🏛️",
-        "🎨",
-        "⚽"
-      ],
-      "image": null,
-      "keywords": [
-        "english",
-        "maths",
-        "math",
-        "science",
-        "music",
-        "history",
-        "physics",
-        "art",
-        "subject",
-        "lesson"
-      ],
-      "prompts": {
-        "1": {
-          "prompt_vi": "Gọi tên các môn học trong tranh.",
-          "model_answer": "English, maths, Science, Music, History",
+          "prompt_vi": "Nói 1–2 câu: Các bạn làm gì giờ ra chơi?",
+          "model_answer": "At break time, we play football with our friends.",
           "min_keywords": 2,
-          "min_words": 2
-        },
-        "2": {
-          "prompt_vi": "Nói 1–2 câu về môn học em thích.",
-          "model_answer": "My favourite subject is Science. I have it on Tuesday.",
-          "min_keywords": 3,
-          "min_words": 7
+          "min_words": 6
         },
         "3": {
-          "prompt_vi": "Nói về các môn học yêu thích và thời khóa biểu của em.",
-          "model_answer": "I like English and Science. My favourite subject is Science because it is interesting. I have Science on Tuesday and Thursday.",
-          "min_keywords": 4,
-          "min_words": 18
+          "prompt_vi": "Kể bạn thường làm gì giờ ra chơi, 3 câu trở lên.",
+          "model_answer": "At break time I usually play football with my classmates. Sometimes I go to the library and read books. I am always happy at break time.",
+          "min_keywords": 3,
+          "min_words": 15
         }
       }
     }
