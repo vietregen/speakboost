@@ -1,0 +1,17 @@
+.screen.wide { max-width: 980px; }
+.proto { background: var(--warn-soft); border-radius: 12px; padding: 10px 14px; font-size: 15px; }
+.summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.summary .card { margin: 0; }
+.summary b { font-size: 24px; display: block; }
+.review-item { display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; align-items: start; }
+.review-item h3 { margin: 0; font-size: 18px; }
+.review-item dl { display: grid; grid-template-columns: max-content 1fr; gap: 2px 12px; margin: 6px 0 0; font-size: 15px; }
+.review-item dt { color: var(--muted); }
+.review-item dd { margin: 0; }
+.review-item select { font: inherit; padding: 8px; border-radius: 10px; min-height: 44px; }
+.status-approved { border-left: 6px solid var(--ok); }
+.status-draft { border-left: 6px solid #ffd84d; }
+.status-needs_fix { border-left: 6px solid var(--miss); }
+.section-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.errors li { color: var(--miss); }
+@media (max-width: 560px) { .review-item { grid-template-columns: 1fr; } }

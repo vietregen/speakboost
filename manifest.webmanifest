@@ -1,0 +1,10 @@
+{
+  "name": "SpeakBoost",
+  "short_name": "SpeakBoost",
+  "description": "Luyện nói tiếng Anh lớp 6",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#f6f8fc",
+  "theme_color": "#2f6fde",
+  "lang": "vi"
+}
