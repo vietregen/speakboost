@@ -70,6 +70,16 @@ export function visibleItems(unit, section, { preview = false } = {}) {
   return (unit[section] || []).filter((item) => preview || item.review === 'approved');
 }
 
+// Nội dung giáo viên vừa nhập từ Excel trên máy này, chưa đưa lên web. Chỉ dùng ở chế độ xem trước.
+const IMPORT_KEY = 'sb.importedUnit';
+export function getImported() {
+  try { return JSON.parse(localStorage.getItem(IMPORT_KEY) || 'null'); } catch (_) { return null; }
+}
+export function setImported(unit) {
+  try { localStorage.setItem(IMPORT_KEY, JSON.stringify(unit)); return true; } catch (_) { return false; }
+}
+export function clearImported() { try { localStorage.removeItem(IMPORT_KEY); } catch (_) { /* bỏ qua */ } }
+
 export function isPreview() {
   const q = new URLSearchParams(location.search);
   if (q.get('preview') === '1') { try { sessionStorage.setItem('sb.preview', '1'); } catch (_) {} return true; }

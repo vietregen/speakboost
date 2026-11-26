@@ -23,9 +23,22 @@ Mọi mục trong `data/units/unit-01.json` đang ở trạng thái `"review": "
 
 Trạng thái duyệt chọn trên trang giáo viên chỉ lưu trên trình duyệt đó cho tới khi thầy cô tải tệp JSON về và thay vào.
 
-## Sửa hoặc thêm nội dung
+## Nhập nội dung từ Excel (khuyên dùng)
 
-Chỉ cần sửa tệp `data/units/unit-01.json` (bằng Notepad, VS Code…), không phải sửa mã nguồn.
+1. Mở trang giáo viên, bấm **⬇ Tải Excel mẫu**. Tệp có sẵn nội dung đang xem để làm ví dụ, và trang tính **HuongDan** giải thích từng cột.
+2. Sửa hoặc điền thêm trong Excel. Mỗi trang tính là một phần: ThongTin, MucDo, TuVung, MauCau, HoiThoai, DongVai, Tranh.
+   Muốn soạn Unit mới thì đổi số Unit ở trang ThongTin.
+3. Bấm **⬆ Tải lên tệp Excel đã điền**. Ứng dụng báo lỗi theo trang tính và số dòng (ví dụ “TuVung dòng 4: mức phải là 1, 2 hoặc 3”).
+4. Bấm **👀 Xem trước** để xem như học sinh. Nội dung nhập chỉ nằm trên máy của thầy cô, học sinh chưa thấy.
+5. Hết lỗi thì bấm **⬇ Tải tệp JSON đã duyệt** và tải tệp đó lên thư mục `data/units` trên GitHub.
+   Nếu là Unit mới, thêm tên tệp vào `data/units/index.json`.
+
+Trạng thái ở cột “Trạng thái” trong Excel thay thế các trạng thái duyệt đã chọn trước đó trên máy này.
+Bấm **Bỏ nội dung nhập** để quay về bản đang có trên web.
+
+## Sửa trực tiếp tệp JSON
+
+Cũng có thể sửa tệp `data/units/unit-01.json` (bằng Notepad, VS Code…), không phải sửa mã nguồn.
 Trang giáo viên tự kiểm tra cấu trúc và báo lỗi bằng tiếng Việt (thiếu trường, trùng id…).
 
 Thêm một từ vựng: chép một khối trong `"vocabulary"`, đổi `id` (không trùng), sửa các trường:

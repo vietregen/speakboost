@@ -14,4 +14,7 @@
 .status-needs_fix { border-left: 6px solid var(--miss); }
 .section-head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .errors li { color: var(--miss); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+label.btn { cursor: pointer; }
+input.sr-only:focus-visible + label.btn { outline: 3px solid var(--brand); outline-offset: 2px; }
 @media (max-width: 560px) { .review-item { grid-template-columns: 1fr; } }

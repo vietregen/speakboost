@@ -3,9 +3,60 @@ import * as C from './content.js';
 import * as S from './speech.js';
 import * as P from './progress.js';
 import { h } from './ui.js';
+import * as X from './excel.js';
 
 const root = document.getElementById('app');
-let unit, original, file;
+let unit, original, file, webOriginal, webFile;
+let fromExcel = false;
+let importErrors = [];
+let excelMsg = '';
+
+const unitFile = (n) => `unit-${String(n).padStart(2, '0')}.json`;
+
+async function onExcelChosen(e) {
+  const f = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (!f) return;
+  excelMsg = `Đang đọc ${f.name}…`; render();
+  try {
+    const wb = await X.workbookFromFile(f);
+    const { unit: u, errors } = await X.workbookToUnit(wb, webOriginal);
+    if (!u.meta.unit) { importErrors = errors; excelMsg = 'Chưa nhập được: thiếu số Unit ở trang ThongTin.'; render(); return; }
+    if (!C.setImported(u)) { excelMsg = 'Trình duyệt không cho lưu tạm nội dung. Thử tắt chế độ ẩn danh.'; render(); return; }
+    C.setReviewOverlay(u.meta.unit, {});
+    original = u; file = unitFile(u.meta.unit); fromExcel = true; importErrors = errors;
+    const n = C.SECTIONS.reduce((s, k) => s + (u[k] || []).length, 0);
+    excelMsg = `Đã đọc ${f.name}: ${n} mục. ${errors.length ? `Có ${errors.length} lỗi cần sửa trong Excel (xem bên dưới).` : 'Không có lỗi.'}`;
+  } catch (err) {
+    excelMsg = `Chưa đọc được tệp: ${err.message}`;
+  }
+  render();
+}
+
+function dropImported() {
+  C.clearImported();
+  original = webOriginal; file = webFile; fromExcel = false; importErrors = []; excelMsg = 'Đã bỏ nội dung nhập từ Excel, quay về bản trên web.';
+  render();
+}
+
+function excelSection() {
+  const input = h('input', { type: 'file', id: 'excel-file', accept: '.xlsx,.xls', class: 'sr-only', onchange: onExcelChosen });
+  return h('section', { class: 'card' },
+    h('h2', {}, 'Nhập nội dung từ Excel'),
+    h('p', {}, '1. Tải tệp Excel mẫu (có sẵn nội dung đang xem để làm ví dụ). 2. Sửa hoặc điền thêm, mỗi trang tính là một phần của bài; đọc trang “HuongDan” trong tệp. 3. Tải tệp lên đây để kiểm tra và xem trước. 4. Không có lỗi thì tải tệp JSON và đưa lên web.'),
+    h('div', { class: 'row' },
+      h('button', { class: 'btn btn-soft', onclick: async () => {
+        try { await X.downloadTemplate(original, `speakboost-unit-${String(original.meta.unit).padStart(2, '0')}.xlsx`); }
+        catch (err) { excelMsg = err.message; render(); }
+      } }, '⬇ Tải Excel mẫu'),
+      input,
+      h('label', { for: 'excel-file', class: 'btn btn-main' }, '⬆ Tải lên tệp Excel đã điền'),
+      fromExcel ? h('button', { class: 'btn btn-soft', onclick: dropImported }, 'Bỏ nội dung nhập') : null),
+    excelMsg ? h('p', { class: 'muted', 'aria-live': 'polite' }, excelMsg) : null,
+    fromExcel ? h('p', { class: 'proto' }, h('b', {}, 'Đang dùng nội dung nhập từ Excel trên máy này. '),
+      `Học sinh chưa thấy nội dung này. Khi không còn lỗi, bấm “Tải tệp JSON đã duyệt” để có tệp ${file}, rồi tải tệp đó lên thư mục data/units trên GitHub.`,
+      webFile && file !== webFile ? ` Đây là Unit mới: cần thêm tên tệp ${file} vào data/units/index.json.` : '') : null);
+}
 
 const STATUS = { draft: 'Chờ duyệt', approved: 'Đã duyệt', needs_fix: 'Cần sửa' };
 
@@ -58,7 +109,7 @@ function exportJson() {
 
 function render() {
   unit = C.applyOverlay(JSON.parse(JSON.stringify(original)));
-  const errors = C.validate(unit);
+  const errors = [...importErrors, ...C.validate(unit)];
   const counts = { draft: 0, approved: 0, needs_fix: 0 };
   for (const s of C.SECTIONS) for (const x of unit[s] || []) counts[x.review]++;
   const total = counts.draft + counts.approved + counts.needs_fix;
@@ -89,6 +140,7 @@ function render() {
       'trang này chưa có đăng nhập và trạng thái duyệt chỉ lưu trên máy này. Để học sinh ở mọi máy thấy nội dung, thầy cô bấm “Tải tệp JSON đã duyệt” rồi thay tệp ',
       h('code', {}, `data/units/${file}`), '. Phân quyền thật làm ở giai đoạn 2.'),
     h('p', { class: 'muted' }, unit.meta.note || ''),
+    excelSection(),
     errors.length
       ? h('div', { class: 'card warn' }, h('h2', {}, `Dữ liệu có ${errors.length} lỗi`), h('ul', { class: 'errors' }, ...errors.map((e) => h('li', {}, e))))
       : h('p', {}, '✅ Cấu trúc dữ liệu hợp lệ.'),
@@ -99,7 +151,7 @@ function render() {
     h('div', { class: 'row' },
       h('a', { class: 'btn btn-soft', href: 'index.html?preview=1', target: '_blank' }, '👀 Xem trước (có bản nháp)'),
       h('a', { class: 'btn btn-soft', href: 'index.html?preview=0', target: '_blank' }, '🧒 Xem như học sinh'),
-      h('button', { class: 'btn btn-main', onclick: exportJson }, '⬇ Tải tệp JSON đã duyệt'),
+      h('button', { class: 'btn btn-main', onclick: exportJson, disabled: errors.length > 0, title: errors.length ? 'Sửa hết lỗi trước khi tải' : null }, '⬇ Tải tệp JSON đã duyệt'),
       h('button', { class: 'btn btn-soft', onclick: () => { if (confirm('Xóa mọi trạng thái duyệt đã chọn trên máy này?')) { C.setReviewOverlay(unit.meta.unit, {}); render(); } } }, 'Đặt lại trạng thái duyệt')),
     ...sections,
     h('section', {},
@@ -114,8 +166,14 @@ function render() {
 async function start() {
   try {
     const index = await C.loadIndex();
-    file = index.units.find((u) => u.file).file;
-    original = await C.loadUnit(file);
+    webFile = index.units.find((u) => u.file).file;
+    webOriginal = await C.loadUnit(webFile);
+    const imported = C.getImported();
+    if (imported && imported.meta && imported.meta.unit) {
+      original = imported; file = unitFile(imported.meta.unit); fromExcel = true;
+    } else {
+      original = webOriginal; file = webFile;
+    }
     render();
   } catch (err) {
     root.replaceChildren(h('div', { class: 'screen' }, h('div', { class: 'card warn' }, h('h2', {}, 'Không nạp được dữ liệu'), h('p', {}, err.message))));

@@ -8,6 +8,7 @@ import { h, speakPanel, listenButtons, sentenceOutcome, heardLine, starsText, di
 const root = document.getElementById('app');
 let unit = null;
 let index = null;
+let fromExcel = false;
 const preview = C.isPreview();
 
 const ACTIVITIES = [
@@ -26,7 +27,8 @@ const byLevel = (list) => list.filter((x) => (x.level || 1) <= level());
 
 function shell(title, ...content) {
   return h('div', { class: 'screen' },
-    preview ? h('div', { class: 'preview-banner' }, 'CHẾ ĐỘ XEM TRƯỚC CỦA GIÁO VIÊN · có cả nội dung chưa duyệt') : null,
+    preview ? h('div', { class: 'preview-banner' }, 'CHẾ ĐỘ XEM TRƯỚC CỦA GIÁO VIÊN · có cả nội dung chưa duyệt',
+      fromExcel ? ' · nội dung nhập từ Excel trên máy này, chưa đưa lên web' : '') : null,
     h('header', { class: 'topbar' },
       title ? h('a', { class: 'back', href: '#/' , 'aria-label': 'Về trang chính' }, '‹') : null,
       h('div', { class: 'topbar-title' }, title || 'SpeakBoost'),
@@ -371,7 +373,9 @@ async function start() {
   try {
     index = await C.loadIndex();
     const entry = index.units.find((u) => u.file);
-    unit = C.applyOverlay(await C.loadUnit(entry.file));
+    const imported = preview ? C.getImported() : null;
+    unit = C.applyOverlay(imported || await C.loadUnit(entry.file));
+    fromExcel = Boolean(imported);
     const errors = C.validate(unit);
     if (errors.length) {
       root.replaceChildren(h('div', { class: 'card warn' }, h('h2', {}, 'Dữ liệu bài học có lỗi'), h('p', {}, 'Báo thầy cô kiểm tra trang giáo viên.'),
