@@ -59,8 +59,33 @@ export function stopModel() {
   if (support.synthesis) speechSynthesis.cancel();
 }
 
+// Nơi đang mở trang, để chỉ đúng cách bật micro.
+export function environment() {
+  const ua = navigator.userAgent || '';
+  if (/Zalo|FBAN|FBAV|FB_IAB|Instagram|Line\/|TikTok|Messenger/i.test(ua)) return 'in-app';
+  if (/\bClaude\/|Electron/i.test(ua)) return 'embedded';
+  if (/iPhone|iPad|iPod/i.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return 'ios';
+  if (/Android/i.test(ua)) return 'android';
+  return 'desktop';
+}
+
+export function micHelp() {
+  switch (environment()) {
+    case 'in-app':
+      return 'Em đang mở trang trong Zalo hoặc Facebook, nơi này không cho dùng micro. Bấm nút ⋯ ở góc màn hình, chọn “Mở bằng trình duyệt” (Chrome hoặc Safari) rồi thử lại.';
+    case 'embedded':
+      return 'Khung trình duyệt này không cho dùng micro. Hãy mở trang bằng Chrome hoặc Edge trên máy tính, hoặc bằng điện thoại.';
+    case 'ios':
+      return 'Trên iPhone, iPad: bấm nút “aA” ở thanh địa chỉ → Cài đặt trang web → Micrô → Cho phép, rồi tải lại trang. Nếu không thấy, vào ứng dụng Cài đặt → Safari → Micrô → Cho phép.';
+    case 'android':
+      return 'Trên điện thoại Android (Chrome): bấm biểu tượng nhỏ bên trái địa chỉ trang (hình hai thanh gạt hoặc ổ khóa) → Quyền → Micrô → Cho phép, rồi tải lại trang.';
+    default:
+      return 'Trên máy tính (Chrome, Edge): bấm biểu tượng nhỏ bên trái địa chỉ trang (hình hai thanh gạt hoặc ổ khóa) → bật Micrô, rồi tải lại trang. Kiểm tra máy đã cắm micro.';
+  }
+}
+
 const ERROR_VI = {
-  'not-allowed': 'Em chưa cho phép dùng micro. Hãy bấm vào biểu tượng ổ khóa trên thanh địa chỉ và cho phép micro.',
+  'not-allowed': 'MIC_HELP',
   'service-not-allowed': 'Trình duyệt chưa cho phép nhận diện lời nói. Hãy thử Chrome hoặc Edge.',
   'no-speech': 'Máy chưa nghe thấy tiếng. Em nói to và rõ hơn một chút nhé.',
   'audio-capture': 'Không tìm thấy micro. Em kiểm tra lại micro nhé.',
@@ -100,7 +125,8 @@ export function listen({ lang = 'en-GB', onStart, continuous = false } = {}) {
     };
     rec.onerror = (e) => {
       if (continuous && pieces.length && e.error !== 'not-allowed') return;
-      finish({ alternatives: [], error: e.error, message: ERROR_VI[e.error] || 'Có lỗi khi nghe, em thử lại nhé.' });
+      const msg = ERROR_VI[e.error] === 'MIC_HELP' ? micHelp() : ERROR_VI[e.error];
+      finish({ alternatives: [], error: e.error, message: msg || 'Có lỗi khi nghe, em thử lại nhé.' });
     };
     rec.onend = () => {
       if (pieces.length) finish({ alternatives: [pieces.join(' ')], error: null });

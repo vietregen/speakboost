@@ -114,7 +114,7 @@ export function speakPanel({ text, audio, evaluate, meta, continuous = false, on
       recBtn.textContent = '⏹ Dừng ghi';
       recBtn.classList.add('active');
     } catch (err) {
-      result.replaceChildren(h('p', { class: 'warn' }, 'Chưa ghi âm được. Em kiểm tra quyền dùng micro nhé.'));
+      result.replaceChildren(h('p', { class: 'warn' }, 'Chưa ghi âm được. ', S.micHelp()));
     }
   });
 

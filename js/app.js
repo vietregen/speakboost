@@ -89,6 +89,8 @@ function renderHome() {
 }
 
 function supportNotice() {
+  const env = S.environment();
+  if (env === 'in-app' || env === 'embedded') return h('div', { class: 'notice' }, h('b', {}, 'Micro chưa dùng được ở đây. '), S.micHelp());
   if (S.support.recognition) return null;
   return h('div', { class: 'notice' },
     h('b', {}, 'Trình duyệt này chưa nhận diện được lời nói. '),
