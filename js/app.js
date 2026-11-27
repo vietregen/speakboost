@@ -5,11 +5,13 @@ import * as M from './match.js';
 import * as P from './progress.js';
 import { h, speakPanel, listenButtons, sentenceOutcome, heardLine, starsText, disposeAll } from './ui.js';
 import * as Challenge from './challenge.js';
+import * as Cloud from './cloud.js';
 
 const root = document.getElementById('app');
 let unit = null;
 let index = null;
 let fromExcel = false;
+let needLogin = false;
 const preview = C.isPreview();
 
 const ACTIVITIES = [
@@ -135,9 +137,74 @@ function renderHome() {
     roadmap(),
     h('div', { class: 'tiles' }, ...tiles),
     h('footer', { class: 'foot' },
-      h('span', {}, '🔒 Không hỏi tên · không lưu giọng nói'),
-      h('a', { href: 'teacher.html', class: 'muted' }, 'Giáo viên')),
+      whoAmI(),
+      h('span', {}, '🔒 Không lưu giọng nói'),
+      h('a', { href: 'dashboard.html', class: 'muted' }, 'Giáo viên')),
   ));
+}
+
+function whoAmI() {
+  if (preview || !Cloud.configured()) return null;
+  const st = Cloud.student();
+  if (st) {
+    return h('span', { class: 'who' }, `👋 ${st.nickname} · lớp ${st.class_name} `,
+      h('button', { class: 'link-btn', onclick: async () => { await Cloud.signOut(); needLogin = true; location.hash = '#/'; render(); } }, 'Đổi bạn'));
+  }
+  return h('button', { class: 'link-btn', onclick: () => { Cloud.setGuest(false); needLogin = true; render(); } }, '🏫 Đăng nhập lớp');
+}
+
+// ---------------- Đăng nhập lớp (mã lớp → chọn tên → PIN) ----------------
+function renderLogin(state = {}) {
+  const msg = h('p', { class: 'warn', 'aria-live': 'polite', hidden: !state.error }, state.error || '');
+  const fail = (e) => { msg.textContent = e.message || String(e); msg.hidden = false; };
+  const guest = h('button', { class: 'link-btn', onclick: () => { Cloud.setGuest(true); needLogin = false; render(); } },
+    'Học thử, không lưu kết quả cho lớp');
+  const box = (title, ...content) => root.replaceChildren(h('div', { class: 'screen' },
+    h('header', { class: 'topbar' }, state.step ? h('button', { class: 'back', 'aria-label': 'Quay lại', onclick: () => renderLogin(state.step === 'pin' ? { ...state, step: 'roster', error: '' } : { code: state.code, auto: false }) }, '‹') : null,
+      h('div', { class: 'topbar-title' }, 'SpeakBoost')),
+    h('main', {}, h('div', { class: 'card login' }, h('p', { class: 'big-emoji' }, '🎤'), h('h1', {}, title), ...content, msg),
+      h('p', { class: 'center' }, guest))));
+
+  if (!state.step) {
+    const input = h('input', { class: 'code-input', value: state.code || new URLSearchParams(location.search).get('lop') || '', placeholder: 'VD: 6A-K7Q', autocomplete: 'off', autocapitalize: 'characters', 'aria-label': 'Mã lớp', maxlength: 12 });
+    const go = h('button', { class: 'btn btn-main', type: 'submit' }, 'Tiếp ›');
+    const form = h('form', { class: 'login-form', onsubmit: async (e) => {
+      e.preventDefault();
+      const code = input.value.trim().toUpperCase();
+      if (!code) return fail(new Error('Bạn nhập mã lớp thầy cô cho nhé.'));
+      go.disabled = true; go.textContent = 'Đang tìm lớp…';
+      try {
+        const list = await Cloud.roster(code);
+        if (!list.length) throw new Error('Không tìm thấy lớp có mã này. Bạn kiểm tra lại mã lớp nhé.');
+        renderLogin({ step: 'roster', code, list });
+      } catch (err) { go.disabled = false; go.textContent = 'Tiếp ›'; fail(err.message === 'offline' ? new Error('Chưa kết nối được Internet.') : err); }
+    } }, input, go);
+    box('Vào lớp của bạn', h('p', { class: 'muted' }, 'Nhập mã lớp thầy cô cho, hoặc quét mã QR.'), form);
+    if (input.value && state.auto !== false && !state.error) setTimeout(() => form.requestSubmit(), 0);
+    else setTimeout(() => input.focus(), 0);
+    return;
+  }
+
+  if (state.step === 'roster') {
+    box(`Lớp ${state.list[0].class_name}`, h('p', { class: 'muted' }, 'Bạn là ai?'),
+      h('div', { class: 'roster' }, ...state.list.map((s) =>
+        h('button', { class: 'roster-btn', onclick: () => renderLogin({ ...state, step: 'pin', pick: s }) },
+          h('span', { class: 'roster-no' }, s.roster_no), h('span', {}, s.nickname)))));
+    return;
+  }
+
+  // Bước nhập PIN
+  const pin = h('input', { class: 'code-input pin-input', type: 'password', inputmode: 'numeric', pattern: '[0-9]*', maxlength: 6, autocomplete: 'off', 'aria-label': 'Mã PIN' });
+  const go = h('button', { class: 'btn btn-main', type: 'submit' }, 'Vào học');
+  box(`Chào ${state.pick.nickname}!`, h('p', { class: 'muted' }, `Số ${state.pick.roster_no} · nhập mã PIN của bạn`),
+    h('form', { class: 'login-form', onsubmit: async (e) => {
+      e.preventDefault();
+      if (!/^\d{4,6}$/.test(pin.value)) return fail(new Error('PIN gồm 4 đến 6 chữ số.'));
+      go.disabled = true; go.textContent = 'Đang vào…';
+      try { await Cloud.join(state.code, state.pick.roster_no, pin.value); needLogin = false; location.hash = '#/'; render(); }
+      catch (err) { go.disabled = false; go.textContent = 'Vào học'; pin.value = ''; fail(err); }
+    } }, pin, go));
+  setTimeout(() => pin.focus(), 0);
 }
 
 function supportNotice() {
@@ -413,6 +480,7 @@ function render() {
   disposeAll();
   const [, route = '', arg] = location.hash.split('/');
   window.scrollTo(0, 0);
+  if (needLogin) return renderLogin();
   switch (route) {
     case 'vocab': return renderVocab(Number(arg) || 0);
     case 'patterns': return renderPatterns(Number(arg) || 0);
@@ -437,7 +505,13 @@ async function start() {
         h('ul', {}, ...errors.slice(0, 10).map((e) => h('li', {}, e)))));
       return;
     }
+    if (!preview && Cloud.configured() && !Cloud.isGuest()) {
+      root.replaceChildren(h('p', { class: 'loading' }, 'Đang vào lớp…'));
+      try { needLogin = !(await Promise.race([Cloud.restore(), new Promise((r) => setTimeout(() => r(null), 12000))])); }
+      catch (_) { needLogin = true; }
+    }
     window.addEventListener('hashchange', render);
+    window.addEventListener('sb-progress', () => { if (!needLogin && !location.hash.replace(/^#\/?/, '')) render(); });
     render();
   } catch (err) {
     root.replaceChildren(h('div', { class: 'card warn' }, h('h2', {}, 'Chưa mở được bài học'), h('p', {}, err.message),

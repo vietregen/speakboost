@@ -1,8 +1,10 @@
-// Tiến độ lưu trên chính thiết bị (localStorage). Không lưu tên, không gửi đi đâu.
-// Giai đoạn 2 sẽ chuyển sang bảng practice_attempts trên Supabase.
+// Tiến độ lưu trên thiết bị (localStorage), tách riêng cho từng học sinh đăng nhập trên cùng máy.
+// Khi học sinh đăng nhập lớp, mỗi lượt luyện còn được gửi lên máy chủ (xem cloud.js).
 
-const KEY = 'sb.progress.v1';
+const BASE_KEY = 'sb.progress.v1';
 const MAX_ATTEMPTS = 1000;
+let KEY = BASE_KEY;
+const listeners = new Set();
 
 function load() {
   try {
@@ -15,16 +17,40 @@ function load() {
 let state = load();
 function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (_) { /* bỏ qua */ } }
 
+// Chuyển sang sổ tiến độ của một học sinh (null = khách / máy dùng riêng).
+export function useStudent(studentId) {
+  KEY = studentId ? `${BASE_KEY}.${studentId}` : BASE_KEY;
+  state = load();
+}
+
+// Báo cho cloud.js mỗi khi có lượt luyện mới.
+export function onRecord(fn) { listeners.add(fn); }
+
+// Gộp các lượt luyện lấy từ máy chủ (khi học sinh đổi máy). Lượt đã có thì bỏ qua.
+export function mergeServer(rows) {
+  const seen = new Set(state.attempts.map((a) => `${a.t}|${a.item}`));
+  for (const r of rows) {
+    const key = `${r.unit}:${r.item}`;
+    state.best[key] = Math.max(state.best[key] || 0, r.stars);
+    if (!seen.has(`${r.t}|${r.item}`)) state.attempts.push(r);
+  }
+  state.attempts.sort((a, b) => (a.t < b.t ? -1 : 1));
+  if (state.attempts.length > MAX_ATTEMPTS) state.attempts = state.attempts.slice(-MAX_ATTEMPTS);
+  save();
+}
+
 export const getLevel = () => state.level || 1;
 export function setLevel(level) { state.level = level; save(); }
 
 // source: 'asr_match' (nhận diện lời nói) | 'self_check' (học sinh tự đánh giá)
 export function record({ unit, activity, item, level, source, stars, detail }) {
-  state.attempts.push({ t: new Date().toISOString(), unit, activity, item, level, source, stars, detail: detail || '' });
+  const a = { t: new Date().toISOString(), unit, activity, item, level, source, stars, detail: detail || '' };
+  state.attempts.push(a);
   if (state.attempts.length > MAX_ATTEMPTS) state.attempts = state.attempts.slice(-MAX_ATTEMPTS);
   const key = `${unit}:${item}`;
   state.best[key] = Math.max(state.best[key] || 0, stars);
   save();
+  for (const fn of listeners) { try { fn(a); } catch (_) { /* không để lỗi gửi làm hỏng bài học */ } }
 }
 
 export const bestStars = (unit, item) => state.best[`${unit}:${item}`] || 0;

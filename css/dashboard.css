@@ -1,0 +1,63 @@
+/* Dashboard giáo viên – dùng chung token màu với app.css */
+.dash { max-width: 1100px; margin: 0 auto; padding: 0 16px 40px; }
+.dash-top { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.dash-brand { font-weight: 800; font-size: 18px; color: var(--ink); text-decoration: none; }
+.dash-nav { display: flex; gap: 4px; flex-wrap: wrap; }
+.dash-nav a { padding: 8px 12px; border-radius: 99px; color: var(--ink); text-decoration: none; font-weight: 600; }
+.dash-nav a:hover { background: var(--brand-soft); }
+.dash-user { margin-left: auto; display: flex; gap: 10px; align-items: center; font-size: 14px; color: var(--muted); flex-wrap: wrap; }
+.dash-main h1 { font-size: 26px; margin: 18px 0 6px; }
+.dash-main h2 { font-size: 18px; margin: 0 0 10px; }
+.narrow { max-width: 520px; }
+.stack { display: flex; flex-direction: column; gap: 10px; max-width: 420px; }
+.field { min-height: 44px; padding: 8px 12px; font: inherit; color: var(--ink); background: var(--bg); border: 2px solid var(--line); border-radius: 12px; box-sizing: border-box; }
+.field:focus { outline: none; border-color: var(--brand); }
+textarea.field { width: 100%; min-height: 120px; resize: vertical; margin: 6px 0 10px; }
+.row.wrap { flex-wrap: wrap; align-items: center; gap: 10px; }
+.small { font-size: 13px; }
+.ok-text { color: var(--ok); font-weight: 600; }
+.danger { color: #c0392b; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+.class-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 12px 0; }
+.class-card { display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: var(--ink); margin: 0; }
+.class-card:hover { border-color: var(--brand); }
+.class-name { font-size: 28px; }
+.code-tag { font-family: ui-monospace, Consolas, monospace; font-weight: 700; background: var(--brand-soft); color: var(--ink); padding: 2px 8px; border-radius: 8px; letter-spacing: 1px; width: fit-content; }
+.code-tag.big { font-size: 22px; }
+.class-head { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 12px; }
+.class-head h1 { margin: 6px 0 2px; }
+.tabs { display: flex; gap: 4px; border-bottom: 1px solid var(--line); margin: 14px 0 6px; overflow-x: auto; }
+.tabs a { padding: 10px 14px; text-decoration: none; color: var(--muted); font-weight: 600; border-bottom: 3px solid transparent; white-space: nowrap; }
+.tabs a.on { color: var(--brand); border-bottom-color: var(--brand); }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 12px 0; }
+.stat { display: flex; flex-direction: column; gap: 2px; margin: 0; }
+.stat b { font-size: 30px; font-variant-numeric: tabular-nums; }
+.stat span { color: var(--muted); font-size: 14px; }
+.table-wrap { overflow-x: auto; }
+table.grid { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+.grid th, .grid td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.grid th { color: var(--muted); font-weight: 600; font-size: 13px; }
+.grid tr.idle td { color: var(--muted); }
+.grid td.actions { display: flex; gap: 12px; }
+.mini { display: inline-flex; align-items: center; gap: 6px; }
+.mini-bar { width: 48px; height: 6px; background: var(--line); border-radius: 99px; overflow: hidden; display: inline-block; }
+.mini-bar span { display: block; height: 100%; background: var(--ok); }
+.hard-list li { margin: 4px 0; }
+
+.join-card { display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+.qr img { display: block; background: #fff; padding: 8px; border-radius: 12px; }
+
+.slips { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-top: 12px; }
+.slip { border: 2px dashed var(--line); border-radius: 12px; padding: 12px; display: flex; flex-direction: column; gap: 4px; }
+.slip-name { font-size: 18px; font-weight: 700; }
+.slip-pin { font-size: 22px; letter-spacing: 4px; font-family: ui-monospace, Consolas, monospace; }
+
+@media print {
+  body { background: #fff; }
+  .dash > *:not(main), .dash-main > *:not(.students-view), .students-view > *:not(div), .slips-card > :not(.slips) { display: none !important; }
+  .students-view > div:not(:last-child) { display: none !important; }
+  .slips { grid-template-columns: repeat(3, 1fr); }
+  .slip { border-color: #999; break-inside: avoid; color: #000; }
+}
