@@ -48,103 +48,133 @@ function draftBadge(item) {
 
 function emptyState(msg) { return h('div', { class: 'card center' }, h('p', { class: 'big-emoji' }, '⏳'), h('p', {}, msg)); }
 
-// ---------------- Trang chính ----------------
-const LEVEL_ICONS = { 1: '🌱', 2: '🌿', 3: '🌳' };
+// ---------------- Trang chính (giao diện "phép thuật") ----------------
+// Mỗi mức là một vùng đất trên bản đồ. Tên vùng chỉ để tạo hứng thú; nội dung vẫn là Mức 1 – 2 – 3.
+const WORLDS = {
+  1: { name: 'Vương quốc Phù Thủy', sub: 'Làm quen · Giao tiếp cơ bản', img: 'assets/theme/island1.png' },
+  2: { name: 'Rừng Ánh Sáng', sub: 'Mở rộng · Luyện phản xạ', img: 'assets/theme/island2.png' },
+  3: { name: 'Thung Lũng Pha Lê', sub: 'Vận dụng · Tự tin hơn', img: 'assets/theme/island3.png' },
+};
+const ACT_ART = { vocabulary: 'assets/theme/icon-vocab.png', patterns: 'assets/theme/icon-patterns.png', dialogues: 'assets/theme/icon-dialogues.png', roleplays: 'assets/theme/icon-roleplays.png' };
 
-// Tiến độ của một chặng: số từ vựng + mẫu câu ĐÚNG mức đó đã luyện, và thử thách của mức đó.
+// Tiến độ của một vùng: số từ vựng + mẫu câu ĐÚNG mức đó đã luyện, và thử thách của mức đó.
 function levelProgress(lv) {
   const list = [...items('vocabulary'), ...items('patterns')].filter((x) => (x.level || 1) === lv);
   const done = list.filter((x) => P.bestStars(U(), x.id) > 0).length;
   return { done, total: list.length, pct: list.length ? Math.round((done / list.length) * 100) : 0, trophy: P.bestStars(U(), Challenge.challengeId(lv)) };
 }
 
-function roadmap() {
+function logo() {
+  return h('a', { class: 'mh-logo', href: '#/', 'aria-label': 'SpeakBoost – trang chính' },
+    h('span', { class: 'mh-logo-icon', 'aria-hidden': 'true' }, h('i'), h('i'), h('i'), h('i'), h('i')),
+    h('span', { class: 'mh-logo-text' }, 'Speak', h('b', {}, 'Boost')));
+}
+
+function unitPicker() {
+  const sel = h('select', { class: 'mh-unit', 'aria-label': 'Chọn Unit', onchange: (e) => { if (Number(e.target.value) !== U()) e.target.value = U(); } },
+    ...(index?.units || [{ unit: U(), file: true }]).map((u) => h('option', { value: u.unit, disabled: !u.file, selected: u.unit === U() }, `Unit ${u.unit}${u.file ? '' : ' · sắp có'}`)));
+  return h('label', { class: 'mh-unit-wrap' }, h('span', { class: 'mh-bars', 'aria-hidden': 'true' }, h('i'), h('i'), h('i')), sel);
+}
+
+function avatar() {
+  const st = Cloud.student();
+  const menu = h('div', { class: 'mh-menu', hidden: true },
+    st ? h('p', {}, h('b', {}, st.nickname), h('br'), `Số ${st.roster_no} · Lớp ${st.class_name}`) : h('p', {}, 'Bạn đang học thử (không lưu kết quả).'),
+    st ? h('button', { class: 'btn btn-soft', onclick: switchStudent }, '🔄 Đổi bạn')
+      : (Cloud.configured() && !preview ? h('button', { class: 'btn btn-main', onclick: () => { Cloud.setGuest(false); needLogin = true; render(); } }, '🏫 Đăng nhập lớp') : null));
+  const btn = h('button', { class: 'mh-avatar', 'aria-label': 'Tài khoản', 'aria-expanded': 'false', onclick: () => {
+    menu.hidden = !menu.hidden; btn.setAttribute('aria-expanded', String(!menu.hidden));
+  } }, st ? st.nickname.trim().charAt(0).toUpperCase() : h('span', { class: 'mh-user', 'aria-hidden': 'true' }));
+  return h('div', { class: 'mh-acc' }, btn, menu);
+}
+
+async function switchStudent() { await Cloud.signOut(); needLogin = true; location.hash = '#/'; render(); }
+
+function worldMap() {
   const cur = level();
   const stations = unit.levels.map((l) => {
+    const w = WORLDS[l.id] || { name: `Mức ${l.id}`, sub: l.name, img: '' };
     const pg = levelProgress(l.id);
     const on = l.id === cur;
     return h('button', {
-      class: `station s${l.id} ${on ? 'current' : ''} ${pg.trophy ? 'cleared' : ''}`,
-      'aria-pressed': String(on), 'aria-label': `Mức ${l.id} ${l.name}, đã luyện ${pg.done}/${pg.total}`,
+      class: `mh-world w${l.id} ${on ? 'on' : ''}`, 'aria-pressed': String(on),
+      'aria-label': `Mức ${l.id}: ${w.name}. Đã luyện ${pg.done}/${pg.total}${pg.trophy ? ', đã vượt thử thách' : ''}`,
       onclick: () => { P.setLevel(l.id); render(); },
     },
-      on ? h('span', { class: 'you' }, 'Bạn ở đây') : null,
-      h('span', { class: 'node', style: `--p:${pg.pct}` }, h('span', { class: 'node-icon' }, LEVEL_ICONS[l.id] || '⭐')),
-      pg.trophy ? h('span', { class: 'cup', title: 'Đã vượt thử thách' }, '🏆') : null,
-      h('span', { class: 'st-name' }, `Mức ${l.id}`),
-      h('span', { class: 'st-sub' }, l.name));
+      h('span', { class: 'mh-island' }, w.img ? h('img', { src: w.img, alt: '' }) : null,
+        on ? h('span', { class: 'mh-here' }, 'Bạn ở đây') : null,
+        pg.trophy ? h('img', { class: 'mh-cup', src: 'assets/theme/shield.png', alt: 'Đã vượt thử thách', title: 'Đã vượt thử thách' }) : null),
+      h('span', { class: 'mh-scroll' }, h('span', { class: 'mh-num' }, l.id), w.name),
+      h('span', { class: 'mh-sub' }, w.sub),
+      h('span', { class: 'mh-prog', 'aria-hidden': 'true' }, h('span', { style: `width:${pg.pct}%` })));
   });
-  return h('section', { class: 'roadmap', 'aria-label': 'Lộ trình các mức' },
-    road(cur),
-    ...stations,
-    h('span', { class: 'goal', 'aria-hidden': 'true' }, '🏁'));
-}
-
-// Con đường nối 3 chặng; đoạn đã đi qua được tô màu.
-function road(cur) {
-  const ns = 'http://www.w3.org/2000/svg';
-  const svg = document.createElementNS(ns, 'svg');
-  svg.setAttribute('class', 'road');
-  svg.setAttribute('viewBox', '0 0 300 160');
-  svg.setAttribute('preserveAspectRatio', 'none');
-  svg.setAttribute('aria-hidden', 'true');
-  const seg1 = 'M50 44 C100 44 100 116 150 116';
-  const seg2 = 'C200 116 200 44 250 44';
-  const path = (d, cls) => {
-    const p = document.createElementNS(ns, 'path');
-    p.setAttribute('d', d); p.setAttribute('class', cls); p.setAttribute('vector-effect', 'non-scaling-stroke');
-    svg.append(p);
-  };
-  path(`${seg1} ${seg2}`, 'road-base');
-  if (cur >= 2) path(cur >= 3 ? `${seg1} ${seg2}` : seg1, 'road-done');
-  return svg;
+  return h('section', { class: 'mh-map', 'aria-label': 'Bản đồ 3 mức' },
+    h('img', { class: 'mh-cat', src: 'assets/theme/cat.png', alt: '' }),
+    h('div', { class: 'mh-worlds' }, ...stations));
 }
 
 function renderHome() {
-  const tiles = ACTIVITIES.map((a) => {
+  const cards = ACTIVITIES.map((a) => {
     const list = a.key === 'vocabulary' || a.key === 'patterns' ? byLevel(items(a.key)) : items(a.key);
     const sum = P.summary(U(), list.map((x) => x.id));
     const disabled = list.length === 0;
-    return h(disabled ? 'div' : 'a', { class: `tile ${disabled ? 'disabled' : ''}`, href: disabled ? null : `#/${a.route}` },
-      h('span', { class: 'tile-icon' }, a.icon),
-      h('span', { class: 'tile-name' }, a.name),
-      disabled ? null : h('span', { class: 'tile-bar' }, h('span', { style: `width:${sum.total ? Math.round((sum.done / sum.total) * 100) : 0}%` })),
-      disabled ? null : h('span', { class: 'tile-progress' }, `${sum.done}/${sum.total}`));
+    return h(disabled ? 'div' : 'a', { class: `mh-card ${disabled ? 'off' : ''}`, href: disabled ? null : `#/${a.route}` },
+      h('span', { class: 'mh-card-art' }, h('img', { src: ACT_ART[a.key], alt: '' })),
+      h('span', { class: 'mh-card-name' }, a.name),
+      h('span', { class: 'mh-bar' }, h('span', { style: `width:${sum.total ? Math.round((sum.done / sum.total) * 100) : 0}%` })),
+      h('span', { class: 'mh-count' }, disabled ? '—' : `${sum.done} / ${sum.total}`));
   });
 
+  // Thử thách: mở khi đã luyện đủ số từ ở mức hiện tại.
   const words = byLevel(items('vocabulary'));
+  let quest = null;
   if (words.length) {
     const st = Challenge.status({ unitNo: U(), words, preview, unit });
     const best = P.bestStars(U(), Challenge.challengeId(level()));
-    tiles.push(h('a', { class: `tile challenge-tile ${st.unlocked ? '' : 'locked'}`, href: '#/challenge' },
-      h('span', { class: 'tile-icon' }, st.unlocked ? '🏆' : '🔒'),
-      h('span', { class: 'tile-name' }, 'Thử thách'),
-      st.unlocked ? null : h('span', { class: 'tile-bar' }, h('span', { style: `width:${Math.min(100, Math.round((st.done / st.need) * 100))}%` })),
-      h('span', { class: 'tile-progress' }, st.unlocked ? (best ? starsText(best) : 'Mở rồi!') : `${st.done}/${st.need}`)));
+    quest = h('section', { class: `mh-quest ${st.unlocked ? '' : 'locked'}` },
+      h('img', { class: 'mh-chest', src: 'assets/theme/chest.png', alt: '' }),
+      h('div', { class: 'mh-quest-text' },
+        h('h2', {}, 'Thử thách hôm nay'),
+        h('p', {}, st.unlocked
+          ? (best ? `Kỷ lục của bạn: ${starsText(best)} · Thử lại để thu thêm pha lê!` : 'Luyện nói nhanh · Thu thập pha lê · Mở khóa vùng đất tiếp theo!')
+          : `Luyện thêm ${Math.max(0, st.need - st.done)} từ ở mức này để mở rương báu (${st.done}/${st.need}).`)),
+      h('img', { class: 'mh-crystal', src: 'assets/theme/crystal.png', alt: '' }),
+      st.unlocked ? h('a', { class: 'mh-go', href: '#/challenge' }, 'Vào ngay ', h('span', { 'aria-hidden': 'true' }, '»'))
+        : h('span', { class: 'mh-go locked', 'aria-label': 'Chưa mở' }, '🔒'));
   }
 
   const anyVisible = ACTIVITIES.some((a) => items(a.key).length);
   const totalStars = P.summary(U(), ACTIVITIES.flatMap((a) => items(a.key).map((x) => x.id))).stars;
-  root.replaceChildren(shell(null,
-    h('section', { class: 'hero' },
-      h('p', { class: 'eyebrow' }, `Unit ${U()}`),
-      h('h1', {}, unit.meta.title),
-      h('div', { class: 'pills' },
-        h('span', { class: 'pill' }, `🔥 ${P.daysPractised()} ngày`),
-        h('span', { class: 'pill' }, `⭐ ${totalStars}`))),
+  const st = Cloud.student();
+  root.replaceChildren(h('div', { class: 'mh' },
+    preview ? h('div', { class: 'preview-banner' }, 'CHẾ ĐỘ XEM TRƯỚC CỦA GIÁO VIÊN · có cả nội dung chưa duyệt',
+      fromExcel ? ' · nội dung nhập từ Excel trên máy này, chưa đưa lên web' : '') : null,
+    h('header', { class: 'mh-top' }, logo(), h('div', { class: 'mh-top-right' }, unitPicker(), avatar())),
+    h('section', { class: 'mh-hero' },
+      h('img', { class: 'mh-castle', src: 'assets/theme/castle.jpg', alt: '' }),
+      h('div', { class: 'mh-hero-text' },
+        h('span', { class: 'mh-ribbon' }, `Unit ${U()}`),
+        h('h1', {}, unit.meta.title),
+        h('p', { class: 'mh-tagline' }, unit.meta.title_vi ? `Luyện nói tiếng Anh · ${unit.meta.title_vi}` : 'Luyện nói tiếng Anh'),
+        h('div', { class: 'mh-pills' },
+          h('span', { class: 'mh-pill' }, '🔥 ', h('b', {}, P.daysPractised()), ' ngày'),
+          h('span', { class: 'mh-pill' }, '⭐ ', h('b', {}, totalStars))))),
     supportNotice(),
     anyVisible ? null : emptyState('Thầy cô chưa duyệt nội dung bài này. Bạn chờ thầy cô nhé!'),
     anyVisible ? taskCard() : null,
-    roadmap(),
-    h('div', { class: 'tiles' }, ...tiles),
-    h('footer', { class: 'foot' },
-      whoAmI(),
-      h('span', {}, '🔒 Không lưu giọng nói'),
-      h('a', { href: 'dashboard.html', class: 'muted' }, 'Giáo viên')),
+    worldMap(),
+    h('div', { class: 'mh-cards-wrap' }, h('img', { class: 'mh-lantern', src: 'assets/theme/lantern.png', alt: '' }),
+      h('nav', { class: 'mh-cards', 'aria-label': 'Hoạt động' }, ...cards)),
+    quest,
+    h('footer', { class: 'mh-foot' },
+      st ? h('span', { class: 'mh-foot-item' }, '👥 ', `${st.nickname} · Lớp ${st.class_name}`)
+        : (preview || !Cloud.configured() ? null : h('button', { class: 'mh-foot-item link', onclick: () => { Cloud.setGuest(false); needLogin = true; render(); } }, '🏫 Đăng nhập lớp')),
+      st ? h('button', { class: 'mh-foot-item link', onclick: switchStudent }, '🔄 Đổi bạn') : null,
+      h('span', { class: 'mh-foot-item' }, '🎙️ Không lưu giọng nói'),
+      h('a', { class: 'mh-foot-item link', href: 'dashboard.html' }, '🎓 Giáo viên')),
   ));
 }
 
-// Bài thầy cô giao cho lớp: tiến độ và các bài còn thiếu (cùng cách tính với Dashboard giáo viên).
 const SECTION_ROUTE = { vocabulary: '#/vocab', patterns: '#/patterns', dialogues: '#/dialogues', roleplays: '#/roleplays', challenge: '#/challenge' };
 function taskCard() {
   const st = Cloud.student();
@@ -174,16 +204,6 @@ function taskCard() {
       h('span', { style: `width:${Math.round(c.pct * 100)}%` })),
     h('div', { class: 'task-head' }, h('span', {}, `${c.done}/${c.total} bài đạt ${stars}`), done ? null : toggle),
     list);
-}
-
-function whoAmI() {
-  if (preview || !Cloud.configured()) return null;
-  const st = Cloud.student();
-  if (st) {
-    return h('span', { class: 'who' }, `👋 ${st.nickname} · lớp ${st.class_name} `,
-      h('button', { class: 'link-btn', onclick: async () => { await Cloud.signOut(); needLogin = true; location.hash = '#/'; render(); } }, 'Đổi bạn'));
-  }
-  return h('button', { class: 'link-btn', onclick: () => { Cloud.setGuest(false); needLogin = true; render(); } }, '🏫 Đăng nhập lớp');
 }
 
 // ---------------- Đăng nhập lớp (mã lớp → chọn tên → PIN) ----------------
