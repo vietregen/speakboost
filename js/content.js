@@ -1,9 +1,9 @@
 // Nạp, kiểm tra và lọc dữ liệu bài học. Mã nguồn không chứa nội dung bài: tất cả nằm trong data/units/*.json.
 
 const REVIEW_KEY = (unit) => `sb.review.u${unit}`;
-export const SECTIONS = ['vocabulary', 'patterns', 'dialogues', 'roleplays', 'picture_tasks'];
+export const SECTIONS = ['vocabulary', 'patterns', 'dialogues', 'roleplays'];
 export const SECTION_VI = {
-  vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai', picture_tasks: 'Nói qua tranh',
+  vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai',
 };
 
 export async function loadIndex() {
@@ -44,10 +44,6 @@ export function validate(unit) {
     (d.turns || []).forEach((t, k) => { if (!(d.roles || []).includes(t.speaker)) errors.push(`${w}.turns[${k}]: người nói “${t.speaker}” không có trong roles`); });
   });
   (unit.roleplays || []).forEach((r, i) => { const w = `roleplays[${i}]`; checkId(r, w); need(r, ['title', 'situation_vi', 'turns', 'closing', 'level'], w); });
-  (unit.picture_tasks || []).forEach((p, i) => {
-    const w = `picture_tasks[${i}]`; checkId(p, w); need(p, ['title', 'keywords', 'prompts'], w);
-    ['1', '2', '3'].forEach((l) => { if (!p.prompts || !p.prompts[l]) errors.push(`${w}: thiếu prompts cho mức ${l}`); });
-  });
   return errors;
 }
 

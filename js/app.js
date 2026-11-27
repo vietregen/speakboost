@@ -20,7 +20,6 @@ const ACTIVITIES = [
   { key: 'patterns', route: 'patterns', icon: '💬', name: 'Mẫu câu', desc: 'Nghe và nói theo mẫu câu' },
   { key: 'dialogues', route: 'dialogues', icon: '👫', name: 'Hội thoại', desc: 'Nhập vai đọc hội thoại' },
   { key: 'roleplays', route: 'roleplays', icon: '🎭', name: 'Đóng vai', desc: 'Trả lời bạn trò chuyện' },
-  { key: 'picture_tasks', route: 'pictures', icon: '🖼️', name: 'Nói qua tranh', desc: 'Nhìn tranh và kể' },
 ];
 
 const level = () => P.getLevel();
@@ -146,7 +145,7 @@ function renderHome() {
 }
 
 // Bài thầy cô giao cho lớp: tiến độ và các bài còn thiếu (cùng cách tính với Dashboard giáo viên).
-const SECTION_ROUTE = { vocabulary: '#/vocab', patterns: '#/patterns', dialogues: '#/dialogues', roleplays: '#/roleplays', picture_tasks: '#/pictures', challenge: '#/challenge' };
+const SECTION_ROUTE = { vocabulary: '#/vocab', patterns: '#/patterns', dialogues: '#/dialogues', roleplays: '#/roleplays', challenge: '#/challenge' };
 function taskCard() {
   const st = Cloud.student();
   if (!st || preview || G.isFree(st.assignment)) return null;   // lớp tự luyện: không hiện nhiệm vụ
@@ -162,7 +161,7 @@ function taskCard() {
       for (const m of miss) (groups[m.section] = groups[m.section] || []).push(m);
       return h('div', {}, h('b', {}, `Mức ${L}: `), miss.length ? `còn ${miss.length} bài` : h('span', { class: 'task-done' }, 'xong rồi ✓'),
         miss.length ? h('ul', { class: 'task-list' }, ...Object.entries(groups).map(([s, ms]) =>
-          h('li', {}, h('a', { href: SECTION_ROUTE[s], onclick: () => { if (level() !== L) P.setLevel(L); } }, ms[0].section === 'challenge' ? ms[0].label : `${ms.length} bài ${({ vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai', picture_tasks: 'Nói qua tranh' })[s]}`),
+          h('li', {}, h('a', { href: SECTION_ROUTE[s], onclick: () => { if (level() !== L) P.setLevel(L); } }, ms[0].section === 'challenge' ? ms[0].label : `${ms.length} bài ${({ vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai' })[s]}`),
             s === 'vocabulary' || s === 'patterns' ? h('span', { class: 'muted' }, `: ${ms.slice(0, 6).map((m) => m.label).join(', ')}${ms.length > 6 ? '…' : ''}`) : null))) : null);
     }));
   const toggle = h('button', { class: 'link-btn', onclick: () => { list.hidden = !list.hidden; toggle.textContent = list.hidden ? 'Xem bài còn thiếu' : 'Ẩn'; } }, 'Xem bài còn thiếu');
@@ -477,38 +476,6 @@ function renderRoleplay(id) {
   step(0);
 }
 
-// ---------------- Nói qua tranh ----------------
-function renderPicture(id) {
-  const p = items('picture_tasks').find((x) => x.id === id);
-  if (!p) return renderList('picture_tasks', 'Nói qua tranh', 'pictures', (x) => x.title_vi);
-  const cfg = p.prompts[String(level())];
-  const model = h('p', { class: 'example', hidden: true }, cfg.model_answer, ' ', h('button', { class: 'link-btn', onclick: () => S.playModel(cfg.model_answer) }, '🔊'));
-  root.replaceChildren(shell('Nói qua tranh',
-    h('div', { class: 'card' }, draftBadge(p),
-      h('h2', {}, p.title), h('p', { class: 'muted' }, p.title_vi),
-      p.image ? h('img', { class: 'pic', src: p.image, alt: p.title }) : h('div', { class: 'scene', role: 'img', 'aria-label': 'tranh minh họa' }, ...p.scene_emoji.map((e) => (e.includes('/') ? h('img', { src: e, alt: '' }) : h('span', {}, e)))),
-      h('p', { class: 'task' }, cfg.prompt_vi),
-      h('button', { class: 'link-btn', onclick: (e) => { model.hidden = false; e.target.remove(); } }, '💡 Xem câu mẫu'), model,
-      h('p', { class: 'item-stars' }, starsText(P.bestStars(U(), p.id))),
-      speakPanel({
-        text: null, continuous: level() > 1, meta: meta('picture_tasks', p.id),
-        evaluate: (alts) => {
-          const r = M.findKeywords(p.keywords, alts);
-          const kwOk = r.found.length >= cfg.min_keywords;
-          const lenOk = r.wordCount >= cfg.min_words;
-          const stars = kwOk && lenOk ? 3 : kwOk || lenOk ? 2 : alts.length ? 1 : 0;
-          const title = stars === 3 ? 'Bạn đã nói đủ ý về bức tranh. Tuyệt!'
-            : !kwOk ? 'Bạn thử nói thêm tên các đồ vật, hoạt động trong tranh nhé.'
-            : 'Bạn thử nói dài hơn, thêm một câu nữa nhé.';
-          return {
-            stars, title, detail: `tu_khoa=${r.found.length};so_tu=${r.wordCount}`,
-            body: [h('div', { class: 'chips' }, ...(r.found.length ? r.found.map((k) => h('span', { class: 'chip ok' }, '✓ ', k)) : [h('span', { class: 'muted' }, 'Chưa nghe thấy từ khóa nào')])),
-              h('p', { class: 'muted' }, `Máy nghe được ${r.wordCount} từ.`), heardLine(r.heard)],
-          };
-        },
-      }))));
-}
-
 // ---------------- Điều hướng ----------------
 function render() {
   disposeAll();
@@ -521,7 +488,6 @@ function render() {
     case 'challenge': return renderChallenge();
     case 'dialogues': return arg ? renderDialogue(decodeURIComponent(arg)) : renderList('dialogues', 'Hội thoại', 'dialogues', (x) => x.title_vi);
     case 'roleplays': return arg ? renderRoleplay(decodeURIComponent(arg)) : renderList('roleplays', 'Đóng vai', 'roleplays', (x) => x.situation_vi);
-    case 'pictures': return arg ? renderPicture(decodeURIComponent(arg)) : renderList('picture_tasks', 'Nói qua tranh', 'pictures', (x) => x.title_vi);
     default: return renderHome();
   }
 }

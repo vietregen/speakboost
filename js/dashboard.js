@@ -9,7 +9,7 @@ const QR_LIB = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';
 const STUDENT_URL = new URL('./', location.href).href;   // trang học sinh cùng thư mục
 const ROLE_VI = { super_admin: 'Super Admin', school_admin: 'Quản trị trường', teacher: 'Giáo viên' };
 const GROUP_VI = { thuc_nghiem: 'Thực nghiệm', doi_chung: 'Đối chứng' };
-const ACT_VI = { vocab: 'Từ vựng', pattern: 'Mẫu câu', dialogue: 'Hội thoại', roleplay: 'Đóng vai', picture: 'Nói qua tranh', challenge: 'Thử thách' };
+const ACT_VI = { vocab: 'Từ vựng', pattern: 'Mẫu câu', dialogue: 'Hội thoại', roleplay: 'Đóng vai', challenge: 'Thử thách' };
 
 const root = document.getElementById('app');
 let sb = null;
@@ -236,7 +236,7 @@ function progressView(cls, students, attempts) {
 // Lớp tự luyện (không giao bài): chỉ số liệu luyện tập, không điểm.
 function practiceView(cls, students, real, by) {
   const approved = (s) => (unit?.[s] || []).filter((x) => x.review === 'approved').map((x) => x.id);
-  const SECT = [['vocab', 'vocabulary', 'Từ vựng'], ['pattern', 'patterns', 'Mẫu câu'], ['dialogue', 'dialogues', 'Hội thoại'], ['roleplay', 'roleplays', 'Đóng vai'], ['picture', 'picture_tasks', 'Tranh']];
+  const SECT = [['vocab', 'vocabulary', 'Từ vựng'], ['pattern', 'patterns', 'Mẫu câu'], ['dialogue', 'dialogues', 'Hội thoại'], ['roleplay', 'roleplays', 'Đóng vai']];
   const totals = Object.fromEntries(SECT.map(([act, s]) => [act, new Set(approved(s))]));
   const rows = students.map((s) => {
     const list = by.get(s.id) || [];
@@ -265,7 +265,7 @@ function practiceView(cls, students, real, by) {
     hardWords(real));
 }
 
-const G_SECTION = { vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai', picture_tasks: 'Nói qua tranh', challenge: 'Thử thách' };
+const G_SECTION = { vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai', challenge: 'Thử thách' };
 
 // Từ máy hay chưa nghe rõ: tỉ lệ lượt nhận diện < 3 sao trên từng từ.
 function hardWords(real) {

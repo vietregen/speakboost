@@ -73,7 +73,6 @@ function fieldsOf(section, x) {
     case 'patterns': return [['Câu', x.text], ['Nghĩa', x.meaning_vi], ['Khung (mức 2)', `${x.frame} ← ${x.slot_options.join(' / ')}`], ['Đề nói tự do (mức 3)', x.free_prompt_vi], ['Câu gợi ý', x.free_example], ['Mức', x.level]];
     case 'dialogues': return [['Tên', `${x.title} (${x.title_vi})`], ['Vai', x.roles.join(', ')], ...x.turns.map((t, i) => [`${i + 1}. ${t.speaker}`, `${t.text} — ${t.hint_vi}`])];
     case 'roleplays': return [['Tình huống', x.situation_vi], ['Vai của máy', x.ai_role], ...x.turns.map((t, i) => [`Lượt ${i + 1}`, `${t.bot} → gợi ý: ${t.hint} · từ chấp nhận: ${t.expect_any.join(', ')}`]), ['Kết thúc', x.closing]];
-    case 'picture_tasks': return [['Tên', `${x.title} (${x.title_vi})`], ['Tranh', x.image || `${x.scene_emoji.join(' ')} (emoji tạm)`], ['Từ khóa', x.keywords.join(', ')], ...['1', '2', '3'].map((l) => [`Mức ${l}`, `${x.prompts[l].prompt_vi} · mẫu: ${x.prompts[l].model_answer}`])];
     default: return [];
   }
 }
@@ -115,7 +114,6 @@ function allSpokenTexts(u) {
   for (const p of u.patterns || []) { add(p.text); add(p.free_example); }
   for (const d of u.dialogues || []) for (const t of d.turns || []) add(t.text);
   for (const r of u.roleplays || []) { for (const t of r.turns || []) { add(t.bot); add(t.hint); } add(r.closing); }
-  for (const p of u.picture_tasks || []) for (const k of ['1', '2', '3']) add(p.prompts && p.prompts[k] && p.prompts[k].model_answer);
   return [...new Set(out)];
 }
 

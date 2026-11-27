@@ -28,7 +28,6 @@ foreach ($v in @($u.vocabulary)) { Add-Text $v.word; Add-Text $v.example }
 foreach ($p in @($u.patterns)) { Add-Text $p.text; Add-Text $p.free_example }
 foreach ($d in @($u.dialogues)) { foreach ($t in @($d.turns)) { Add-Text $t.text } }
 foreach ($r in @($u.roleplays)) { foreach ($t in @($r.turns)) { Add-Text $t.bot; Add-Text $t.hint }; Add-Text $r.closing }
-foreach ($p in @($u.picture_tasks)) { foreach ($k in '1','2','3') { if ($p.prompts.$k) { Add-Text $p.prompts.$k.model_answer } } }
 $unique = $texts | Sort-Object -Unique
 
 $sha = [Security.Cryptography.SHA1]::Create()

@@ -3,7 +3,7 @@
 //
 // Một "nhiệm vụ" = một mục bài học luyện ở một mức. Ở mức L, học sinh cần làm:
 //   - Từ vựng và Mẫu câu có mức ≤ L (giống những gì trang học sinh hiện ở mức L)
-//   - Mọi bài Hội thoại, Đóng vai, Nói qua tranh (đề bài tự khó dần theo mức)
+//   - Mọi bài Hội thoại, Đóng vai (đề bài tự khó dần theo mức)
 //   - Thử thách từ vựng của mức L (nếu thầy cô bật)
 // Nhiệm vụ "hoàn thành" khi có ít nhất một lượt LUYỆN Ở ĐÚNG MỨC ĐÓ đạt từ pass_stars sao trở lên,
 // trước hoặc trong ngày hạn chót (nếu có).
@@ -23,7 +23,7 @@ export function normAssignment(a) {
   return x;
 }
 
-const SECTION_ACT = { vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai', picture_tasks: 'Nói qua tranh' };
+const SECTION_ACT = { vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai' };
 export const challengeId = (lv) => `challenge-vocab-L${lv}`;
 
 // Danh sách nhiệm vụ của bài được giao. Chỉ tính nội dung đã được giáo viên duyệt.
@@ -37,7 +37,7 @@ export function tasksFor(unit, assignment) {
         tasks.push({ key: `${x.id}@${L}`, item: x.id, level: L, section: s, label: x.word || x.text || x.title });
       }
     }
-    for (const s of ['dialogues', 'roleplays', 'picture_tasks']) {
+    for (const s of ['dialogues', 'roleplays']) {
       for (const x of (unit[s] || []).filter(ok)) tasks.push({ key: `${x.id}@${L}`, item: x.id, level: L, section: s, label: x.title });
     }
     if (a.challenge && (unit.vocabulary || []).some((v) => ok(v) && (v.level || 1) <= L)) {

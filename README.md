@@ -26,7 +26,7 @@ Trạng thái duyệt chọn trên trang giáo viên chỉ lưu trên trình duy
 ## Nhập nội dung từ Excel (khuyên dùng)
 
 1. Mở trang giáo viên, bấm **⬇ Tải Excel mẫu**. Tệp có sẵn nội dung đang xem để làm ví dụ, và trang tính **HuongDan** giải thích từng cột.
-2. Sửa hoặc điền thêm trong Excel. Mỗi trang tính là một phần: ThongTin, MucDo, TuVung, MauCau, HoiThoai, DongVai, Tranh.
+2. Sửa hoặc điền thêm trong Excel. Mỗi trang tính là một phần: ThongTin, MucDo, TuVung, MauCau, HoiThoai, DongVai.
    Muốn soạn Unit mới thì đổi số Unit ở trang ThongTin.
 3. Bấm **⬆ Tải lên tệp Excel đã điền**. Ứng dụng báo lỗi theo trang tính và số dòng (ví dụ “TuVung dòng 4: mức phải là 1, 2 hoặc 3”).
 4. Bấm **👀 Xem trước** để xem như học sinh. Nội dung nhập chỉ nằm trên máy của thầy cô, học sinh chưa thấy.
@@ -55,7 +55,6 @@ Thêm một từ vựng: chép một khối trong `"vocabulary"`, đổi `id` (k
 Mẫu câu (`patterns`): `frame` phải có `___`; `slot_options` là các từ điền được; `free_required` là các nhóm từ bắt buộc ở mức 3
 (mỗi nhóm cần ít nhất một từ; `"*ing"` nghĩa là có một từ đuôi -ing).
 Đóng vai (`roleplays`): mỗi lượt có câu của máy (`bot`), các từ chấp nhận (`expect_any`) và câu gợi ý (`hint`).
-Nói qua tranh (`picture_tasks`): từ khóa và yêu cầu riêng cho từng mức trong `prompts`.
 
 Thêm Unit mới: tạo `data/units/unit-02.json` theo cùng cấu trúc và ghi tên tệp vào `data/units/index.json`.
 

@@ -29,10 +29,6 @@ export const SHEETS = {
   patterns: { name: 'MauCau', cols: ['id', 'Câu mẫu', 'Nghĩa', 'Mức (1-3)', 'Khung câu (có ___)', 'Từ điền vào khung (;)', 'Đề nói tự do (mức 3)', 'Từ bắt buộc (nhóm | , từ ;)', 'Câu gợi ý (mức 3)', 'Âm thanh', 'Trạng thái'] },
   dialogues: { name: 'HoiThoai', cols: ['id hội thoại', 'Tên (tiếng Anh)', 'Tên (tiếng Việt)', 'Mức (1-3)', 'Thứ tự', 'Người nói', 'Lời thoại', 'Nghĩa tiếng Việt', 'Âm thanh', 'Trạng thái'] },
   roleplays: { name: 'DongVai', cols: ['id tình huống', 'Tên', 'Tình huống (tiếng Việt)', 'Tên nhân vật của máy', 'Vai của máy', 'Mục tiêu', 'Mức (1-3)', 'Thứ tự', 'Câu của máy', 'Từ chấp nhận (;)', 'Câu gợi ý', 'Câu kết thúc', 'Trạng thái'] },
-  pictures: { name: 'Tranh', cols: ['id', 'Tên (tiếng Anh)', 'Tên (tiếng Việt)', 'Emoji tranh (cách nhau dấu cách)', 'Ảnh', 'Từ khóa (;)',
-    'Mức 1: đề', 'Mức 1: câu mẫu', 'Mức 1: số từ khóa tối thiểu', 'Mức 1: số từ tối thiểu',
-    'Mức 2: đề', 'Mức 2: câu mẫu', 'Mức 2: số từ khóa tối thiểu', 'Mức 2: số từ tối thiểu',
-    'Mức 3: đề', 'Mức 3: câu mẫu', 'Mức 3: số từ khóa tối thiểu', 'Mức 3: số từ tối thiểu', 'Trạng thái'] },
 };
 
 const INFO_ROWS = [['Bộ sách', 'book'], ['Khối', 'grade'], ['Unit', 'unit'], ['Tên bài (tiếng Anh)', 'title'], ['Tên bài (tiếng Việt)', 'title_vi'], ['Phiên bản', 'version'], ['Ghi chú', 'note']];
@@ -40,7 +36,7 @@ const INFO_ROWS = [['Bộ sách', 'book'], ['Khối', 'grade'], ['Unit', 'unit']
 const GUIDE = [
   ['HƯỚNG DẪN NHẬP NỘI DUNG SPEAKBOOST'],
   [''],
-  ['1. Mỗi trang tính là một phần của bài: ThongTin, MucDo, TuVung, MauCau, HoiThoai, DongVai, Tranh.'],
+  ['1. Mỗi trang tính là một phần của bài: ThongTin, MucDo, TuVung, MauCau, HoiThoai, DongVai.'],
   ['2. Giữ nguyên dòng tiêu đề (dòng 1) và tên trang tính. Mỗi dòng bên dưới là một mục.'],
   ['3. Cột id có thể để trống: ứng dụng tự tạo. Nếu điền, id không được trùng trong cả bài.'],
   ['4. Ô có nhiều mục thì cách nhau bằng dấu chấm phẩy ;  Ví dụ: uniforms; school uniform'],
@@ -80,8 +76,6 @@ export async function unitToWorkbook(unit) {
   const rRows = [];
   for (const r of unit.roleplays || []) r.turns.forEach((t, i) => rRows.push([r.id, i ? '' : r.title, i ? '' : r.situation_vi, i ? '' : (r.bot_name || ''), i ? '' : (r.ai_role || ''), i ? '' : (r.goal || ''), i ? '' : r.level, i + 1, t.bot, (t.expect_any || []).join('; '), t.hint || '', i ? '' : r.closing, i ? '' : r.review]));
   add(SHEETS.roleplays.name, [SHEETS.roleplays.cols, ...rRows]);
-  add(SHEETS.pictures.name, [SHEETS.pictures.cols, ...(unit.picture_tasks || []).map((p) => [p.id, p.title, p.title_vi, (p.scene_emoji || []).join(' '), p.image || '', (p.keywords || []).join('; '),
-    ...['1', '2', '3'].flatMap((l) => [p.prompts[l].prompt_vi, p.prompts[l].model_answer, p.prompts[l].min_keywords, p.prompts[l].min_words]), p.review])]);
   return wb;
 }
 
@@ -232,26 +226,7 @@ export async function workbookToUnit(wb, fallback) {
   });
   for (const rp of rById.values()) { rp.turns.sort((a, b) => a.order - b.order).forEach((t) => delete t.order); roleplays.push(rp); }
 
-  // Nói qua tranh
-  const picture_tasks = [];
-  const tRows = read('pictures') || [];
-  missingCols(tRows, 'pictures');
-  tRows.forEach((r, i) => {
-    if (isBlank(r)) return;
-    const w = `Tranh dòng ${i + 2}`;
-    if (!need(r, ['Tên (tiếng Anh)', 'Từ khóa (;)', 'Mức 1: đề', 'Mức 2: đề', 'Mức 3: đề'], w)) return;
-    if (!str(r['Emoji tranh (cách nhau dấu cách)']) && !str(r['Ảnh'])) errors.push(`${w}: cần Emoji tranh hoặc Ảnh`);
-    const prompts = {};
-    ['1', '2', '3'].forEach((l, k) => {
-      prompts[l] = { prompt_vi: str(r[`Mức ${l}: đề`]), model_answer: str(r[`Mức ${l}: câu mẫu`]),
-        min_keywords: num(r[`Mức ${l}: số từ khóa tối thiểu`], [2, 2, 3][k]), min_words: num(r[`Mức ${l}: số từ tối thiểu`], [2, 6, 15][k]) };
-    });
-    picture_tasks.push({ id: makeId(r.id, 'pic', r['Tên (tiếng Anh)'], w), review: status(r['Trạng thái'], w), title: str(r['Tên (tiếng Anh)']), title_vi: str(r['Tên (tiếng Việt)']),
-      scene_emoji: str(r['Emoji tranh (cách nhau dấu cách)']).split(/\s+/).filter(Boolean), image: str(r['Ảnh']) || null,
-      keywords: list(r['Từ khóa (;)']).map((t) => t.toLowerCase()), prompts });
-  });
-
   // Cấu hình thử thách chưa có trong Excel: giữ nguyên từ bản đang có.
-  const unit = { meta, levels, ...(fallback?.challenges ? { challenges: fallback.challenges } : {}), vocabulary, patterns, dialogues, roleplays, picture_tasks };
+  const unit = { meta, levels, ...(fallback?.challenges ? { challenges: fallback.challenges } : {}), vocabulary, patterns, dialogues, roleplays };
   return { unit, errors };
 }
