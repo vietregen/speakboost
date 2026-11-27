@@ -61,3 +61,13 @@ table.grid { border-collapse: collapse; width: 100%; font-size: 14px; font-varia
   .slips { grid-template-columns: repeat(3, 1fr); }
   .slip { border-color: #999; break-inside: avoid; color: #000; }
 }
+
+/* ---------- Giao bài & điểm ---------- */
+.assign-note { font-size: 14px; }
+.mini-bar.wide { width: 90px; }
+.grade { font-weight: 800; font-size: 16px; }
+table.clickable tbody tr { cursor: pointer; }
+table.clickable tbody tr:hover, table.clickable tbody tr:focus { background: var(--brand-soft); outline: none; }
+.check { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; }
+.inline-list { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 0; list-style: none; }
+.miss-list { columns: 2 280px; font-size: 14px; }

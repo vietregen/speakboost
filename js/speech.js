@@ -150,6 +150,23 @@ const IOS_NO_SPEECH = 'Máy chưa nghe thấy tiếng. Trên iPhone/iPad cần b
 
 let activeRec = null;
 
+// ---- Nhật ký chẩn đoán: mở trang với ?debug=1 để xem máy nhận diện báo gì (dùng khi thử trên iPhone) ----
+export const VERSION = 'speech-2026-11-27c';
+const DEBUG = /[?&]debug=1/.test(location.search);
+let logBox = null;
+function dlog(msg) {
+  if (!DEBUG) return;
+  if (!logBox) {
+    logBox = document.createElement('pre');
+    logBox.style.cssText = 'position:fixed;left:0;right:0;bottom:0;max-height:38vh;overflow:auto;margin:0;padding:6px 8px;font:11px/1.35 ui-monospace,monospace;background:rgba(0,0,0,.85);color:#9f9;z-index:9999;white-space:pre-wrap';
+    document.body.append(logBox);
+    logBox.textContent = `${VERSION} · ${navigator.userAgent}\n`;
+  }
+  const t = new Date(); const ts = `${t.getSeconds()}.${String(t.getMilliseconds()).padStart(3, '0')}`;
+  logBox.textContent += `${ts} ${msg}\n`;
+  logBox.scrollTop = logBox.scrollHeight;
+}
+
 // Nghe một lượt nói. Trả về { alternatives: [...], error }.
 // continuous = true: nghe nhiều câu liền nhau cho tới khi học sinh bấm dừng (dùng cho nói tự do).
 export function listen({ lang = 'en-GB', onStart, continuous = false } = {}) {
@@ -183,6 +200,7 @@ export function listen({ lang = 'en-GB', onStart, continuous = false } = {}) {
     // Dừng nghe; nếu trình duyệt (Safari) không báo “đã dừng” trong 0,6 giây thì tự chốt với những gì đã nghe.
     const stopNow = () => {
       if (done) return;
+      dlog('→ tự dừng (stop)');
       try { rec.stop(); } catch (_) { /* bỏ qua */ }
       clearTimeout(endTimer);
       endTimer = setTimeout(() => { try { rec.abort(); } catch (_) { /* bỏ qua */ } finish(result()); }, 600);
@@ -196,10 +214,19 @@ export function listen({ lang = 'en-GB', onStart, continuous = false } = {}) {
       clearTimeout(silenceTimer);
       silenceTimer = setTimeout(stopNow, IS_IOS ? 1500 : 2500);
     };
-    if (!continuous) maxTimer = setTimeout(stopNow, 12000);   // chốt chặn: một lượt nói ngắn không quá 12 giây
-    rec.onspeechend = () => { if (!continuous && (interim.length || IS_IOS)) setTimeout(stopNow, 700); };
-    rec.onstart = () => onStart && onStart();
+    // Chốt chặn: một lượt nói ngắn không quá 12 giây (iPhone: 8 giây).
+    if (!continuous) maxTimer = setTimeout(() => { dlog('hết giờ tối đa → dừng'); stopNow(); }, IS_IOS ? 8000 : 12000);
+    rec.onspeechend = () => { dlog('speechend'); if (!continuous && (interim.length || IS_IOS)) setTimeout(stopNow, 700); };
+    for (const ev of ['audiostart', 'soundstart', 'speechstart', 'soundend', 'audioend', 'nomatch']) {
+      rec.addEventListener(ev, () => dlog(ev));
+    }
+    rec.onstart = () => { dlog(`start lang=${rec.lang} continuous=${continuous}`); if (onStart) onStart(); };
     rec.onresult = (e) => {
+      if (DEBUG) {
+        const parts = [];
+        for (let i = 0; i < e.results.length; i++) parts.push(`${e.results[i].isFinal ? 'F' : 'i'}:"${e.results[i][0] && e.results[i][0].transcript}"`);
+        dlog(`result idx=${e.resultIndex} ${parts.join(' ')}`);
+      }
       const cur = [];
       let sawFinal = false;
       for (let i = e.resultIndex; i < e.results.length; i++) {
@@ -215,11 +242,12 @@ export function listen({ lang = 'en-GB', onStart, continuous = false } = {}) {
       if (cur.length) { interim = [cur.join(' ')]; armSilence(interim[0]); } else if (sawFinal) interim = [];
     };
     rec.onerror = (e) => {
+      dlog(`error ${e.error}`);
       if ((pieces.length || interim.length) && e.error !== 'not-allowed') return;   // vẫn có chữ: để onend chốt
       const msg = ERROR_VI[e.error] === 'MIC_HELP' ? micHelp() : ERROR_VI[e.error];
       finish({ alternatives: [], error: e.error, message: msg || 'Có lỗi khi nghe, bạn thử lại nhé.' });
     };
-    rec.onend = () => finish(result());
+    rec.onend = () => { dlog('end'); finish(result()); };
     try { rec.start(); } catch (err) { finish({ alternatives: [], error: 'start-failed', message: 'Chưa bắt đầu nghe được, bạn bấm lại nhé.' }); }
   });
 }

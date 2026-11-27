@@ -209,3 +209,13 @@ h2 { font-size: 19px; margin: 24px 0 10px; }
 .roster-no { min-width: 30px; height: 30px; border-radius: 99px; background: var(--brand); color: var(--brand-ink); display: inline-grid; place-items: center; font-size: 14px; }
 .who { font-weight: 600; color: var(--ink); }
 .center { text-align: center; }
+
+/* ---------- Nhiệm vụ của lớp (trang học sinh) ---------- */
+.task-card { display: grid; gap: 8px; }
+.task-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.task-head b { font-size: 17px; }
+.task-bar { height: 12px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.task-bar span { display: block; height: 100%; background: var(--ok); border-radius: 99px; transition: width .4s; }
+.task-list { margin: 4px 0 0; padding-left: 18px; font-size: 15px; }
+.task-list li { margin: 3px 0; }
+.task-done { color: var(--ok); font-weight: 700; }

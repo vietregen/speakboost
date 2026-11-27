@@ -6,6 +6,7 @@ import * as P from './progress.js';
 import { h, speakPanel, listenButtons, sentenceOutcome, heardLine, starsText, disposeAll } from './ui.js';
 import * as Challenge from './challenge.js';
 import * as Cloud from './cloud.js';
+import * as G from './grading.js';
 
 const root = document.getElementById('app');
 let unit = null;
@@ -134,6 +135,7 @@ function renderHome() {
         h('span', { class: 'pill' }, `⭐ ${totalStars}`))),
     supportNotice(),
     anyVisible ? null : emptyState('Thầy cô chưa duyệt nội dung bài này. Bạn chờ thầy cô nhé!'),
+    anyVisible ? taskCard() : null,
     roadmap(),
     h('div', { class: 'tiles' }, ...tiles),
     h('footer', { class: 'foot' },
@@ -141,6 +143,38 @@ function renderHome() {
       h('span', {}, '🔒 Không lưu giọng nói'),
       h('a', { href: 'dashboard.html', class: 'muted' }, 'Giáo viên')),
   ));
+}
+
+// Bài thầy cô giao cho lớp: tiến độ và các bài còn thiếu (cùng cách tính với Dashboard giáo viên).
+const SECTION_ROUTE = { vocabulary: '#/vocab', patterns: '#/patterns', dialogues: '#/dialogues', roleplays: '#/roleplays', picture_tasks: '#/pictures', challenge: '#/challenge' };
+function taskCard() {
+  const st = Cloud.student();
+  if (!st || preview) return null;
+  const c = G.completion(unit, st.assignment, P.attempts());
+  if (!c.total) return null;
+  const a = c.assignment;
+  const stars = '⭐'.repeat(a.pass_stars);
+  const list = h('div', { hidden: true },
+    h('p', { class: 'muted' }, `Mỗi bài cần đạt từ ${stars} khi luyện ở đúng mức. Bạn đổi mức ở lộ trình bên dưới.`),
+    ...a.levels.map((L) => {
+      const miss = c.missing.filter((m) => m.level === L);
+      const groups = {};
+      for (const m of miss) (groups[m.section] = groups[m.section] || []).push(m);
+      return h('div', {}, h('b', {}, `Mức ${L}: `), miss.length ? `còn ${miss.length} bài` : h('span', { class: 'task-done' }, 'xong rồi ✓'),
+        miss.length ? h('ul', { class: 'task-list' }, ...Object.entries(groups).map(([s, ms]) =>
+          h('li', {}, h('a', { href: SECTION_ROUTE[s], onclick: () => { if (level() !== L) P.setLevel(L); } }, ms[0].section === 'challenge' ? ms[0].label : `${ms.length} bài ${({ vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai', picture_tasks: 'Nói qua tranh' })[s]}`),
+            s === 'vocabulary' || s === 'patterns' ? h('span', { class: 'muted' }, `: ${ms.slice(0, 6).map((m) => m.label).join(', ')}${ms.length > 6 ? '…' : ''}`) : null))) : null);
+    }));
+  const toggle = h('button', { class: 'link-btn', onclick: () => { list.hidden = !list.hidden; toggle.textContent = list.hidden ? 'Xem bài còn thiếu' : 'Ẩn'; } }, 'Xem bài còn thiếu');
+  const done = c.done === c.total;
+  return h('section', { class: 'card task-card' },
+    h('div', { class: 'task-head' },
+      h('b', {}, done ? '🎉 Bạn đã hoàn thành bài được giao!' : '📋 Bài thầy cô giao'),
+      h('span', { class: 'muted' }, a.levels.map((l) => `Mức ${l}`).join(' + '), a.due ? ` · hạn ${new Date(`${a.due}T00:00:00`).toLocaleDateString('vi-VN')}` : '')),
+    h('div', { class: 'task-bar', role: 'progressbar', 'aria-valuenow': c.done, 'aria-valuemax': c.total, 'aria-label': 'Tiến độ bài được giao' },
+      h('span', { style: `width:${Math.round(c.pct * 100)}%` })),
+    h('div', { class: 'task-head' }, h('span', {}, `${c.done}/${c.total} bài đạt ${stars}`), done ? null : toggle),
+    list);
 }
 
 function whoAmI() {
@@ -158,7 +192,7 @@ function renderLogin(state = {}) {
   const msg = h('p', { class: 'warn', 'aria-live': 'polite', hidden: !state.error }, state.error || '');
   const fail = (e) => { msg.textContent = e.message || String(e); msg.hidden = false; };
   const guest = h('button', { class: 'link-btn', onclick: () => { Cloud.setGuest(true); needLogin = false; render(); } },
-    'Học thử, không lưu kết quả cho lớp');
+    'Học thử (không lưu kết quả, không được tính điểm)');
   const box = (title, ...content) => root.replaceChildren(h('div', { class: 'screen' },
     h('header', { class: 'topbar' }, state.step ? h('button', { class: 'back', 'aria-label': 'Quay lại', onclick: () => renderLogin(state.step === 'pin' ? { ...state, step: 'roster', error: '' } : { code: state.code, auto: false }) }, '‹') : null,
       h('div', { class: 'topbar-title' }, 'SpeakBoost')),

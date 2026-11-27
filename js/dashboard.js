@@ -2,6 +2,7 @@
 // Mọi quyền do RLS ở máy chủ kiểm tra; trang này chỉ hiển thị những gì máy chủ cho phép.
 import { SUPABASE_URL, SUPABASE_KEY } from './config.js';
 import * as C from './content.js';
+import * as G from './grading.js';
 
 const SDK = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm';
 const QR_LIB = 'https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.js';
@@ -151,7 +152,7 @@ async function renderClasses() {
 // ---------- Một lớp ----------
 async function renderClass(id) {
   show('Lớp', note('muted', 'Đang tải…'));
-  const { data: cls, error } = await sb.from('classes').select('id, name, code, study_group, active').eq('id', id).maybeSingle();
+  const { data: cls, error } = await sb.from('classes').select('id, name, code, study_group, active, assignment').eq('id', id).maybeSingle();
   if (error || !cls) return show('Lớp', note('warn', error ? errText(error) : 'Không tìm thấy lớp, hoặc bạn không có quyền xem lớp này.'));
   const { data: students, error: e2 } = await sb.from('students').select('id, roster_no, nickname, failed_attempts, locked_until').eq('class_id', id).order('roster_no');
   if (e2) return show(cls.name, note('warn', errText(e2)));
@@ -161,7 +162,7 @@ async function renderClass(id) {
   } catch (e) { attempts = []; }
 
   const link = `${STUDENT_URL}?lop=${encodeURIComponent(cls.code)}`;
-  const tabs = { progress: 'Tiến độ', students: 'Học sinh & PIN', export: 'Xuất dữ liệu', settings: 'Mã lớp & cài đặt' };
+  const tabs = { progress: 'Tiến độ & điểm', students: 'Học sinh & PIN', export: 'Xuất dữ liệu', settings: 'Giao bài & cài đặt' };
   const current = (location.hash.split('/')[3]) || (students.length ? 'progress' : 'students');
   const body = { progress: () => progressView(cls, students, attempts), students: () => studentsView(cls, students), export: () => exportView(cls, students, attempts), settings: () => settingsView(cls, link) }[current] || (() => progressView(cls, students, attempts));
 
@@ -174,56 +175,81 @@ async function renderClass(id) {
     body());
 }
 
-// ---- Tiến độ ----
+// ---- Tiến độ & điểm ----
+// Lượt luyện từ máy chủ → dạng dùng chung với trang học sinh.
+const asAttempts = (list) => list.map((a) => ({ item: a.item_id, level: a.level, stars: a.stars, t: a.created_at }));
+
 function progressView(cls, students, attempts) {
   if (!students.length) return h('div', { class: 'card' }, h('p', {}, 'Lớp chưa có học sinh. Vào thẻ “Học sinh & PIN” để thêm.'));
+  if (!unit) return h('div', { class: 'card warn' }, h('p', {}, 'Chưa tải được nội dung bài học để tính mức hoàn thành.'));
+  const asg = G.normAssignment(cls.assignment);
   const real = attempts.filter((a) => !a.is_simulated);
-  const vocab = new Map((unit?.vocabulary || []).map((v) => [v.id, v]));
-  const totals = { vocab: unit?.vocabulary?.length || 0, pattern: unit?.patterns?.length || 0, dialogue: unit?.dialogues?.length || 0, roleplay: unit?.roleplays?.length || 0, picture: unit?.picture_tasks?.length || 0 };
   const by = new Map(students.map((s) => [s.id, []]));
   for (const a of real) by.get(a.student_id)?.push(a);
 
   const rows = students.map((s) => {
     const list = by.get(s.id) || [];
-    const done = (act) => new Set(list.filter((a) => a.activity === act && a.stars > 0).map((a) => a.item_id.split('#')[0])).size;
-    const asr = list.filter((a) => a.source === 'asr_match');
-    const avg = asr.length ? (asr.reduce((t, a) => t + a.stars, 0) / asr.length).toFixed(1) : '—';
-    const days = new Set(list.map((a) => a.created_at.slice(0, 10))).size;
-    const ch = list.filter((a) => a.activity === 'challenge');
-    const last = list.length ? list[list.length - 1].created_at : null;
-    return { s, n: list.length, days, avg, last, chBest: ch.length ? Math.max(...ch.map((a) => a.stars)) : 0,
-      vocab: done('vocab'), pattern: done('pattern'), dialogue: done('dialogue'), roleplay: done('roleplay'), picture: done('picture') };
+    const c = G.completion(unit, asg, asAttempts(list));
+    return { s, c, n: list.length, days: new Set(list.map((a) => a.created_at.slice(0, 10))).size, last: list.length ? list[list.length - 1].created_at : null };
   });
+  const total = rows[0]?.c.total || 0;
+  const finished = rows.filter((r) => r.c.total && r.c.done === r.c.total).length;
+  const avgPct = rows.length ? Math.round((rows.reduce((t, r) => t + r.c.pct, 0) / rows.length) * 100) : 0;
   const active7 = rows.filter((r) => r.last && Date.now() - new Date(r.last) < 7 * 864e5).length;
 
-  // Từ máy hay chưa nghe rõ: tỉ lệ lượt nhận diện < 3 sao trên từng từ (chỉ nguồn nhận diện lời nói)
-  const wordStats = new Map();
-  for (const a of real) if (a.activity === 'vocab' && a.source === 'asr_match') {
-    const w = wordStats.get(a.item_id) || { n: 0, miss: 0 };
-    w.n++; if (a.stars < 3) w.miss++;
-    wordStats.set(a.item_id, w);
-  }
-  const hard = [...wordStats.entries()].filter(([, w]) => w.n >= 3).map(([id, w]) => ({ id, ...w, rate: w.miss / w.n }))
-    .sort((a, b) => b.rate - a.rate).slice(0, 8).filter((w) => w.rate > 0);
+  const detail = h('div', {});
+  const showDetail = (r) => {
+    const groups = r.c.bySection.map((g) => h('li', {}, `${g.name}: ${g.done}/${g.total}`));
+    const miss = r.c.missing;
+    detail.replaceChildren(h('section', { class: 'card' },
+      h('h2', {}, `${r.s.roster_no}. ${r.s.nickname} · ${r.c.done}/${r.c.total} nhiệm vụ · điểm gợi ý ${r.c.grade}`),
+      h('ul', { class: 'inline-list' }, ...groups),
+      miss.length ? h('div', {}, h('p', { class: 'muted' }, `Còn ${miss.length} nhiệm vụ chưa đạt ${asg.pass_stars}⭐ (sao cao nhất hiện có trong ngoặc):`),
+        h('ul', { class: 'miss-list' }, ...miss.map((m) => h('li', {}, `Mức ${m.level} · ${G_SECTION[m.section] || m.section} · ${m.label} (${m.best}⭐)`))))
+        : h('p', { class: 'ok-text' }, '🎉 Đã hoàn thành toàn bộ bài được giao.')));
+    detail.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  };
 
-  const bar = (v, t) => h('span', { class: 'mini' }, h('span', { class: 'mini-bar' }, h('span', { style: `width:${t ? Math.round((v / t) * 100) : 0}%` })), `${v}/${t}`);
+  const pctBar = (r) => h('span', { class: 'mini' }, h('span', { class: 'mini-bar wide' }, h('span', { style: `width:${Math.round(r.c.pct * 100)}%` })), `${r.c.done}/${r.c.total}`);
   return h('div', {},
+    h('div', { class: 'card assign-note' },
+      h('b', {}, 'Bài được giao: '), asg.levels.map((l) => `Mức ${l}`).join(' + '), asg.challenge ? ' (có Thử thách)' : '',
+      ` · đạt khi ≥ ${asg.pass_stars}⭐`, asg.due ? ` · hạn ${fmtDate(asg.due)}` : ' · chưa đặt hạn',
+      ` · ${total} nhiệm vụ/học sinh · thang ${asg.scale} `,
+      h('a', { href: `#/class/${cls.id}/settings` }, 'Sửa')),
     h('div', { class: 'stats' },
-      stat(students.length, 'học sinh'), stat(active7, 'luyện trong 7 ngày qua'), stat(real.length, 'lượt luyện'),
-      stat(new Set(real.map((a) => a.created_at.slice(0, 10))).size, 'ngày có luyện tập')),
+      stat(`${avgPct}%`, 'hoàn thành trung bình'), stat(`${finished}/${students.length}`, 'học sinh đã xong'),
+      stat(active7, 'luyện trong 7 ngày qua'), stat(real.length, 'lượt luyện')),
     h('div', { class: 'card table-wrap' },
-      h('table', { class: 'grid' },
-        h('thead', {}, h('tr', {}, ...['Số', 'Tên gọi', 'Ngày luyện', 'Lượt', 'Từ vựng', 'Mẫu câu', 'Hội thoại', 'Đóng vai', 'Tranh', 'Thử thách', 'Sao TB*', 'Lần cuối'].map((t) => h('th', {}, t)))),
-        h('tbody', {}, ...rows.map((r) => h('tr', { class: r.n ? '' : 'idle' },
-          h('td', {}, r.s.roster_no), h('td', {}, r.s.nickname), h('td', {}, r.days), h('td', {}, r.n),
-          h('td', {}, bar(r.vocab, totals.vocab)), h('td', {}, bar(r.pattern, totals.pattern)), h('td', {}, bar(r.dialogue, totals.dialogue)),
-          h('td', {}, bar(r.roleplay, totals.roleplay)), h('td', {}, bar(r.picture, totals.picture)),
-          h('td', {}, r.chBest ? '★'.repeat(r.chBest) : '—'), h('td', {}, r.avg), h('td', {}, fmtDate(r.last))))))),
-    h('p', { class: 'muted small' }, '* Sao TB: trung bình số sao của các lượt máy nhận diện lời nói (không tính lượt tự đánh giá). Đây là mức máy nghe ra lời nói, không phải điểm phát âm. Số liệu chỉ gồm dữ liệu thật (is_simulated = false).'),
-    h('section', { class: 'card' }, h('h2', {}, 'Từ máy hay chưa nghe rõ'),
-      hard.length ? h('ol', { class: 'hard-list' }, ...hard.map((w) => h('li', {}, h('b', {}, vocab.get(w.id)?.word || w.id), ` ${vocab.get(w.id)?.ipa || ''} · ${Math.round(w.rate * 100)}% lượt chưa được 3 sao (${w.n} lượt)`)))
-        : h('p', { class: 'muted' }, 'Chưa đủ dữ liệu (cần ít nhất 3 lượt nói cho mỗi từ).')));
+      h('table', { class: 'grid clickable' },
+        h('thead', {}, h('tr', {}, ...['Số', 'Tên gọi', 'Hoàn thành', 'Điểm gợi ý', ...asg.levels.map((l) => `Mức ${l}`), 'Ngày luyện', 'Lượt', 'Lần cuối'].map((t) => h('th', {}, t)))),
+        h('tbody', {}, ...rows.map((r) => h('tr', { class: r.n ? '' : 'idle', tabindex: 0, title: 'Bấm để xem bài còn thiếu', onclick: () => showDetail(r), onkeydown: (e) => { if (e.key === 'Enter') showDetail(r); } },
+          h('td', {}, r.s.roster_no), h('td', {}, r.s.nickname), h('td', {}, pctBar(r)), h('td', { class: 'grade' }, r.c.grade),
+          ...r.c.byLevel.map((b) => h('td', {}, `${b.done}/${b.total}`)),
+          h('td', {}, r.days), h('td', {}, r.n), h('td', {}, fmtDate(r.last))))))),
+    h('p', { class: 'muted small' }, `Điểm gợi ý = tỉ lệ nhiệm vụ đạt ≥ ${asg.pass_stars}⭐ × ${asg.scale}, làm tròn 0,5${asg.due ? `, chỉ tính lượt luyện đến hết ngày ${fmtDate(asg.due)}` : ''}. “Sao” là mức máy nhận diện được lời nói, không phải điểm phát âm; thầy cô quyết định điểm cuối cùng. Bấm vào một học sinh để xem bài còn thiếu.`),
+    detail,
+    hardWords(real));
 }
+
+const G_SECTION = { vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai', picture_tasks: 'Nói qua tranh', challenge: 'Thử thách' };
+
+// Từ máy hay chưa nghe rõ: tỉ lệ lượt nhận diện < 3 sao trên từng từ.
+function hardWords(real) {
+  const vocab = new Map((unit?.vocabulary || []).map((v) => [v.id, v]));
+  const stats = new Map();
+  for (const a of real) if (a.activity === 'vocab' && a.source === 'asr_match') {
+    const w = stats.get(a.item_id) || { n: 0, miss: 0 };
+    w.n++; if (a.stars < 3) w.miss++;
+    stats.set(a.item_id, w);
+  }
+  const hard = [...stats.entries()].filter(([, w]) => w.n >= 3).map(([id, w]) => ({ id, ...w, rate: w.miss / w.n }))
+    .sort((a, b) => b.rate - a.rate).slice(0, 8).filter((w) => w.rate > 0);
+  return h('section', { class: 'card' }, h('h2', {}, 'Từ máy hay chưa nghe rõ'),
+    hard.length ? h('ol', { class: 'hard-list' }, ...hard.map((w) => h('li', {}, h('b', {}, vocab.get(w.id)?.word || w.id), ` ${vocab.get(w.id)?.ipa || ''} · ${Math.round(w.rate * 100)}% lượt chưa được 3 sao (${w.n} lượt)`)))
+      : h('p', { class: 'muted' }, 'Chưa đủ dữ liệu (cần ít nhất 3 lượt nói cho mỗi từ).'));
+}
+
 const stat = (n, label) => h('div', { class: 'card stat' }, h('b', {}, n), h('span', {}, label));
 
 // ---- Học sinh & PIN ----
@@ -348,10 +374,28 @@ function exportView(cls, students, attempts) {
     });
     download(`speakboost-${cls.name}-tong-hop-${stamp()}.csv`, toCsv(head, rows), 'text/csv;charset=utf-8');
   };
+  // Bảng điểm: mức hoàn thành bài được giao (theo cài đặt của lớp, tính đến hạn chót).
+  const gradeCsv = () => {
+    if (!unit) return;
+    const asg = G.normAssignment(cls.assignment);
+    const real = attempts.filter((a) => !a.is_simulated);
+    const head = ['so_thu_tu', 'ten_goi', 'lop', 'nhiem_vu_dat', 'tong_nhiem_vu', 'ti_le_hoan_thanh', `diem_goi_y_thang_${asg.scale}`,
+      ...asg.levels.map((l) => `muc_${l}_dat`), 'lan_luyen_cuoi'];
+    const rows = students.map((s) => {
+      const mine = real.filter((a) => a.student_id === s.id);
+      const c = G.completion(unit, asg, mine.map((a) => ({ item: a.item_id, level: a.level, stars: a.stars, t: a.created_at })));
+      return [s.roster_no, s.nickname, cls.name, c.done, c.total, `${Math.round(c.pct * 100)}%`, String(c.grade).replace('.', ','),
+        ...c.byLevel.map((b) => `${b.done}/${b.total}`), mine.length ? mine[mine.length - 1].created_at.slice(0, 10) : ''];
+    });
+    download(`speakboost-${cls.name}-bang-diem-${stamp()}.csv`, toCsv(head, rows), 'text/csv;charset=utf-8');
+  };
 
   return h('div', {},
+    h('section', { class: 'card' }, h('h2', {}, 'Bảng điểm'),
+      h('p', {}, 'Mức hoàn thành bài được giao và điểm gợi ý của từng học sinh, theo cài đặt ở thẻ “Giao bài & cài đặt”. Tệp có tên gọi để nhập vào sổ điểm; không gửi tệp này ra ngoài nhà trường.'),
+      h('button', { class: 'btn btn-main', onclick: gradeCsv }, '⬇ Tải bảng điểm (CSV)')),
     h('section', { class: 'card' }, h('h2', {}, 'Xuất dữ liệu phục vụ thực nghiệm sư phạm'),
-      h('p', {}, `Lớp ${cls.name}`, group ? ` · nhóm ${GROUP_VI[group]}` : ' · chưa xếp nhóm (xếp ở thẻ “Mã lớp & cài đặt”)', ` · ${attempts.length} lượt luyện đã ghi.`),
+      h('p', {}, `Lớp ${cls.name}`, group ? ` · nhóm ${GROUP_VI[group]}` : ' · chưa xếp nhóm (xếp ở thẻ “Giao bài & cài đặt”)', ` · ${attempts.length} lượt luyện đã ghi.`),
       h('div', { class: 'row wrap' }, h('label', {}, 'Từ ngày ', from), h('label', {}, 'Đến ngày ', to)),
       h('p', {}, withName, h('label', { for: 'with-name' }, ' Kèm tên gọi (mặc định chỉ dùng mã ẩn danh dạng 6A-07)')),
       h('div', { class: 'row wrap' },
@@ -376,7 +420,32 @@ function settingsView(cls, link) {
     .map(([v, t]) => h('option', { value: v, selected: (cls.study_group || '') === v }, t)));
   const out = note('muted', '');
   const upd = async (patch, ok) => { const { error } = await sb.from('classes').update(patch).eq('id', cls.id); out.className = error ? 'warn' : 'ok-text'; out.textContent = error ? errText(error) : ok; };
+  // --- Giao bài ---
+  const asg = G.normAssignment(cls.assignment);
+  const lvBox = [1, 2, 3].map((l) => h('input', { type: 'checkbox', id: `lv${l}`, checked: asg.levels.includes(l) }));
+  const chBox = h('input', { type: 'checkbox', id: 'asg-ch', checked: asg.challenge });
+  const pass = h('select', { class: 'field', 'aria-label': 'Ngưỡng sao' }, ...[1, 2, 3].map((n) => h('option', { value: n, selected: n === asg.pass_stars }, `${n} sao trở lên`)));
+  const due = h('input', { type: 'date', class: 'field', value: asg.due || '', 'aria-label': 'Hạn chót' });
+  const scale = h('select', { class: 'field', 'aria-label': 'Thang điểm' }, ...[10, 100].map((n) => h('option', { value: n, selected: n === asg.scale }, `Thang ${n}`)));
+  const preview = h('p', { class: 'muted small' });
+  const draft = () => G.normAssignment({ levels: [1, 2, 3].filter((l, i) => lvBox[i].checked), challenge: chBox.checked, pass_stars: Number(pass.value), due: due.value || null, scale: Number(scale.value) });
+  const refresh = () => { const d = draft(); preview.textContent = unit ? `Mỗi học sinh có ${G.tasksFor(unit, d).length} nhiệm vụ.` : ''; };
+  [...lvBox, chBox, pass, due, scale].forEach((el) => el.addEventListener('change', refresh));
+  refresh();
+  const assignCard = h('section', { class: 'card' }, h('h2', {}, '📋 Bài được giao & cách tính điểm'),
+    h('p', {}, 'Mức học sinh cần hoàn thành:'),
+    h('div', { class: 'row wrap' }, ...[1, 2, 3].map((l, i) => h('label', { class: 'check' }, lvBox[i], ` Mức ${l} – ${(unit?.levels || []).find((x) => x.id === l)?.name || ''}`))),
+    h('p', {}, h('label', { class: 'check' }, chBox, ' Tính cả Thử thách từ vựng của mỗi mức')),
+    h('div', { class: 'row wrap' }, h('label', {}, 'Một bài đạt khi: ', pass), h('label', {}, 'Hạn chót: ', due), h('label', {}, scale)),
+    preview,
+    h('button', { class: 'btn btn-main', onclick: () => {
+      const d = draft();
+      upd({ assignment: d }, `Đã lưu. Học sinh thấy yêu cầu mới khi mở lại trang.`).then(() => { cls.assignment = d; });
+    } }, 'Lưu bài được giao'),
+    h('p', { class: 'muted small' }, 'Lượt luyện sau ngày hạn chót vẫn được ghi lại nhưng không tính vào điểm gợi ý. Để trống hạn chót nếu muốn tính mọi lượt.'));
+
   return h('div', {},
+    assignCard,
     h('section', { class: 'card join-card' }, qrBox,
       h('div', {}, h('h2', {}, 'Cho học sinh vào lớp'),
         h('p', {}, 'Mã lớp: ', h('b', { class: 'code-tag big' }, cls.code)),
