@@ -168,15 +168,36 @@ export function listen({ lang = 'en-GB', onStart, continuous = false } = {}) {
     let done = false;
     const pieces = [];       // các câu đã chốt (nói tự do)
     let interim = [];        // kết quả tạm mới nhất
+    let silenceTimer = null, maxTimer = null, endTimer = null;
+    let lastText = '';
     const finish = (res) => {
       if (done) return;
-      done = true; activeRec = null; clearTimeout(silenceTimer);
+      done = true; activeRec = null;
+      clearTimeout(silenceTimer); clearTimeout(maxTimer); clearTimeout(endTimer);
       setAudioMode('playback');
       resolve(res);
     };
-    let silenceTimer = null;
-    // Safari đôi khi không tự dừng: im lặng 2,5 giây sau khi đã nghe được chữ thì tự chốt (trừ khi nói tự do).
-    const armSilence = () => { if (continuous) return; clearTimeout(silenceTimer); silenceTimer = setTimeout(() => { try { rec.stop(); } catch (_) { /* bỏ qua */ } }, 2500); };
+    const result = () => (pieces.length ? { alternatives: [[...pieces, ...interim].join(' ')], error: null }
+      : interim.length ? { alternatives: interim, error: null }
+      : { alternatives: [], error: 'no-speech', message: environment() === 'ios' ? IOS_NO_SPEECH : ERROR_VI['no-speech'] });
+    // Dừng nghe; nếu trình duyệt (Safari) không báo “đã dừng” trong 0,6 giây thì tự chốt với những gì đã nghe.
+    const stopNow = () => {
+      if (done) return;
+      try { rec.stop(); } catch (_) { /* bỏ qua */ }
+      clearTimeout(endTimer);
+      endTimer = setTimeout(() => { try { rec.abort(); } catch (_) { /* bỏ qua */ } finish(result()); }, 600);
+    };
+    rec.stopNow = stopNow;
+    // iPhone không tự dừng như Chrome: khi chữ nghe được thôi thay đổi 1,5 giây (học sinh đã nói xong) thì tự dừng.
+    // Safari hay gửi lặp lại cùng một chữ, nên chỉ tính lại thời gian khi chữ THAY ĐỔI. Nói tự do thì không tự dừng.
+    const armSilence = (text) => {
+      if (continuous || text === lastText) return;
+      lastText = text;
+      clearTimeout(silenceTimer);
+      silenceTimer = setTimeout(stopNow, IS_IOS ? 1500 : 2500);
+    };
+    if (!continuous) maxTimer = setTimeout(stopNow, 12000);   // chốt chặn: một lượt nói ngắn không quá 12 giây
+    rec.onspeechend = () => { if (!continuous && (interim.length || IS_IOS)) setTimeout(stopNow, 700); };
     rec.onstart = () => onStart && onStart();
     rec.onresult = (e) => {
       const cur = [];
@@ -191,23 +212,20 @@ export function listen({ lang = 'en-GB', onStart, continuous = false } = {}) {
           if (alternatives.length) return finish({ alternatives, error: null });
         } else if (r[0] && r[0].transcript) cur.push(r[0].transcript.trim());
       }
-      if (cur.length) { interim = [cur.join(' ')]; armSilence(); } else if (sawFinal) interim = [];
+      if (cur.length) { interim = [cur.join(' ')]; armSilence(interim[0]); } else if (sawFinal) interim = [];
     };
     rec.onerror = (e) => {
       if ((pieces.length || interim.length) && e.error !== 'not-allowed') return;   // vẫn có chữ: để onend chốt
       const msg = ERROR_VI[e.error] === 'MIC_HELP' ? micHelp() : ERROR_VI[e.error];
       finish({ alternatives: [], error: e.error, message: msg || 'Có lỗi khi nghe, bạn thử lại nhé.' });
     };
-    rec.onend = () => {
-      if (pieces.length) finish({ alternatives: [[...pieces, ...interim].join(' ')], error: null });
-      else if (interim.length) finish({ alternatives: interim, error: null });
-      else finish({ alternatives: [], error: 'no-speech', message: environment() === 'ios' ? IOS_NO_SPEECH : ERROR_VI['no-speech'] });
-    };
+    rec.onend = () => finish(result());
     try { rec.start(); } catch (err) { finish({ alternatives: [], error: 'start-failed', message: 'Chưa bắt đầu nghe được, bạn bấm lại nhé.' }); }
   });
 }
 
-export function stopListening() { if (activeRec) activeRec.stop(); }
+// Học sinh bấm dừng: dừng và chốt ngay cả khi Safari không báo “đã dừng”.
+export function stopListening() { if (activeRec) (activeRec.stopNow || activeRec.stop).call(activeRec); }
 
 // Ghi âm để học sinh tự nghe lại. Bản ghi chỉ nằm trong bộ nhớ trang và mất khi đóng trang.
 export class Recorder {
