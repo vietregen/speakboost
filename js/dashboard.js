@@ -15,6 +15,7 @@ let sb = null;
 let session = null;
 let profile = null;
 let unit = null;
+let pendingSlips = null;   // phiếu PIN vừa tạo, chờ hiện sau khi vẽ lại trang
 
 // ---------- Tiện ích ----------
 function h(tag, attrs = {}, ...children) {
@@ -258,10 +259,10 @@ function studentsView(cls, students) {
     const withPin = fresh.map((r) => ({ ...r, pin: newPin() }));
     const { error } = await sb.rpc('upsert_students', { p_class: cls.id, p_rows: withPin });
     if (error) { out.textContent = errText(error); return; }
-    await renderClass(cls.id);
-    // vẽ lại xong thì hiện phiếu PIN trên trang mới
-    const view = document.querySelector('.students-view');
-    if (view) view.dispatchEvent(new CustomEvent('slips', { detail: { list: withPin, title: `Phiếu PIN · ${withPin.length} học sinh mới${skipped ? ` (bỏ qua ${skipped} số đã có)` : ''}` } }));
+    // Giữ phiếu PIN lại để hiện sau khi trang vẽ lại (PIN chỉ có ở đây, máy chủ chỉ lưu bản băm).
+    pendingSlips = { list: withPin, title: `Phiếu PIN · ${withPin.length} học sinh mới${skipped ? ` (bỏ qua ${skipped} số đã có)` : ''}` };
+    const target = `#/class/${cls.id}/students`;
+    if (location.hash !== target) location.hash = target; else renderClass(cls.id);
   };
   const fileIn = h('input', { type: 'file', accept: '.xlsx,.xls,.csv', class: 'sr-only', id: 'roster-file', onchange: async (e) => {
     const f = e.target.files[0]; if (!f) return;
@@ -305,7 +306,7 @@ function studentsView(cls, students) {
       h('div', { class: 'row wrap' }, fileIn, h('label', { for: 'roster-file', class: 'btn btn-soft' }, '⬆ Lấy từ Excel'),
         h('button', { class: 'btn btn-main', onclick: () => save(parse(area.value)) }, 'Thêm và tạo PIN')), out),
     slips);
-  view.addEventListener('slips', (e) => showSlips(e.detail.list, e.detail.title));
+  if (pendingSlips) { const p = pendingSlips; pendingSlips = null; setTimeout(() => showSlips(p.list, p.title), 0); }
   return view;
 }
 
