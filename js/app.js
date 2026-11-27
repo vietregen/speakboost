@@ -334,7 +334,7 @@ function renderDialogue(id) {
   const pick = h('div', { class: 'card center' },
     draftBadge(d), h('h2', {}, d.title), h('p', { class: 'muted' }, d.title_vi), h('p', {}, 'Bạn muốn đóng vai ai?'),
     h('div', { class: 'row center' }, ...d.roles.map((r) => h('button', { class: 'btn btn-main', onclick: () => play(r) }, r))),
-    h('button', { class: 'btn btn-soft', onclick: () => S.playModel(d.turns.map((t) => t.text).join(' ')) }, '🔊 Nghe cả bài'));
+    h('button', { class: 'btn btn-soft', onclick: () => S.playSequence(d.turns.map((t) => t.text)) }, '🔊 Nghe cả bài'));
   root.replaceChildren(shell('Hội thoại', pick));
 
   function play(role) {
@@ -499,6 +499,7 @@ async function start() {
     const imported = preview ? C.getImported() : null;
     unit = C.applyOverlay(imported || await C.loadUnit(entry.file));
     fromExcel = Boolean(imported);
+    S.loadAudioManifest(unit.meta.unit);   // tệp âm thanh mẫu; thiếu thì dùng giọng máy
     const errors = C.validate(unit);
     if (errors.length) {
       root.replaceChildren(h('div', { class: 'card warn' }, h('h2', {}, 'Dữ liệu bài học có lỗi'), h('p', {}, 'Báo thầy cô kiểm tra trang giáo viên.'),

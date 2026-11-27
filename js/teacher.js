@@ -107,6 +107,31 @@ function exportJson() {
   download(file, JSON.stringify(out, null, 2) + '\n', 'application/json');
 }
 
+// Mọi câu học sinh có thể bấm nghe (khớp với tools/make-audio.ps1).
+function allSpokenTexts(u) {
+  const out = [];
+  const add = (t) => { if (t && String(t).trim()) out.push(String(t).trim()); };
+  for (const v of u.vocabulary || []) { add(v.word); add(v.example); }
+  for (const p of u.patterns || []) { add(p.text); add(p.free_example); }
+  for (const d of u.dialogues || []) for (const t of d.turns || []) add(t.text);
+  for (const r of u.roleplays || []) { for (const t of r.turns || []) { add(t.bot); add(t.hint); } add(r.closing); }
+  for (const p of u.picture_tasks || []) for (const k of ['1', '2', '3']) add(p.prompts && p.prompts[k] && p.prompts[k].model_answer);
+  return [...new Set(out)];
+}
+
+function audioSection() {
+  const texts = allSpokenTexts(unit);
+  const missing = texts.filter((t) => !S.audioFor(t));
+  const has = texts.length - missing.length;
+  return h('section', { class: 'card' },
+    h('h2', {}, '🔊 Âm thanh mẫu'),
+    h('p', {}, `${has}/${texts.length} câu có tệp âm thanh (giọng đọc máy Microsoft Zira, Anh-Mỹ). Mọi máy, kể cả iPhone, nghe cùng một giọng. Bấm “🔊 Nghe thử” ở từng mục để duyệt giọng mẫu.`),
+    missing.length
+      ? h('div', {}, h('p', { class: 'warn' }, `${missing.length} câu chưa có tệp (thường do vừa sửa chữ trong Excel) – các câu này tạm dùng giọng máy của trình duyệt. Cần tạo lại tệp âm thanh rồi đưa lên GitHub:`),
+        h('ul', { class: 'errors' }, ...missing.slice(0, 30).map((t) => h('li', {}, t))))
+      : h('p', { class: 'muted' }, '✅ Câu nào cũng có tệp âm thanh.'));
+}
+
 function render() {
   unit = C.applyOverlay(JSON.parse(JSON.stringify(original)));
   const errors = [...importErrors, ...C.validate(unit)];
@@ -141,6 +166,7 @@ function render() {
       h('code', {}, `data/units/${file}`), '. Phân quyền thật làm ở giai đoạn 2.'),
     h('p', { class: 'muted' }, unit.meta.note || ''),
     excelSection(),
+    audioSection(),
     errors.length
       ? h('div', { class: 'card warn' }, h('h2', {}, `Dữ liệu có ${errors.length} lỗi`), h('ul', { class: 'errors' }, ...errors.map((e) => h('li', {}, e))))
       : h('p', {}, '✅ Cấu trúc dữ liệu hợp lệ.'),
@@ -174,6 +200,7 @@ async function start() {
     } else {
       original = webOriginal; file = webFile;
     }
+    await S.loadAudioManifest(original.meta.unit);
     render();
   } catch (err) {
     root.replaceChildren(h('div', { class: 'screen' }, h('div', { class: 'card warn' }, h('h2', {}, 'Không nạp được dữ liệu'), h('p', {}, err.message))));

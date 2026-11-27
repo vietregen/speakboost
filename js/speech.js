@@ -24,18 +24,56 @@ function pickVoice() {
 if (support.synthesis) speechSynthesis.onvoiceschanged = () => { voiceCache = null; pickVoice(); };
 
 let currentAudio = null;
+let playToken = 0;
+let audioEl = null;
+const player = () => (audioEl = audioEl || new Audio());
 
-// Phát mẫu: ưu tiên tệp âm thanh giáo viên đã duyệt, nếu chưa có thì dùng giọng máy.
-export function playModel(text, { audio = null, rate = 1 } = {}) {
+// Bảng tra câu → tệp âm thanh mẫu (data/audio/unit-NN.json). Không phân biệt hoa thường, khoảng trắng.
+let audioMap = new Map();
+const keyOf = (t) => String(t || '').trim().replace(/\s+/g, ' ').toLowerCase();
+export function setAudioManifest(manifest) {
+  audioMap = new Map(Object.entries((manifest && manifest.items) || {}).map(([t, f]) => [keyOf(t), f]));
+}
+export async function loadAudioManifest(unitNo) {
+  try {
+    const r = await fetch(`data/audio/unit-${String(unitNo).padStart(2, '0')}.json`, { cache: 'no-cache' });
+    if (r.ok) setAudioManifest(await r.json());
+  } catch (_) { /* không có tệp âm thanh: dùng giọng máy */ }
+}
+export const audioFor = (text) => audioMap.get(keyOf(text)) || null;
+export const audioCount = () => audioMap.size;
+
+// Phát lần lượt nhiều câu (VD: “Nghe cả bài” hội thoại).
+export async function playSequence(texts, opts = {}) {
   stopModel();
+  const my = ++playToken;
+  for (const t of texts) {
+    if (my !== playToken) return;
+    await playModel(t, { ...opts, keepToken: true });
+    await new Promise((r) => setTimeout(r, 250));
+  }
+}
+
+// Phát mẫu: ưu tiên tệp âm thanh (của câu hoặc trong bảng tra), nếu chưa có thì dùng giọng máy.
+export function playModel(text, { audio = null, rate = 1, keepToken = false } = {}) {
+  if (!keepToken) { stopModel(); playToken++; }
+  else if (currentAudio) { currentAudio.pause(); currentAudio = null; }
+  audio = audio || audioFor(text);
   if (audio) {
     setAudioMode('playback');
     return new Promise((resolve) => {
-      currentAudio = new Audio(audio);
-      currentAudio.playbackRate = rate;
-      currentAudio.onended = () => resolve('file');
-      currentAudio.onerror = () => resolve(speakTts(text, rate));
-      currentAudio.play().catch(() => resolve(speakTts(text, rate)));
+      // Dùng lại MỘT thẻ audio: iPhone chỉ cho phát tiếp (câu 2, 3… của “Nghe cả bài”) trên thẻ đã được bấm phát.
+      const el = player();
+      currentAudio = el;
+      let settled = false;
+      const done = (v) => { if (!settled) { settled = true; el.onended = el.onerror = el.onpause = null; resolve(v); } };
+      el.onended = () => done('file');
+      el.onpause = () => { if (!el.ended) done('stopped'); };
+      el.onerror = () => done(speakTts(text, rate));
+      el.src = audio;
+      el.preservesPitch = true;
+      el.playbackRate = rate;
+      el.play().then(() => { el.playbackRate = rate; }).catch(() => done(speakTts(text, rate)));
     });
   }
   return speakTts(text, rate);
@@ -68,6 +106,7 @@ function speakTts(text, rate) {
 }
 
 export function stopModel() {
+  playToken++;
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
   // Chỉ hủy khi đang đọc: trên iOS, gọi cancel() liên tục làm câu sau bị cắt.
   if (support.synthesis && (speechSynthesis.speaking || speechSynthesis.pending)) speechSynthesis.cancel();
