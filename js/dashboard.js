@@ -186,6 +186,7 @@ function progressView(cls, students, attempts) {
   const real = attempts.filter((a) => !a.is_simulated);
   const by = new Map(students.map((s) => [s.id, []]));
   for (const a of real) by.get(a.student_id)?.push(a);
+  if (asg.mode === 'free') return practiceView(cls, students, real, by);
 
   const rows = students.map((s) => {
     const list = by.get(s.id) || [];
@@ -229,6 +230,38 @@ function progressView(cls, students, attempts) {
           h('td', {}, r.days), h('td', {}, r.n), h('td', {}, fmtDate(r.last))))))),
     h('p', { class: 'muted small' }, `Điểm gợi ý = tỉ lệ nhiệm vụ đạt ≥ ${asg.pass_stars}⭐ × ${asg.scale}, làm tròn 0,5${asg.due ? `, chỉ tính lượt luyện đến hết ngày ${fmtDate(asg.due)}` : ''}. “Sao” là mức máy nhận diện được lời nói, không phải điểm phát âm; thầy cô quyết định điểm cuối cùng. Bấm vào một học sinh để xem bài còn thiếu.`),
     detail,
+    hardWords(real));
+}
+
+// Lớp tự luyện (không giao bài): chỉ số liệu luyện tập, không điểm.
+function practiceView(cls, students, real, by) {
+  const approved = (s) => (unit?.[s] || []).filter((x) => x.review === 'approved').map((x) => x.id);
+  const SECT = [['vocab', 'vocabulary', 'Từ vựng'], ['pattern', 'patterns', 'Mẫu câu'], ['dialogue', 'dialogues', 'Hội thoại'], ['roleplay', 'roleplays', 'Đóng vai'], ['picture', 'picture_tasks', 'Tranh']];
+  const totals = Object.fromEntries(SECT.map(([act, s]) => [act, new Set(approved(s))]));
+  const rows = students.map((s) => {
+    const list = by.get(s.id) || [];
+    const done = (act) => new Set(list.filter((a) => a.activity === act && a.stars > 0 && totals[act].has(a.item_id.split('#')[0])).map((a) => a.item_id.split('#')[0])).size;
+    const ch = list.filter((a) => a.activity === 'challenge');
+    return { s, n: list.length, days: new Set(list.map((a) => a.created_at.slice(0, 10))).size,
+      last: list.length ? list[list.length - 1].created_at : null, ch: ch.length ? Math.max(...ch.map((a) => a.stars)) : 0,
+      done: Object.fromEntries(SECT.map(([act]) => [act, done(act)])) };
+  });
+  const active7 = rows.filter((r) => r.last && Date.now() - new Date(r.last) < 7 * 864e5).length;
+  const bar = (v, t) => h('span', { class: 'mini' }, h('span', { class: 'mini-bar' }, h('span', { style: `width:${t ? Math.round((v / t) * 100) : 0}%` })), `${v}/${t}`);
+  return h('div', {},
+    h('div', { class: 'card assign-note' }, h('b', {}, 'Lớp tự luyện: '), 'không giao bài, không tính điểm. Học sinh luyện mọi nội dung đã duyệt, ở mức tùy chọn. ',
+      h('a', { href: `#/class/${cls.id}/settings` }, 'Giao bài')),
+    h('div', { class: 'stats' },
+      stat(students.length, 'học sinh'), stat(rows.filter((r) => r.n).length, 'đã từng luyện'),
+      stat(active7, 'luyện trong 7 ngày qua'), stat(real.length, 'lượt luyện')),
+    h('div', { class: 'card table-wrap' },
+      h('table', { class: 'grid' },
+        h('thead', {}, h('tr', {}, ...['Số', 'Tên gọi', ...SECT.map(([, , n]) => n), 'Thử thách', 'Ngày luyện', 'Lượt', 'Lần cuối'].map((t) => h('th', {}, t)))),
+        h('tbody', {}, ...rows.map((r) => h('tr', { class: r.n ? '' : 'idle' },
+          h('td', {}, r.s.roster_no), h('td', {}, r.s.nickname),
+          ...SECT.map(([act]) => h('td', {}, bar(r.done[act], totals[act].size))),
+          h('td', {}, r.ch ? '★'.repeat(r.ch) : '—'), h('td', {}, r.days), h('td', {}, r.n), h('td', {}, fmtDate(r.last))))))),
+    h('p', { class: 'muted small' }, 'Mỗi ô: số bài đã luyện (ở bất kỳ mức nào, có ít nhất 1 sao) / số bài đã duyệt. Chỉ gồm dữ liệu thật.'),
     hardWords(real));
 }
 
@@ -375,8 +408,9 @@ function exportView(cls, students, attempts) {
     download(`speakboost-${cls.name}-tong-hop-${stamp()}.csv`, toCsv(head, rows), 'text/csv;charset=utf-8');
   };
   // Bảng điểm: mức hoàn thành bài được giao (theo cài đặt của lớp, tính đến hạn chót).
+  const free = G.isFree(cls.assignment);
   const gradeCsv = () => {
-    if (!unit) return;
+    if (!unit || free) return;
     const asg = G.normAssignment(cls.assignment);
     const real = attempts.filter((a) => !a.is_simulated);
     const head = ['so_thu_tu', 'ten_goi', 'lop', 'nhiem_vu_dat', 'tong_nhiem_vu', 'ti_le_hoan_thanh', `diem_goi_y_thang_${asg.scale}`,
@@ -393,7 +427,8 @@ function exportView(cls, students, attempts) {
   return h('div', {},
     h('section', { class: 'card' }, h('h2', {}, 'Bảng điểm'),
       h('p', {}, 'Mức hoàn thành bài được giao và điểm gợi ý của từng học sinh, theo cài đặt ở thẻ “Giao bài & cài đặt”. Tệp có tên gọi để nhập vào sổ điểm; không gửi tệp này ra ngoài nhà trường.'),
-      h('button', { class: 'btn btn-main', onclick: gradeCsv }, '⬇ Tải bảng điểm (CSV)')),
+      free ? h('p', { class: 'muted' }, 'Lớp đang để “Không giao bài” nên không có bảng điểm. Dùng “Bảng tổng hợp theo học sinh” bên dưới để xem số liệu luyện tập.')
+        : h('button', { class: 'btn btn-main', onclick: gradeCsv }, '⬇ Tải bảng điểm (CSV)')),
     h('section', { class: 'card' }, h('h2', {}, 'Xuất dữ liệu phục vụ thực nghiệm sư phạm'),
       h('p', {}, `Lớp ${cls.name}`, group ? ` · nhóm ${GROUP_VI[group]}` : ' · chưa xếp nhóm (xếp ở thẻ “Giao bài & cài đặt”)', ` · ${attempts.length} lượt luyện đã ghi.`),
       h('div', { class: 'row wrap' }, h('label', {}, 'Từ ngày ', from), h('label', {}, 'Đến ngày ', to)),
@@ -428,21 +463,31 @@ function settingsView(cls, link) {
   const due = h('input', { type: 'date', class: 'field', value: asg.due || '', 'aria-label': 'Hạn chót' });
   const scale = h('select', { class: 'field', 'aria-label': 'Thang điểm' }, ...[10, 100].map((n) => h('option', { value: n, selected: n === asg.scale }, `Thang ${n}`)));
   const preview = h('p', { class: 'muted small' });
-  const draft = () => G.normAssignment({ levels: [1, 2, 3].filter((l, i) => lvBox[i].checked), challenge: chBox.checked, pass_stars: Number(pass.value), due: due.value || null, scale: Number(scale.value) });
-  const refresh = () => { const d = draft(); preview.textContent = unit ? `Mỗi học sinh có ${G.tasksFor(unit, d).length} nhiệm vụ.` : ''; };
-  [...lvBox, chBox, pass, due, scale].forEach((el) => el.addEventListener('change', refresh));
-  refresh();
+  const freeBox = h('input', { type: 'checkbox', id: 'asg-free', checked: asg.mode === 'free' });
+  const gradedPart = h('fieldset', { class: 'plain' });
+  const draft = () => G.normAssignment({ mode: freeBox.checked ? 'free' : 'graded', levels: [1, 2, 3].filter((l, i) => lvBox[i].checked), challenge: chBox.checked, pass_stars: Number(pass.value), due: due.value || null, scale: Number(scale.value) });
+  const refresh = () => {
+    const d = draft();
+    gradedPart.disabled = freeBox.checked;
+    preview.textContent = freeBox.checked ? 'Học sinh tự luyện mọi nội dung đã duyệt; trang học sinh không hiện nhiệm vụ, Dashboard không tính điểm.'
+      : unit ? `Mỗi học sinh có ${G.tasksFor(unit, d).length} nhiệm vụ.` : '';
+  };
+  [freeBox, ...lvBox, chBox, pass, due, scale].forEach((el) => el.addEventListener('change', refresh));
   const assignCard = h('section', { class: 'card' }, h('h2', {}, '📋 Bài được giao & cách tính điểm'),
-    h('p', {}, 'Mức học sinh cần hoàn thành:'),
-    h('div', { class: 'row wrap' }, ...[1, 2, 3].map((l, i) => h('label', { class: 'check' }, lvBox[i], ` Mức ${l} – ${(unit?.levels || []).find((x) => x.id === l)?.name || ''}`))),
-    h('p', {}, h('label', { class: 'check' }, chBox, ' Tính cả Thử thách từ vựng của mỗi mức')),
-    h('div', { class: 'row wrap' }, h('label', {}, 'Một bài đạt khi: ', pass), h('label', {}, 'Hạn chót: ', due), h('label', {}, scale)),
+    h('p', {}, h('label', { class: 'check' }, freeBox, h('b', {}, ' Không giao bài – học sinh tự luyện'))),
+    gradedPart,
     preview,
     h('button', { class: 'btn btn-main', onclick: () => {
       const d = draft();
-      upd({ assignment: d }, `Đã lưu. Học sinh thấy yêu cầu mới khi mở lại trang.`).then(() => { cls.assignment = d; });
-    } }, 'Lưu bài được giao'),
-    h('p', { class: 'muted small' }, 'Lượt luyện sau ngày hạn chót vẫn được ghi lại nhưng không tính vào điểm gợi ý. Để trống hạn chót nếu muốn tính mọi lượt.'));
+      upd({ assignment: d }, `Đã lưu. Học sinh thấy thay đổi khi mở lại trang.`).then(() => { cls.assignment = d; });
+    } }, 'Lưu'),
+    h('p', { class: 'muted small' }, 'Giao bài không khóa nội dung: học sinh vẫn luyện mọi bài đã duyệt ở mọi mức, kể cả sau hạn chót. Lượt luyện sau hạn chót vẫn được ghi lại nhưng không tính vào điểm gợi ý.'));
+  gradedPart.append(
+    h('p', {}, 'Mức học sinh cần hoàn thành:'),
+    h('div', { class: 'row wrap' }, ...[1, 2, 3].map((l, i) => h('label', { class: 'check' }, lvBox[i], ` Mức ${l} – ${(unit?.levels || []).find((x) => x.id === l)?.name || ''}`))),
+    h('p', {}, h('label', { class: 'check' }, chBox, ' Tính cả Thử thách từ vựng của mỗi mức')),
+    h('div', { class: 'row wrap' }, h('label', {}, 'Một bài đạt khi: ', pass), h('label', {}, 'Hạn chót: ', due), h('label', {}, scale)));
+  refresh();
 
   return h('div', {},
     assignCard,

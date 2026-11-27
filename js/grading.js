@@ -8,10 +8,14 @@
 // Nhiệm vụ "hoàn thành" khi có ít nhất một lượt LUYỆN Ở ĐÚNG MỨC ĐÓ đạt từ pass_stars sao trở lên,
 // trước hoặc trong ngày hạn chót (nếu có).
 
-export const DEFAULT_ASSIGNMENT = { levels: [1], challenge: true, pass_stars: 2, due: null, scale: 10 };
+// mode: 'graded' = giao bài, tính hoàn thành và điểm gợi ý; 'free' = không giao bài, học sinh tự luyện.
+export const DEFAULT_ASSIGNMENT = { mode: 'graded', levels: [1], challenge: true, pass_stars: 2, due: null, scale: 10 };
+
+export const isFree = (a) => Boolean(a && a.mode === 'free');
 
 export function normAssignment(a) {
   const x = { ...DEFAULT_ASSIGNMENT, ...(a || {}) };
+  x.mode = x.mode === 'free' ? 'free' : 'graded';
   x.levels = [...new Set((x.levels || []).map(Number).filter((n) => n >= 1 && n <= 3))].sort();
   if (!x.levels.length) x.levels = [1];
   x.pass_stars = Math.min(3, Math.max(1, Number(x.pass_stars) || 2));

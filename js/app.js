@@ -149,7 +149,7 @@ function renderHome() {
 const SECTION_ROUTE = { vocabulary: '#/vocab', patterns: '#/patterns', dialogues: '#/dialogues', roleplays: '#/roleplays', picture_tasks: '#/pictures', challenge: '#/challenge' };
 function taskCard() {
   const st = Cloud.student();
-  if (!st || preview) return null;
+  if (!st || preview || G.isFree(st.assignment)) return null;   // lớp tự luyện: không hiện nhiệm vụ
   const c = G.completion(unit, st.assignment, P.attempts());
   if (!c.total) return null;
   const a = c.assignment;

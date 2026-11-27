@@ -71,3 +71,6 @@ table.clickable tbody tr:hover, table.clickable tbody tr:focus { background: var
 .check { display: inline-flex; align-items: center; gap: 6px; min-height: 36px; }
 .inline-list { display: flex; flex-wrap: wrap; gap: 8px 18px; padding: 0; list-style: none; }
 .miss-list { columns: 2 280px; font-size: 14px; }
+
+fieldset.plain { border: 0; padding: 0; margin: 0 0 6px; min-width: 0; }
+fieldset.plain:disabled { opacity: .45; }
