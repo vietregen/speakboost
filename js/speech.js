@@ -29,6 +29,7 @@ let currentAudio = null;
 export function playModel(text, { audio = null, rate = 1 } = {}) {
   stopModel();
   if (audio) {
+    setAudioMode('playback');
     return new Promise((resolve) => {
       currentAudio = new Audio(audio);
       currentAudio.playbackRate = rate;
@@ -40,23 +41,36 @@ export function playModel(text, { audio = null, rate = 1 } = {}) {
   return speakTts(text, rate);
 }
 
+// iPhone/iPad: sau khi dùng micro, Safari giữ chế độ "gọi điện" nên tiếng phát ra loa nhỏ ở tai nghe.
+// Safari 17+ cho chọn chế độ âm thanh: phát mẫu thì dùng "playback" (loa ngoài, to), nghe thì "play-and-record".
+function setAudioMode(type) {
+  try { if (navigator.audioSession && navigator.audioSession.type !== type) navigator.audioSession.type = type; } catch (_) { /* trình duyệt khác: bỏ qua */ }
+}
+
+const IS_IOS = /iPhone|iPad|iPod/i.test(navigator.userAgent || '') || (/Macintosh/.test(navigator.userAgent || '') && navigator.maxTouchPoints > 1);
+
 function speakTts(text, rate) {
   if (!support.synthesis) return Promise.resolve('none');
+  setAudioMode('playback');
   return new Promise((resolve) => {
     const u = new SpeechSynthesisUtterance(text);
     const v = pickVoice();
     if (v) u.voice = v;
     u.lang = v ? v.lang : 'en-GB';
-    u.rate = rate * 0.95;
+    u.rate = IS_IOS ? Math.max(0.5, rate * 0.9) : rate * 0.95;   // giọng iOS đọc nhanh hơn
+    u.volume = 1;
     u.onend = () => resolve('tts');
     u.onerror = () => resolve('tts');
-    speechSynthesis.speak(u);
+    // iOS bị ngắt quãng nếu vừa hủy câu trước đã đọc câu mới ngay: chờ một nhịp.
+    const go = () => { if (IS_IOS && speechSynthesis.paused) speechSynthesis.resume(); speechSynthesis.speak(u); };
+    if (IS_IOS) setTimeout(go, 120); else go();
   });
 }
 
 export function stopModel() {
   if (currentAudio) { currentAudio.pause(); currentAudio = null; }
-  if (support.synthesis) speechSynthesis.cancel();
+  // Chỉ hủy khi đang đọc: trên iOS, gọi cancel() liên tục làm câu sau bị cắt.
+  if (support.synthesis && (speechSynthesis.speaking || speechSynthesis.pending)) speechSynthesis.cancel();
 }
 
 // Nơi đang mở trang, để chỉ đúng cách bật micro.
@@ -76,7 +90,7 @@ export function micHelp() {
     case 'embedded':
       return 'Khung trình duyệt này không cho dùng micro. Hãy mở trang bằng Chrome hoặc Edge trên máy tính, hoặc bằng điện thoại.';
     case 'ios':
-      return 'Trên iPhone, iPad: bấm nút “aA” ở thanh địa chỉ → Cài đặt trang web → Micrô → Cho phép, rồi tải lại trang. Nếu không thấy, vào ứng dụng Cài đặt → Safari → Micrô → Cho phép.';
+      return 'Trên iPhone, iPad: bấm nút “aA” ở thanh địa chỉ → Cài đặt trang web → Micrô → Cho phép, rồi tải lại trang. Nếu không thấy, vào ứng dụng Cài đặt → Safari → Micrô → Cho phép. Máy cũng cần bật Đọc chính tả: Cài đặt → Cài đặt chung → Bàn phím → Bật Đọc chính tả.';
     case 'android':
       return 'Trên điện thoại Android (Chrome): bấm biểu tượng nhỏ bên trái địa chỉ trang (hình hai thanh gạt hoặc ổ khóa) → Quyền → Micrô → Cho phép, rồi tải lại trang.';
     default:
@@ -93,6 +107,8 @@ const ERROR_VI = {
   aborted: 'Đã dừng nghe.',
 };
 
+const IOS_NO_SPEECH = 'Máy chưa nghe thấy tiếng. Trên iPhone/iPad cần bật Đọc chính tả: Cài đặt → Cài đặt chung → Bàn phím → bật “Bật Đọc chính tả”, và trong Cài đặt → Safari → Micrô chọn Cho phép. Sau đó tải lại trang, bấm 🎤 rồi nói to, gần máy.';
+
 let activeRec = null;
 
 // Nghe một lượt nói. Trả về { alternatives: [...], error }.
@@ -100,37 +116,53 @@ let activeRec = null;
 export function listen({ lang = 'en-GB', onStart, continuous = false } = {}) {
   if (!Recognition) return Promise.resolve({ alternatives: [], error: 'unsupported' });
   stopModel();
+  setAudioMode('play-and-record');
   return new Promise((resolve) => {
     const rec = new Recognition();
     activeRec = rec;
     rec.lang = lang;
-    rec.interimResults = false;
+    // iPhone/iPad (Safari) hay không trả kết quả "cuối cùng" mà chỉ có kết quả tạm thời,
+    // nên luôn nghe cả kết quả tạm và dùng nó khi máy dừng mà chưa có kết quả cuối.
+    rec.interimResults = true;
     rec.continuous = continuous;
     rec.maxAlternatives = 5;
     let done = false;
-    const pieces = [];
-    const finish = (res) => { if (!done) { done = true; activeRec = null; resolve(res); } };
+    const pieces = [];       // các câu đã chốt (nói tự do)
+    let interim = [];        // kết quả tạm mới nhất
+    const finish = (res) => {
+      if (done) return;
+      done = true; activeRec = null; clearTimeout(silenceTimer);
+      setAudioMode('playback');
+      resolve(res);
+    };
+    let silenceTimer = null;
+    // Safari đôi khi không tự dừng: im lặng 2,5 giây sau khi đã nghe được chữ thì tự chốt (trừ khi nói tự do).
+    const armSilence = () => { if (continuous) return; clearTimeout(silenceTimer); silenceTimer = setTimeout(() => { try { rec.stop(); } catch (_) { /* bỏ qua */ } }, 2500); };
     rec.onstart = () => onStart && onStart();
     rec.onresult = (e) => {
-      if (continuous) {
-        for (let i = e.resultIndex; i < e.results.length; i++) {
-          if (e.results[i].isFinal && e.results[i][0].transcript) pieces.push(e.results[i][0].transcript.trim());
-        }
-        return;
+      const cur = [];
+      let sawFinal = false;
+      for (let i = e.resultIndex; i < e.results.length; i++) {
+        const r = e.results[i];
+        if (r.isFinal) {
+          sawFinal = true;
+          if (continuous) { if (r[0].transcript) pieces.push(r[0].transcript.trim()); continue; }
+          const alternatives = [];
+          for (let j = 0; j < r.length; j++) if (r[j].transcript) alternatives.push(r[j].transcript.trim());
+          if (alternatives.length) return finish({ alternatives, error: null });
+        } else if (r[0] && r[0].transcript) cur.push(r[0].transcript.trim());
       }
-      const r = e.results[0];
-      const alternatives = [];
-      for (let i = 0; i < r.length; i++) if (r[i].transcript) alternatives.push(r[i].transcript.trim());
-      finish({ alternatives, error: null });
+      if (cur.length) { interim = [cur.join(' ')]; armSilence(); } else if (sawFinal) interim = [];
     };
     rec.onerror = (e) => {
-      if (continuous && pieces.length && e.error !== 'not-allowed') return;
+      if ((pieces.length || interim.length) && e.error !== 'not-allowed') return;   // vẫn có chữ: để onend chốt
       const msg = ERROR_VI[e.error] === 'MIC_HELP' ? micHelp() : ERROR_VI[e.error];
       finish({ alternatives: [], error: e.error, message: msg || 'Có lỗi khi nghe, bạn thử lại nhé.' });
     };
     rec.onend = () => {
-      if (pieces.length) finish({ alternatives: [pieces.join(' ')], error: null });
-      else finish({ alternatives: [], error: 'no-speech', message: ERROR_VI['no-speech'] });
+      if (pieces.length) finish({ alternatives: [[...pieces, ...interim].join(' ')], error: null });
+      else if (interim.length) finish({ alternatives: interim, error: null });
+      else finish({ alternatives: [], error: 'no-speech', message: environment() === 'ios' ? IOS_NO_SPEECH : ERROR_VI['no-speech'] });
     };
     try { rec.start(); } catch (err) { finish({ alternatives: [], error: 'start-failed', message: 'Chưa bắt đầu nghe được, bạn bấm lại nhé.' }); }
   });
@@ -146,6 +178,7 @@ export class Recorder {
   async start() {
     if (!support.recorder) throw new Error('Trình duyệt này chưa hỗ trợ ghi âm.');
     stopModel();
+    setAudioMode('play-and-record');
     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
     const chunks = [];
     this.rec = new MediaRecorder(stream);
@@ -165,7 +198,7 @@ export class Recorder {
 
   stop() { if (this.recording) this.rec.stop(); return this.stopped; }
 
-  play() { if (this.url) { stopModel(); currentAudio = new Audio(this.url); return currentAudio.play(); } }
+  play() { if (this.url) { stopModel(); setAudioMode('playback'); currentAudio = new Audio(this.url); return currentAudio.play(); } }
 
   dispose() { if (this.recording) this.rec.stop(); if (this.url) URL.revokeObjectURL(this.url); this.url = null; }
 }
