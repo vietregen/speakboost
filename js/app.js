@@ -109,7 +109,7 @@ function unitPicker() {
     ...(index?.units || [{ unit: U(), file: true }]).map((u) => {
       const blocked = !u.file || (guest && u.unit !== 1);
       return h('option', { value: u.unit, disabled: blocked, selected: u.unit === U() },
-        `Unit ${u.unit}${!u.file ? ' · sắp có' : guest && u.unit !== 1 ? ' · đăng nhập lớp để học' : ''}`);
+        `${u.label || `Unit ${u.unit}`}${!u.file ? ' · sắp có' : guest && u.unit !== 1 ? ' · đăng nhập lớp để học' : ''}`);
     }));
   return h('label', { class: 'mh-unit-wrap' }, h('span', { class: 'mh-bars', 'aria-hidden': 'true' }, h('i'), h('i'), h('i')), sel);
 }
@@ -210,7 +210,7 @@ function renderHome() {
     h('section', { class: 'mh-hero' },
       h('img', { class: 'mh-castle', src: 'assets/theme/castle.jpg', alt: '' }),
       h('div', { class: 'mh-hero-text' },
-        h('span', { class: 'mh-ribbon' }, `Unit ${U()}`),
+        h('span', { class: 'mh-ribbon' }, unit.meta.display_label || `Unit ${U()}`),
         h('h1', {}, unit.meta.title),
         h('p', { class: 'mh-tagline' }, unit.meta.title_vi ? `Luyện nói tiếng Anh · ${unit.meta.title_vi}` : 'Luyện nói tiếng Anh'),
         h('div', { class: 'mh-pills' },

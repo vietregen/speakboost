@@ -28,7 +28,7 @@ try {
 
       # Lưu tệp bài học (chỉ khi bật -AllowSave, chỉ vào data/units/unit-NN.json)
       if ($req.HttpMethod -eq 'PUT') {
-        if ($AllowSave -and $path -match '^__save/(data/units/unit-\d{2}\.json)$') {
+        if ($AllowSave -and $path -match '^__save/(data/units/unit-\d{2,3}\.json)$') {
           $target = [IO.Path]::GetFullPath((Join-Path $root $Matches[1]))
           $reader = New-Object IO.StreamReader($req.InputStream, [Text.Encoding]::UTF8)
           $body = $reader.ReadToEnd(); $reader.Close()

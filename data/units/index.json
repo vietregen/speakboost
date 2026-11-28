@@ -1,11 +1,12 @@
 {
   "book": "Global Success 6",
   "units": [
-    { "unit": 1, "title": "My New School", "file": "unit-01.json" },
+    { "unit": 1, "grade": 6, "label": "Lớp 6 · Unit 1", "title": "My New School", "file": "unit-01.json" },
     { "unit": 2, "title": "My House", "file": null },
     { "unit": 3, "title": "My Friends", "file": null },
-    { "unit": 4, "title": "My Neighbourhood", "file": "unit-04.json" },
+    { "unit": 4, "grade": 6, "label": "Lớp 6 · Unit 4", "title": "My Neighbourhood", "file": "unit-04.json" },
     { "unit": 5, "title": "Natural Wonders of Viet Nam", "file": null },
-    { "unit": 6, "title": "Our Tet Holiday", "file": null }
+    { "unit": 6, "title": "Our Tet Holiday", "file": null },
+    { "unit": 804, "grade": 8, "label": "Lớp 8 · Unit 4", "title": "Ethnic Groups of Viet Nam", "file": "unit-804.json" }
   ]
 }

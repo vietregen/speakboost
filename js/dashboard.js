@@ -479,7 +479,7 @@ function settingsView(cls, link) {
   const scale = h('select', { class: 'field', 'aria-label': 'Thang điểm' }, ...[10, 100].map((n) => h('option', { value: n, selected: n === asg.scale }, `Thang ${n}`)));
   const preview = h('p', { class: 'muted small' });
   const freeBox = h('input', { type: 'checkbox', id: 'asg-free', checked: asg.mode === 'free' });
-  const unitSel = h('select', { class: 'field', 'aria-label': 'Unit lớp đang học' }, ...unitsIndex.map((u) => h('option', { value: u.unit, selected: u.unit === asg.unit }, `Unit ${u.unit} · ${u.title}`)));
+  const unitSel = h('select', { class: 'field', 'aria-label': 'Unit lớp đang học' }, ...unitsIndex.map((u) => h('option', { value: u.unit, selected: u.unit === asg.unit }, `${u.label || `Unit ${u.unit}`} · ${u.title}`)));
   const gradedPart = h('fieldset', { class: 'plain' });
   const draft = () => G.normAssignment({ unit: Number(unitSel.value) || 1, mode: freeBox.checked ? 'free' : 'graded', levels: [1, 2, 3].filter((l, i) => lvBox[i].checked), challenge: chBox.checked, pass_stars: Number(pass.value), due: due.value || null, scale: Number(scale.value) });
   const refresh = async () => {
@@ -487,7 +487,7 @@ function settingsView(cls, link) {
     gradedPart.disabled = freeBox.checked;
     const su = await getUnit(d.unit).catch(() => null);
     preview.textContent = freeBox.checked ? 'Học sinh tự luyện mọi nội dung đã duyệt; trang học sinh không hiện nhiệm vụ, Dashboard không tính điểm.'
-      : su ? `Unit ${d.unit}: mỗi học sinh có ${G.tasksFor(su, d).length} nhiệm vụ (chỉ tính nội dung đã duyệt).` : '';
+      : su ? `${su.meta.display_label || `Unit ${d.unit}`}: mỗi học sinh có ${G.tasksFor(su, d).length} nhiệm vụ (chỉ tính nội dung đã duyệt).` : '';
   };
   [unitSel, freeBox, ...lvBox, chBox, pass, due, scale].forEach((el) => el.addEventListener('change', refresh));
   const assignCard = h('section', { class: 'card' }, h('h2', {}, '📋 Bài được giao & cách tính điểm'),

@@ -1,0 +1,2090 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "book": "Global Success 8",
+    "grade": 8,
+    "unit": 804,
+    "title": "Ethnic Groups of Viet Nam",
+    "title_vi": "Các dân tộc Việt Nam",
+    "version": "1.0.0-draft",
+    "status": "approved",
+    "reviewed_by": "Giáo viên (điền tên khi lưu trữ)",
+    "reviewed_at": "2026-11-28",
+    "note": "Nguồn: Unit 4 K8 - HS.pdf, tr. 1–4, 6–9, 12–14. Không có bài nói qua tranh.",
+    "display_label": "Lớp 8 · Unit 4"
+  },
+  "levels": [
+    {
+      "id": 1,
+      "name": "Khởi động",
+      "description": "Từ và câu ngắn, hội thoại đơn giản."
+    },
+    {
+      "id": 2,
+      "name": "Vững vàng",
+      "description": "Cùng dạng bài, câu dài hơn và từ vựng mở rộng."
+    },
+    {
+      "id": 3,
+      "name": "Bứt phá",
+      "description": "Cùng dạng bài, câu phức tạp hơn và tình huống ít quen thuộc hơn."
+    }
+  ],
+  "challenges": {
+    "vocabulary": {
+      "title": "Thử thách từ vựng",
+      "rounds": 10,
+      "tries_per_word": 2,
+      "seconds_by_level": {
+        "1": 20,
+        "2": 15,
+        "3": 10
+      },
+      "show_meaning_levels": [
+        1
+      ],
+      "unlock": "practised_at_least_rounds"
+    }
+  },
+  "vocabulary": [
+    {
+      "id": "g8-u4-v-01",
+      "review": "approved",
+      "word": "ethnic",
+      "ipa": "/ˈeθnɪk/",
+      "meaning_vi": "thuộc dân tộc",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "We learn about ethnic cultures.",
+      "level": 3,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-02",
+      "review": "approved",
+      "word": "ethnic group",
+      "ipa": "/ˈeθnɪk ɡruːp/",
+      "meaning_vi": "nhóm dân tộc",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "Which ethnic group is this?",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-03",
+      "review": "approved",
+      "word": "minority",
+      "ipa": "/maɪˈnɒrəti/",
+      "meaning_vi": "thiểu số",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "We learn about ethnic minorities.",
+      "level": 3,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-04",
+      "review": "approved",
+      "word": "bamboo",
+      "ipa": "/bæmˈbuː/",
+      "meaning_vi": "tre",
+      "emoji": "🎋",
+      "image": null,
+      "audio": null,
+      "example": "They use bamboo to make baskets.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-05",
+      "review": "approved",
+      "word": "bamboo house",
+      "ipa": "/bæmˈbuː haʊs/",
+      "meaning_vi": "nhà tre",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "This is a bamboo house.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-06",
+      "review": "approved",
+      "word": "stilt house",
+      "ipa": "/stɪlt haʊs/",
+      "meaning_vi": "nhà sàn",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "They visit a stilt house.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-07",
+      "review": "approved",
+      "word": "communal",
+      "ipa": "/ˈkɒmjənəl/",
+      "meaning_vi": "thuộc cộng đồng",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "This is a communal space.",
+      "level": 3,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-08",
+      "review": "approved",
+      "word": "communal house",
+      "ipa": "/ˈkɒmjənəl haʊs/",
+      "meaning_vi": "nhà cộng đồng, nhà rông",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "People meet at the communal house.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-09",
+      "review": "approved",
+      "word": "post",
+      "ipa": "/pəʊst/",
+      "meaning_vi": "cột, trụ",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "The house stands on wooden posts.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-10",
+      "review": "approved",
+      "word": "folk",
+      "ipa": "/fəʊk/",
+      "meaning_vi": "dân gian",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "I enjoy folk music.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-11",
+      "review": "approved",
+      "word": "folk dance",
+      "ipa": "/fəʊk dɑːns/",
+      "meaning_vi": "điệu múa dân gian",
+      "emoji": "💃",
+      "image": null,
+      "audio": null,
+      "example": "We watch a folk dance.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-12",
+      "review": "approved",
+      "word": "musical",
+      "ipa": "/ˈmjuːzɪkəl/",
+      "meaning_vi": "thuộc âm nhạc",
+      "emoji": "🎵",
+      "image": null,
+      "audio": null,
+      "example": "This is a musical event.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-13",
+      "review": "approved",
+      "word": "musical instrument",
+      "ipa": "/ˈmjuːzɪkəl ˈɪnstrəmənt/",
+      "meaning_vi": "nhạc cụ",
+      "emoji": "🎶",
+      "image": null,
+      "audio": null,
+      "example": "Can you play a musical instrument?",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-14",
+      "review": "approved",
+      "word": "traditional",
+      "ipa": "/trəˈdɪʃənəl/",
+      "meaning_vi": "truyền thống",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "I like traditional music.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-15",
+      "review": "approved",
+      "word": "costume",
+      "ipa": "/ˈkɒstjuːm/",
+      "meaning_vi": "trang phục",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "She wears a traditional costume.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-16",
+      "review": "approved",
+      "word": "sticky rice",
+      "ipa": "/ˈstɪki raɪs/",
+      "meaning_vi": "xôi",
+      "emoji": "🍚",
+      "image": null,
+      "audio": null,
+      "example": "We eat sticky rice.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-17",
+      "review": "approved",
+      "word": "five-colour sticky rice",
+      "ipa": "/ˌfaɪv ˈkʌlə ˈstɪki raɪs/",
+      "meaning_vi": "xôi ngũ sắc",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "Have you tried five-colour sticky rice?",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-18",
+      "review": "approved",
+      "word": "flute",
+      "ipa": "/fluːt/",
+      "meaning_vi": "sáo",
+      "emoji": "🪈",
+      "image": null,
+      "audio": null,
+      "example": "He plays the flute.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-19",
+      "review": "approved",
+      "word": "bamboo flute",
+      "ipa": "/bæmˈbuː fluːt/",
+      "meaning_vi": "sáo trúc",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "This bamboo flute sounds lovely.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-20",
+      "review": "approved",
+      "word": "gong",
+      "ipa": "/ɡɒŋ/",
+      "meaning_vi": "cồng, chiêng",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "They play gongs at the festival.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-21",
+      "review": "approved",
+      "word": "feature",
+      "ipa": "/ˈfiːtʃə/",
+      "meaning_vi": "đặc điểm",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "What is a special feature of this house?",
+      "level": 3,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-22",
+      "review": "approved",
+      "word": "overlook",
+      "ipa": "/ˌəʊvəˈlʊk/",
+      "meaning_vi": "nhìn ra, nhìn xuống",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "The house overlooks a valley.",
+      "level": 3,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-23",
+      "review": "approved",
+      "word": "terraced",
+      "ipa": "/ˈterəst/",
+      "meaning_vi": "bậc thang",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "We can see terraced hillsides.",
+      "level": 3,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-24",
+      "review": "approved",
+      "word": "terraced field",
+      "ipa": "/ˈterəst fiːld/",
+      "meaning_vi": "ruộng bậc thang",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "There are terraced fields on the hills.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-25",
+      "review": "approved",
+      "word": "livestock",
+      "ipa": "/ˈlaɪvstɒk/",
+      "meaning_vi": "gia súc, vật nuôi",
+      "emoji": "🐄🐐",
+      "image": null,
+      "audio": null,
+      "example": "Some farmers raise livestock.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-26",
+      "review": "approved",
+      "word": "raise",
+      "ipa": "/reɪz/",
+      "meaning_vi": "chăn nuôi",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "They raise chickens.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-27",
+      "review": "approved",
+      "word": "soil",
+      "ipa": "/sɔɪl/",
+      "meaning_vi": "đất",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "The soil is good for growing rice.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-28",
+      "review": "approved",
+      "word": "enrich",
+      "ipa": "/ɪnˈrɪtʃ/",
+      "meaning_vi": "làm giàu, làm phong phú",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "Festivals enrich community life.",
+      "level": 3,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-29",
+      "review": "approved",
+      "word": "staircase",
+      "ipa": "/ˈsteəkeɪs/",
+      "meaning_vi": "cầu thang",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "The staircase leads to the house.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-30",
+      "review": "approved",
+      "word": "weave",
+      "ipa": "/wiːv/",
+      "meaning_vi": "dệt",
+      "emoji": "🧵",
+      "image": null,
+      "audio": null,
+      "example": "She knows how to weave cloth.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-31",
+      "review": "approved",
+      "word": "wooden",
+      "ipa": "/ˈwʊdən/",
+      "meaning_vi": "bằng gỗ",
+      "emoji": "🪵",
+      "image": null,
+      "audio": null,
+      "example": "There is a wooden chair.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-32",
+      "review": "approved",
+      "word": "wooden statue",
+      "ipa": "/ˈwʊdən ˈstætʃuː/",
+      "meaning_vi": "tượng gỗ",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "We saw a wooden statue.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-33",
+      "review": "approved",
+      "word": "peaceful",
+      "ipa": "/ˈpiːsfəl/",
+      "meaning_vi": "yên bình",
+      "emoji": "🌿",
+      "image": null,
+      "audio": null,
+      "example": "The village is peaceful.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-34",
+      "review": "approved",
+      "word": "awesome",
+      "ipa": "/ˈɔːsəm/",
+      "meaning_vi": "tuyệt vời",
+      "emoji": "🤩",
+      "image": null,
+      "audio": null,
+      "example": "The view is awesome!",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-35",
+      "review": "approved",
+      "word": "unique",
+      "ipa": "/juˈniːk/",
+      "meaning_vi": "độc đáo",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "Each group has unique traditions.",
+      "level": 3,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-36",
+      "review": "approved",
+      "word": "highland",
+      "ipa": "/ˈhaɪlənd/",
+      "meaning_vi": "vùng cao",
+      "emoji": "⛰️",
+      "image": null,
+      "audio": null,
+      "example": "We visit a highland village.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-37",
+      "review": "approved",
+      "word": "delta",
+      "ipa": "/ˈdeltə/",
+      "meaning_vi": "đồng bằng châu thổ",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "They live in a river delta.",
+      "level": 3,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-38",
+      "review": "approved",
+      "word": "close",
+      "ipa": "/kləʊs/",
+      "meaning_vi": "gần gũi",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "They live close to nature.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-39",
+      "review": "approved",
+      "word": "natural",
+      "ipa": "/ˈnætʃərəl/",
+      "meaning_vi": "thuộc tự nhiên",
+      "emoji": "🌿",
+      "image": null,
+      "audio": null,
+      "example": "They use natural materials.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-40",
+      "review": "approved",
+      "word": "nature",
+      "ipa": "/ˈneɪtʃə/",
+      "meaning_vi": "thiên nhiên",
+      "emoji": "🌳",
+      "image": null,
+      "audio": null,
+      "example": "I love nature.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-41",
+      "review": "approved",
+      "word": "culture",
+      "ipa": "/ˈkʌltʃə/",
+      "meaning_vi": "văn hóa",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "We respect every culture.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-42",
+      "review": "approved",
+      "word": "brochure",
+      "ipa": "/ˈbrəʊʃə/",
+      "meaning_vi": "tập quảng cáo, sách nhỏ",
+      "emoji": "📄",
+      "image": null,
+      "audio": null,
+      "example": "Read this brochure.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "g8-u4-v-43",
+      "review": "approved",
+      "word": "travel brochure",
+      "ipa": "/ˈtrævəl ˈbrəʊʃə/",
+      "meaning_vi": "tập quảng cáo du lịch",
+      "emoji": null,
+      "image": null,
+      "audio": null,
+      "example": "I found a travel brochure.",
+      "level": 2,
+      "accepted_variants": []
+    }
+  ],
+  "patterns": [
+    {
+      "id": "g8-u4-p-01",
+      "review": "approved",
+      "level": 1,
+      "text": "Is this a stilt house?",
+      "meaning_vi": "Đây có phải nhà sàn không?",
+      "audio": null,
+      "frame": "Is this a ___?",
+      "slot_options": [
+        "stilt house",
+        "bamboo house",
+        "communal house"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Đây có phải nhà sàn không?",
+      "free_required": [
+        [
+          "is this a"
+        ],
+        [
+          "stilt house",
+          "bamboo house",
+          "communal house"
+        ]
+      ],
+      "free_example": "Is this a bamboo house?"
+    },
+    {
+      "id": "g8-u4-p-02",
+      "review": "approved",
+      "level": 1,
+      "text": "Are these wooden statues?",
+      "meaning_vi": "Đây có phải những tượng gỗ không?",
+      "audio": null,
+      "frame": "Are these ___?",
+      "slot_options": [
+        "wooden statues",
+        "musical instruments",
+        "costumes"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Đây có phải những tượng gỗ không?",
+      "free_required": [
+        [
+          "are these"
+        ],
+        [
+          "wooden statues",
+          "musical instruments",
+          "costumes"
+        ]
+      ],
+      "free_example": "Are these musical instruments?"
+    },
+    {
+      "id": "g8-u4-p-03",
+      "review": "approved",
+      "level": 2,
+      "text": "Was the festival interesting?",
+      "meaning_vi": "Lễ hội có thú vị không?",
+      "audio": null,
+      "frame": "Was the festival ___?",
+      "slot_options": [
+        "interesting",
+        "exciting",
+        "fun"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Lễ hội có thú vị không?",
+      "free_required": [
+        [
+          "was the festival"
+        ],
+        [
+          "interesting",
+          "exciting",
+          "fun"
+        ]
+      ],
+      "free_example": "Was the festival fun?"
+    },
+    {
+      "id": "g8-u4-p-04",
+      "review": "approved",
+      "level": 2,
+      "text": "Were the dancers at the communal house?",
+      "meaning_vi": "Các vũ công có ở nhà cộng đồng không?",
+      "audio": null,
+      "frame": "Were the dancers at the ___?",
+      "slot_options": [
+        "communal house",
+        "market",
+        "festival"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Các vũ công có ở nhà cộng đồng không?",
+      "free_required": [
+        [
+          "were the dancers at the"
+        ],
+        [
+          "communal house",
+          "market",
+          "festival"
+        ]
+      ],
+      "free_example": "Were the dancers at the festival?"
+    },
+    {
+      "id": "g8-u4-p-05",
+      "review": "approved",
+      "level": 1,
+      "text": "Do you like folk music?",
+      "meaning_vi": "Bạn thích nhạc dân gian không?",
+      "audio": null,
+      "frame": "Do you like ___?",
+      "slot_options": [
+        "folk music",
+        "folk dances",
+        "sticky rice"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Bạn thích nhạc dân gian không?",
+      "free_required": [
+        [
+          "do you like"
+        ],
+        [
+          "folk music",
+          "folk dances",
+          "sticky rice"
+        ]
+      ],
+      "free_example": "Do you like folk dances?"
+    },
+    {
+      "id": "g8-u4-p-06",
+      "review": "approved",
+      "level": 1,
+      "text": "Does she play the flute?",
+      "meaning_vi": "Cô ấy có chơi sáo không?",
+      "audio": null,
+      "frame": "Does she play the ___?",
+      "slot_options": [
+        "flute",
+        "gong"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Cô ấy có chơi sáo không?",
+      "free_required": [
+        [
+          "does she play the"
+        ],
+        [
+          "flute",
+          "gong"
+        ]
+      ],
+      "free_example": "Does she play the gong?"
+    },
+    {
+      "id": "g8-u4-p-07",
+      "review": "approved",
+      "level": 2,
+      "text": "Did you visit the village yesterday?",
+      "meaning_vi": "Bạn đã thăm làng hôm qua chưa?",
+      "audio": null,
+      "frame": "Did you visit the ___ yesterday?",
+      "slot_options": [
+        "village",
+        "market",
+        "communal house"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Bạn đã thăm làng hôm qua chưa?",
+      "free_required": [
+        [
+          "did you visit the"
+        ],
+        [
+          "village",
+          "market",
+          "communal house"
+        ]
+      ],
+      "free_example": "Did you visit the market yesterday?"
+    },
+    {
+      "id": "g8-u4-p-08",
+      "review": "approved",
+      "level": 2,
+      "text": "Will you visit the village next week?",
+      "meaning_vi": "Bạn sẽ thăm làng tuần tới chứ?",
+      "audio": null,
+      "frame": "Will you visit the ___ next week?",
+      "slot_options": [
+        "village",
+        "museum",
+        "market"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Bạn sẽ thăm làng tuần tới chứ?",
+      "free_required": [
+        [
+          "will you visit the"
+        ],
+        [
+          "village",
+          "museum",
+          "market"
+        ]
+      ],
+      "free_example": "Will you visit the museum next week?"
+    },
+    {
+      "id": "g8-u4-p-09",
+      "review": "approved",
+      "level": 1,
+      "text": "Can you play the gong?",
+      "meaning_vi": "Bạn có thể chơi cồng chiêng không?",
+      "audio": null,
+      "frame": "Can you play the ___?",
+      "slot_options": [
+        "gong",
+        "flute",
+        "bamboo flute"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Bạn có thể chơi cồng chiêng không?",
+      "free_required": [
+        [
+          "can you play the"
+        ],
+        [
+          "gong",
+          "flute",
+          "bamboo flute"
+        ]
+      ],
+      "free_example": "Can you play the flute?"
+    },
+    {
+      "id": "g8-u4-p-10",
+      "review": "approved",
+      "level": 2,
+      "text": "Should we respect local traditions?",
+      "meaning_vi": "Chúng ta có nên tôn trọng truyền thống địa phương không?",
+      "audio": null,
+      "frame": "Should we respect local ___?",
+      "slot_options": [
+        "traditions",
+        "customs",
+        "culture"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Chúng ta có nên tôn trọng truyền thống địa phương không?",
+      "free_required": [
+        [
+          "should we respect local"
+        ],
+        [
+          "traditions",
+          "customs",
+          "culture"
+        ]
+      ],
+      "free_example": "Should we respect local customs?"
+    },
+    {
+      "id": "g8-u4-p-11",
+      "review": "approved",
+      "level": 3,
+      "text": "Have you ever visited a stilt house?",
+      "meaning_vi": "Bạn đã từng thăm nhà sàn chưa?",
+      "audio": null,
+      "frame": "Have you ever visited a ___?",
+      "slot_options": [
+        "stilt house",
+        "bamboo house",
+        "communal house"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Bạn đã từng thăm nhà sàn chưa?",
+      "free_required": [
+        [
+          "have you ever visited a"
+        ],
+        [
+          "stilt house",
+          "bamboo house",
+          "communal house"
+        ]
+      ],
+      "free_example": "Have you ever visited a communal house?"
+    },
+    {
+      "id": "g8-u4-p-12",
+      "review": "approved",
+      "level": 2,
+      "text": "Were they weaving cloth at that time?",
+      "meaning_vi": "Lúc đó họ đang dệt vải phải không?",
+      "audio": null,
+      "frame": "Were they weaving ___ at that time?",
+      "slot_options": [
+        "cloth",
+        "fabric"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Lúc đó họ đang dệt vải phải không?",
+      "free_required": [
+        [
+          "were they weaving"
+        ],
+        [
+          "cloth",
+          "fabric"
+        ]
+      ],
+      "free_example": "Were they weaving fabric at that time?"
+    },
+    {
+      "id": "g8-u4-p-13",
+      "review": "approved",
+      "level": 1,
+      "text": "Who plays the flute?",
+      "meaning_vi": "Ai chơi sáo?",
+      "audio": null,
+      "frame": "Who plays the ___?",
+      "slot_options": [
+        "flute",
+        "gong",
+        "bamboo flute"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Ai chơi sáo?",
+      "free_required": [
+        [
+          "who plays the"
+        ],
+        [
+          "flute",
+          "gong",
+          "bamboo flute"
+        ]
+      ],
+      "free_example": "Who plays the gong?"
+    },
+    {
+      "id": "g8-u4-p-14",
+      "review": "approved",
+      "level": 2,
+      "text": "What makes this village special?",
+      "meaning_vi": "Điều gì khiến ngôi làng đặc biệt?",
+      "audio": null,
+      "frame": "What makes this ___ special?",
+      "slot_options": [
+        "village",
+        "festival",
+        "house"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Điều gì khiến ngôi làng đặc biệt?",
+      "free_required": [
+        [
+          "what makes this"
+        ],
+        [
+          "village",
+          "festival",
+          "house"
+        ]
+      ],
+      "free_example": "What makes this festival special?"
+    },
+    {
+      "id": "g8-u4-p-15",
+      "review": "approved",
+      "level": 1,
+      "text": "What do they grow?",
+      "meaning_vi": "Họ trồng gì?",
+      "audio": null,
+      "frame": "What do they ___?",
+      "slot_options": [
+        "grow",
+        "eat",
+        "make"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Họ trồng gì?",
+      "free_required": [
+        [
+          "what do they"
+        ],
+        [
+          "grow",
+          "eat",
+          "make"
+        ]
+      ],
+      "free_example": "What do they eat?"
+    },
+    {
+      "id": "g8-u4-p-16",
+      "review": "approved",
+      "level": 2,
+      "text": "Who did you meet at the festival?",
+      "meaning_vi": "Bạn đã gặp ai ở lễ hội?",
+      "audio": null,
+      "frame": "Who did you meet at the ___?",
+      "slot_options": [
+        "festival",
+        "market",
+        "museum"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Bạn đã gặp ai ở lễ hội?",
+      "free_required": [
+        [
+          "who did you meet at the"
+        ],
+        [
+          "festival",
+          "market",
+          "museum"
+        ]
+      ],
+      "free_example": "Who did you meet at the market?"
+    },
+    {
+      "id": "g8-u4-p-17",
+      "review": "approved",
+      "level": 1,
+      "text": "Where do they live?",
+      "meaning_vi": "Họ sống ở đâu?",
+      "audio": null,
+      "frame": "Where do they ___?",
+      "slot_options": [
+        "live",
+        "work",
+        "meet"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Họ sống ở đâu?",
+      "free_required": [
+        [
+          "where do they"
+        ],
+        [
+          "live",
+          "work",
+          "meet"
+        ]
+      ],
+      "free_example": "Where do they meet?"
+    },
+    {
+      "id": "g8-u4-p-18",
+      "review": "approved",
+      "level": 1,
+      "text": "When does the festival start?",
+      "meaning_vi": "Lễ hội bắt đầu khi nào?",
+      "audio": null,
+      "frame": "When does the festival ___?",
+      "slot_options": [
+        "start",
+        "finish",
+        "take place"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Lễ hội bắt đầu khi nào?",
+      "free_required": [
+        [
+          "when does the festival"
+        ],
+        [
+          "start",
+          "finish",
+          "take place"
+        ]
+      ],
+      "free_example": "When does the festival finish?"
+    },
+    {
+      "id": "g8-u4-p-19",
+      "review": "approved",
+      "level": 2,
+      "text": "Why do people build houses on stilts?",
+      "meaning_vi": "Tại sao người ta xây nhà sàn?",
+      "audio": null,
+      "frame": "Why do people build houses on ___?",
+      "slot_options": [
+        "stilts",
+        "posts"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Tại sao người ta xây nhà sàn?",
+      "free_required": [
+        [
+          "why do people build houses on"
+        ],
+        [
+          "stilts",
+          "posts"
+        ]
+      ],
+      "free_example": "Why do people build houses on posts?"
+    },
+    {
+      "id": "g8-u4-p-20",
+      "review": "approved",
+      "level": 1,
+      "text": "How do they make sticky rice?",
+      "meaning_vi": "Họ làm xôi như thế nào?",
+      "audio": null,
+      "frame": "How do they make ___?",
+      "slot_options": [
+        "sticky rice",
+        "bamboo baskets",
+        "costumes"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Họ làm xôi như thế nào?",
+      "free_required": [
+        [
+          "how do they make"
+        ],
+        [
+          "sticky rice",
+          "bamboo baskets",
+          "costumes"
+        ]
+      ],
+      "free_example": "How do they make bamboo baskets?"
+    },
+    {
+      "id": "g8-u4-p-21",
+      "review": "approved",
+      "level": 1,
+      "text": "Which costume do you like?",
+      "meaning_vi": "Bạn thích trang phục nào?",
+      "audio": null,
+      "frame": "Which ___ do you like?",
+      "slot_options": [
+        "costume",
+        "instrument",
+        "dance"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Bạn thích trang phục nào?",
+      "free_required": [
+        [
+          "which"
+        ],
+        [
+          "costume",
+          "instrument",
+          "dance"
+        ]
+      ],
+      "free_example": "Which instrument do you like?"
+    },
+    {
+      "id": "g8-u4-p-22",
+      "review": "approved",
+      "level": 2,
+      "text": "Whose flute is this?",
+      "meaning_vi": "Đây là sáo của ai?",
+      "audio": null,
+      "frame": "Whose ___ is this?",
+      "slot_options": [
+        "flute",
+        "costume",
+        "brochure"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Đây là sáo của ai?",
+      "free_required": [
+        [
+          "whose"
+        ],
+        [
+          "flute",
+          "costume",
+          "brochure"
+        ]
+      ],
+      "free_example": "Whose brochure is this?"
+    },
+    {
+      "id": "g8-u4-p-23",
+      "review": "approved",
+      "level": 1,
+      "text": "How many houses are there in the village?",
+      "meaning_vi": "Có bao nhiêu ngôi nhà trong làng?",
+      "audio": null,
+      "frame": "How many ___ are there in the village?",
+      "slot_options": [
+        "houses",
+        "families",
+        "staircases"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Có bao nhiêu ngôi nhà trong làng?",
+      "free_required": [
+        [
+          "how many"
+        ],
+        [
+          "houses",
+          "families",
+          "staircases"
+        ]
+      ],
+      "free_example": "How many families are there in the village?"
+    },
+    {
+      "id": "g8-u4-p-24",
+      "review": "approved",
+      "level": 1,
+      "text": "How much rice do we need?",
+      "meaning_vi": "Chúng ta cần bao nhiêu gạo?",
+      "audio": null,
+      "frame": "How much ___ do we need?",
+      "slot_options": [
+        "rice",
+        "water",
+        "wood"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Chúng ta cần bao nhiêu gạo?",
+      "free_required": [
+        [
+          "how much"
+        ],
+        [
+          "rice",
+          "water",
+          "wood"
+        ]
+      ],
+      "free_example": "How much water do we need?"
+    },
+    {
+      "id": "g8-u4-p-25",
+      "review": "approved",
+      "level": 1,
+      "text": "How old is this communal house?",
+      "meaning_vi": "Nhà cộng đồng này bao nhiêu tuổi?",
+      "audio": null,
+      "frame": "How old is this ___?",
+      "slot_options": [
+        "communal house",
+        "stilt house",
+        "wooden statue"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Nhà cộng đồng này bao nhiêu tuổi?",
+      "free_required": [
+        [
+          "how old is this"
+        ],
+        [
+          "communal house",
+          "stilt house",
+          "wooden statue"
+        ]
+      ],
+      "free_example": "How old is this stilt house?"
+    },
+    {
+      "id": "g8-u4-p-26",
+      "review": "approved",
+      "level": 2,
+      "text": "How often do they hold this festival?",
+      "meaning_vi": "Họ tổ chức lễ hội này bao lâu một lần?",
+      "audio": null,
+      "frame": "How often do they ___?",
+      "slot_options": [
+        "hold this festival",
+        "visit the market",
+        "perform folk dances"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Họ tổ chức lễ hội này bao lâu một lần?",
+      "free_required": [
+        [
+          "how often do they"
+        ],
+        [
+          "hold this festival",
+          "visit the market",
+          "perform folk dances"
+        ]
+      ],
+      "free_example": "How often do they perform folk dances?"
+    },
+    {
+      "id": "g8-u4-p-27",
+      "review": "approved",
+      "level": 2,
+      "text": "How long does the festival last?",
+      "meaning_vi": "Lễ hội kéo dài bao lâu?",
+      "audio": null,
+      "frame": "How long does the ___ last?",
+      "slot_options": [
+        "festival",
+        "performance",
+        "tour"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Lễ hội kéo dài bao lâu?",
+      "free_required": [
+        [
+          "how long does the"
+        ],
+        [
+          "festival",
+          "performance",
+          "tour"
+        ]
+      ],
+      "free_example": "How long does the performance last?"
+    },
+    {
+      "id": "g8-u4-p-28",
+      "review": "approved",
+      "level": 2,
+      "text": "How far is the village from here?",
+      "meaning_vi": "Ngôi làng cách đây bao xa?",
+      "audio": null,
+      "frame": "How far is the ___ from here?",
+      "slot_options": [
+        "village",
+        "market",
+        "museum"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Ngôi làng cách đây bao xa?",
+      "free_required": [
+        [
+          "how far is the"
+        ],
+        [
+          "village",
+          "market",
+          "museum"
+        ]
+      ],
+      "free_example": "How far is the museum from here?"
+    },
+    {
+      "id": "g8-u4-p-29",
+      "review": "approved",
+      "level": 2,
+      "text": "How tall are the wooden posts?",
+      "meaning_vi": "Các cột gỗ cao bao nhiêu?",
+      "audio": null,
+      "frame": "How tall are the ___?",
+      "slot_options": [
+        "wooden posts",
+        "trees",
+        "houses"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Các cột gỗ cao bao nhiêu?",
+      "free_required": [
+        [
+          "how tall are the"
+        ],
+        [
+          "wooden posts",
+          "trees",
+          "houses"
+        ]
+      ],
+      "free_example": "How tall are the trees?"
+    },
+    {
+      "id": "g8-u4-p-30",
+      "review": "approved",
+      "level": 2,
+      "text": "There are a few wooden statues here.",
+      "meaning_vi": "Có một vài tượng gỗ ở đây.",
+      "audio": null,
+      "frame": "There are a few ___ here.",
+      "slot_options": [
+        "wooden statues",
+        "stilt houses",
+        "musical instruments"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Có một vài tượng gỗ ở đây.",
+      "free_required": [
+        [
+          "there are a few"
+        ],
+        [
+          "wooden statues",
+          "stilt houses",
+          "musical instruments"
+        ]
+      ],
+      "free_example": "There are a few stilt houses here."
+    },
+    {
+      "id": "g8-u4-p-31",
+      "review": "approved",
+      "level": 2,
+      "text": "There is a little rice left.",
+      "meaning_vi": "Còn một ít gạo.",
+      "audio": null,
+      "frame": "There is a little ___ left.",
+      "slot_options": [
+        "rice",
+        "water",
+        "milk"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Còn một ít gạo.",
+      "free_required": [
+        [
+          "there is a little"
+        ],
+        [
+          "rice",
+          "water",
+          "milk"
+        ]
+      ],
+      "free_example": "There is a little water left."
+    },
+    {
+      "id": "g8-u4-p-32",
+      "review": "approved",
+      "level": 2,
+      "text": "We have some information about the festival.",
+      "meaning_vi": "Chúng tôi có một số thông tin về lễ hội.",
+      "audio": null,
+      "frame": "We have some information about the ___.",
+      "slot_options": [
+        "festival",
+        "village",
+        "museum"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Chúng tôi có một số thông tin về lễ hội.",
+      "free_required": [
+        [
+          "we have some information about the"
+        ],
+        [
+          "festival",
+          "village",
+          "museum"
+        ]
+      ],
+      "free_example": "We have some information about the village."
+    },
+    {
+      "id": "g8-u4-p-33",
+      "review": "approved",
+      "level": 2,
+      "text": "There isn't much land for growing crops.",
+      "meaning_vi": "Không có nhiều đất trồng trọt.",
+      "audio": null,
+      "frame": "There isn't much ___ for growing crops.",
+      "slot_options": [
+        "land",
+        "space"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Không có nhiều đất trồng trọt.",
+      "free_required": [
+        [
+          "there isn't much"
+        ],
+        [
+          "land",
+          "space"
+        ]
+      ],
+      "free_example": "There isn't much space for growing crops."
+    },
+    {
+      "id": "g8-u4-p-34",
+      "review": "approved",
+      "level": 2,
+      "text": "There aren't many houses on this hill.",
+      "meaning_vi": "Không có nhiều nhà trên đồi này.",
+      "audio": null,
+      "frame": "There aren't many ___ on this hill.",
+      "slot_options": [
+        "houses",
+        "trees",
+        "people"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Không có nhiều nhà trên đồi này.",
+      "free_required": [
+        [
+          "there aren't many"
+        ],
+        [
+          "houses",
+          "trees",
+          "people"
+        ]
+      ],
+      "free_example": "There aren't many trees on this hill."
+    },
+    {
+      "id": "g8-u4-p-35",
+      "review": "approved",
+      "level": 2,
+      "text": "Do you have any books about ethnic groups?",
+      "meaning_vi": "Bạn có sách nào về các dân tộc không?",
+      "audio": null,
+      "frame": "Do you have any ___ about ethnic groups?",
+      "slot_options": [
+        "books",
+        "brochures",
+        "information"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Bạn có sách nào về các dân tộc không?",
+      "free_required": [
+        [
+          "do you have any"
+        ],
+        [
+          "books",
+          "brochures",
+          "information"
+        ]
+      ],
+      "free_example": "Do you have any information about ethnic groups?"
+    },
+    {
+      "id": "g8-u4-p-36",
+      "review": "approved",
+      "level": 3,
+      "text": "Many women and children joined the dance.",
+      "meaning_vi": "Nhiều phụ nữ và trẻ em tham gia điệu múa.",
+      "audio": null,
+      "frame": "Many women and children joined the ___.",
+      "slot_options": [
+        "dance",
+        "festival",
+        "celebration"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Nhiều phụ nữ và trẻ em tham gia điệu múa.",
+      "free_required": [
+        [
+          "many women and children joined the"
+        ],
+        [
+          "dance",
+          "festival",
+          "celebration"
+        ]
+      ],
+      "free_example": "Many women and children joined the festival."
+    },
+    {
+      "id": "g8-u4-p-37",
+      "review": "approved",
+      "level": 3,
+      "text": "We bought two bags of rice.",
+      "meaning_vi": "Chúng tôi mua hai túi gạo.",
+      "audio": null,
+      "frame": "We bought two bags of ___.",
+      "slot_options": [
+        "rice",
+        "flour",
+        "sugar"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Chúng tôi mua hai túi gạo.",
+      "free_required": [
+        [
+          "we bought two bags of"
+        ],
+        [
+          "rice",
+          "flour",
+          "sugar"
+        ]
+      ],
+      "free_example": "We bought two bags of flour."
+    },
+    {
+      "id": "g8-u4-p-38",
+      "review": "approved",
+      "level": 3,
+      "text": "Can I ask you something about your culture?",
+      "meaning_vi": "Tôi có thể hỏi bạn đôi điều về văn hóa của bạn không?",
+      "audio": null,
+      "frame": "Can I ask you something about your ___?",
+      "slot_options": [
+        "culture",
+        "traditions",
+        "village"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Tôi có thể hỏi bạn đôi điều về văn hóa của bạn không?",
+      "free_required": [
+        [
+          "can i ask you something about your"
+        ],
+        [
+          "culture",
+          "traditions",
+          "village"
+        ]
+      ],
+      "free_example": "Can I ask you something about your traditions?"
+    },
+    {
+      "id": "g8-u4-p-39",
+      "review": "approved",
+      "level": 3,
+      "text": "How about visiting the communal house?",
+      "meaning_vi": "Hay là đi thăm nhà cộng đồng nhé?",
+      "audio": null,
+      "frame": "How about visiting the ___?",
+      "slot_options": [
+        "communal house",
+        "market",
+        "museum"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Hay là đi thăm nhà cộng đồng nhé?",
+      "free_required": [
+        [
+          "how about visiting the"
+        ],
+        [
+          "communal house",
+          "market",
+          "museum"
+        ]
+      ],
+      "free_example": "How about visiting the museum?"
+    },
+    {
+      "id": "g8-u4-p-40",
+      "review": "approved",
+      "level": 3,
+      "text": "I am not sure where the festival takes place.",
+      "meaning_vi": "Tôi không chắc lễ hội diễn ra ở đâu.",
+      "audio": null,
+      "frame": "I am not sure where the ___ takes place.",
+      "slot_options": [
+        "festival",
+        "performance",
+        "celebration"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Tôi không chắc lễ hội diễn ra ở đâu.",
+      "free_required": [
+        [
+          "i am not sure where the"
+        ],
+        [
+          "festival",
+          "performance",
+          "celebration"
+        ]
+      ],
+      "free_example": "I am not sure where the performance takes place."
+    },
+    {
+      "id": "g8-u4-p-41",
+      "review": "approved",
+      "level": 3,
+      "text": "Would you like some sticky rice?",
+      "meaning_vi": "Bạn có muốn ăn một ít xôi không?",
+      "audio": null,
+      "frame": "Would you like some ___?",
+      "slot_options": [
+        "sticky rice",
+        "tea",
+        "water"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Bạn có muốn ăn một ít xôi không?",
+      "free_required": [
+        [
+          "would you like some"
+        ],
+        [
+          "sticky rice",
+          "tea",
+          "water"
+        ]
+      ],
+      "free_example": "Would you like some tea?"
+    },
+    {
+      "id": "g8-u4-p-42",
+      "review": "approved",
+      "level": 3,
+      "text": "What is the difference between these two costumes?",
+      "meaning_vi": "Hai bộ trang phục này khác nhau thế nào?",
+      "audio": null,
+      "frame": "What is the difference between these two ___?",
+      "slot_options": [
+        "costumes",
+        "houses",
+        "instruments"
+      ],
+      "free_prompt_vi": "Nói một câu cùng cấu trúc: Hai bộ trang phục này khác nhau thế nào?",
+      "free_required": [
+        [
+          "what is the difference between these two"
+        ],
+        [
+          "costumes",
+          "houses",
+          "instruments"
+        ]
+      ],
+      "free_example": "What is the difference between these two instruments?"
+    }
+  ],
+  "dialogues": [
+    {
+      "id": "g8-u4-d-1",
+      "review": "approved",
+      "level": 1,
+      "title": "At a cultural museum",
+      "title_vi": "Tại bảo tàng văn hóa",
+      "roles": [
+        "Mai",
+        "Alex"
+      ],
+      "turns": [
+        {
+          "speaker": "Mai",
+          "text": "What is this?",
+          "hint_vi": "Đây là gì?",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "It is a bamboo flute.",
+          "hint_vi": "Đây là sáo trúc.",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "Can you play it?",
+          "hint_vi": "Bạn chơi được không?",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "No, I can’t.",
+          "hint_vi": "Không, tôi không chơi được.",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "It looks interesting!",
+          "hint_vi": "Trông thú vị quá!",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "Let’s learn more about it.",
+          "hint_vi": "Hãy tìm hiểu thêm nhé.",
+          "audio": null
+        }
+      ]
+    },
+    {
+      "id": "g8-u4-d-2",
+      "review": "approved",
+      "level": 2,
+      "title": "A village visit",
+      "title_vi": "Thăm làng",
+      "roles": [
+        "Mai",
+        "Alex"
+      ],
+      "turns": [
+        {
+          "speaker": "Mai",
+          "text": "Where do people meet in this village?",
+          "hint_vi": "Người dân gặp nhau ở đâu?",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "They meet at the communal house.",
+          "hint_vi": "Họ gặp nhau tại nhà cộng đồng.",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "What do they do there?",
+          "hint_vi": "Họ làm gì ở đó?",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "They hold meetings and cultural events.",
+          "hint_vi": "Họ tổ chức họp và sự kiện văn hóa.",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "How often do they hold events?",
+          "hint_vi": "Họ tổ chức sự kiện bao lâu một lần?",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "It depends on the village calendar.",
+          "hint_vi": "Điều đó tùy lịch của làng.",
+          "audio": null
+        }
+      ]
+    },
+    {
+      "id": "g8-u4-d-3",
+      "review": "approved",
+      "level": 2,
+      "title": "At a food stall",
+      "title_vi": "Tại quầy đồ ăn",
+      "roles": [
+        "Mai",
+        "Alex"
+      ],
+      "turns": [
+        {
+          "speaker": "Mai",
+          "text": "What is this dish?",
+          "hint_vi": "Đây là món gì?",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "It is five-colour sticky rice.",
+          "hint_vi": "Đây là xôi ngũ sắc.",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "Would you like some?",
+          "hint_vi": "Bạn muốn ăn một ít không?",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "Yes, please. How much is it?",
+          "hint_vi": "Vâng. Nó giá bao nhiêu?",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "It is twenty thousand dong.",
+          "hint_vi": "Hai mươi nghìn đồng.",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "Thank you. I would like one portion.",
+          "hint_vi": "Cảm ơn. Tôi muốn một phần.",
+          "audio": null
+        }
+      ]
+    },
+    {
+      "id": "g8-u4-d-4",
+      "review": "approved",
+      "level": 3,
+      "title": "Learning about traditions",
+      "title_vi": "Tìm hiểu truyền thống",
+      "roles": [
+        "Mai",
+        "Alex"
+      ],
+      "turns": [
+        {
+          "speaker": "Mai",
+          "text": "Why do people preserve folk dances?",
+          "hint_vi": "Tại sao người ta gìn giữ điệu múa dân gian?",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "They help people share their culture.",
+          "hint_vi": "Chúng giúp mọi người chia sẻ văn hóa.",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "Who teaches the dances to children?",
+          "hint_vi": "Ai dạy trẻ em các điệu múa?",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "Experienced dancers can teach them.",
+          "hint_vi": "Những người múa có kinh nghiệm có thể dạy các em.",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "How can visitors learn more respectfully?",
+          "hint_vi": "Du khách có thể tìm hiểu với thái độ tôn trọng thế nào?",
+          "audio": null
+        },
+        {
+          "speaker": "Alex",
+          "text": "They can ask permission and listen carefully.",
+          "hint_vi": "Họ có thể xin phép và lắng nghe cẩn thận.",
+          "audio": null
+        }
+      ]
+    }
+  ],
+  "roleplays": [
+    {
+      "id": "g8-u4-r-1",
+      "review": "approved",
+      "level": 1,
+      "title": "Museum guide",
+      "situation_vi": "Giới thiệu nhạc cụ tại bảo tàng.",
+      "bot_name": "Alex",
+      "ai_role": "visitor",
+      "goal": "Answer questions in English.",
+      "mode": "scripted",
+      "turns": [
+        {
+          "bot": "What is this instrument?",
+          "expect_any": [
+            "flute",
+            "gong"
+          ],
+          "hint": "It is a flute."
+        },
+        {
+          "bot": "What is it made of?",
+          "expect_any": [
+            "bamboo",
+            "wood",
+            "metal"
+          ],
+          "hint": "It is made of bamboo."
+        },
+        {
+          "bot": "Can you play it?",
+          "expect_any": [
+            "yes",
+            "no"
+          ],
+          "hint": "No, I can’t."
+        },
+        {
+          "bot": "Do you like its sound?",
+          "expect_any": [
+            "yes",
+            "no",
+            "like"
+          ],
+          "hint": "Yes, I do."
+        }
+      ],
+      "closing": "Thank you for sharing!"
+    },
+    {
+      "id": "g8-u4-r-2",
+      "review": "approved",
+      "level": 2,
+      "title": "Village guide",
+      "situation_vi": "Giới thiệu một ngôi làng giả định.",
+      "bot_name": "Alex",
+      "ai_role": "visitor",
+      "goal": "Answer questions in English.",
+      "mode": "scripted",
+      "turns": [
+        {
+          "bot": "Where do people meet?",
+          "expect_any": [
+            "communal house",
+            "market"
+          ],
+          "hint": "They meet at the communal house."
+        },
+        {
+          "bot": "What can I see there?",
+          "expect_any": [
+            "house",
+            "statue",
+            "instrument"
+          ],
+          "hint": "You can see wooden statues."
+        },
+        {
+          "bot": "Are there any stilt houses?",
+          "expect_any": [
+            "yes",
+            "no"
+          ],
+          "hint": "Yes, there are."
+        },
+        {
+          "bot": "How can I learn more?",
+          "expect_any": [
+            "ask",
+            "guide",
+            "brochure"
+          ],
+          "hint": "You can ask a local guide."
+        }
+      ],
+      "closing": "Thank you for sharing!"
+    },
+    {
+      "id": "g8-u4-r-3",
+      "review": "approved",
+      "level": 2,
+      "title": "Food stall",
+      "situation_vi": "Trò chuyện về món ăn trong tình huống giả định.",
+      "bot_name": "Alex",
+      "ai_role": "visitor",
+      "goal": "Answer questions in English.",
+      "mode": "scripted",
+      "turns": [
+        {
+          "bot": "What food would you recommend?",
+          "expect_any": [
+            "rice",
+            "sticky rice"
+          ],
+          "hint": "I recommend sticky rice."
+        },
+        {
+          "bot": "Is it a traditional dish?",
+          "expect_any": [
+            "yes",
+            "no"
+          ],
+          "hint": "Yes, it is."
+        },
+        {
+          "bot": "How much rice do we need for two portions?",
+          "expect_any": [
+            "rice",
+            "grams",
+            "cups"
+          ],
+          "hint": "We need two cups of rice."
+        },
+        {
+          "bot": "Do we need any water?",
+          "expect_any": [
+            "yes",
+            "no",
+            "water"
+          ],
+          "hint": "Yes, we need some water."
+        }
+      ],
+      "closing": "Thank you for sharing!"
+    },
+    {
+      "id": "g8-u4-r-4",
+      "review": "approved",
+      "level": 3,
+      "title": "Culture interview",
+      "situation_vi": "Phỏng vấn về gìn giữ văn hóa.",
+      "bot_name": "Alex",
+      "ai_role": "visitor",
+      "goal": "Answer questions in English.",
+      "mode": "scripted",
+      "turns": [
+        {
+          "bot": "Which tradition would you like to learn about?",
+          "expect_any": [
+            "dance",
+            "music",
+            "weaving"
+          ],
+          "hint": "I would like to learn about folk dances."
+        },
+        {
+          "bot": "Why are traditions important?",
+          "expect_any": [
+            "culture",
+            "community",
+            "history"
+          ],
+          "hint": "They connect people with their culture."
+        },
+        {
+          "bot": "Who can help young people learn?",
+          "expect_any": [
+            "family",
+            "teachers",
+            "elders"
+          ],
+          "hint": "Family members and elders can help."
+        },
+        {
+          "bot": "How can visitors show respect?",
+          "expect_any": [
+            "ask",
+            "listen",
+            "permission"
+          ],
+          "hint": "They can ask permission and listen carefully."
+        }
+      ],
+      "closing": "Thank you for sharing!"
+    }
+  ]
+}

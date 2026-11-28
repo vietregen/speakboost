@@ -159,9 +159,9 @@ function render() {
 
   root.replaceChildren(h('div', { class: 'screen wide' },
     h('header', { class: 'topbar' }, h('a', { class: 'back', href: 'index.html?preview=0', 'aria-label': 'Về trang học sinh' }, '‹'),
-      h('div', { class: 'topbar-title' }, `Duyệt nội dung · Unit ${unit.meta.unit}: ${unit.meta.title}`),
+      h('div', { class: 'topbar-title' }, `Duyệt nội dung · ${unit.meta.display_label || `Unit ${unit.meta.unit}`}: ${unit.meta.title}`),
       unitsAvail.length > 1 ? h('select', { class: 'unit-select', 'aria-label': 'Chọn Unit để duyệt', onchange: (e) => { location.search = `?unit=${e.target.value}`; } },
-        ...unitsAvail.map((u) => h('option', { value: u.unit, selected: u.unit === unit.meta.unit }, `Unit ${u.unit} · ${u.title}`))) : null),
+        ...unitsAvail.map((u) => h('option', { value: u.unit, selected: u.unit === unit.meta.unit }, `${u.label || `Unit ${u.unit}`} · ${u.title}`))) : null),
     h('p', { class: 'proto' }, h('b', {}, 'Bản mẫu giai đoạn 1: '),
       'trang này chưa có đăng nhập và trạng thái duyệt chỉ lưu trên máy này. Để học sinh ở mọi máy thấy nội dung, thầy cô bấm “Tải tệp JSON đã duyệt” rồi thay tệp ',
       h('code', {}, `data/units/${file}`), '. Phân quyền thật làm ở giai đoạn 2.'),
