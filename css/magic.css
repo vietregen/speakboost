@@ -330,3 +330,27 @@ body.magic .combo { color: #ff9f5a; }
 .mh-go.cleared { filter: saturate(1.2); }
 @media (max-width: 560px) { .mh-chapters { flex-direction: row; flex-wrap: wrap; justify-content: center; } .mh-chapters .mh-go { min-width: 140px; font-size: 18px; } }
 .q-bubble { max-width: 100%; text-align: left; }
+
+/* ---------- Bìa chung + nhận xét câu trả lời tự do ---------- */
+.mh-hero h1 .mh-h1-accent { background: linear-gradient(180deg, #f3e8ff 10%, #c9a6ff 55%, #8c5cf0 95%); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.mh-now { margin: 12px 0 0; font-size: 16px; color: #e7dcff; text-shadow: 0 2px 6px rgba(0, 0, 0, .6); }
+.mh-now b { color: var(--gold); }
+.free-notes { list-style: none; padding: 0; margin: 8px 0 0; font-size: 15px; }
+.free-notes li { margin: 4px 0; color: #c9f5d0; }
+.free-tip { margin: 8px 0 0; font-size: 15px; color: #ffe7a8; }
+.free-summary { list-style: none; padding: 0; margin: 10px auto; text-align: left; max-width: 520px; font-size: 15px; }
+.free-summary li { padding: 8px 0; border-bottom: 1px solid rgba(255, 255, 255, .12); }
+.mh-hero .mh-ribbon { margin-top: 8px; padding-left: 60px; padding-right: 60px; }
+.mh-spell-say { background: none; border: 0; cursor: pointer; font-size: 18px; padding: 0 4px; vertical-align: middle; }
+@media (max-width: 480px) { .mh-hero .mh-ribbon { font-size: 18px; padding: 7px 44px 12px; } .mh-tagline { font-size: 17px; } }
+/* Câu bùa đổi mỗi 15 giây (Việt / Anh đan xen) */
+.mh-spellbox { transition: opacity .45s ease, transform .45s ease; }
+.mh-spellbox.out { opacity: 0; transform: translateY(-6px) scale(.97); }
+.mh-spell-note { font-size: 17px; }
+@media (prefers-reduced-motion: reduce) { .mh-spellbox { transition: none; } }
+/* Câu bùa tiếng Việt nhiều dòng: các câu thơ nối nhau, chỉ xuống dòng giữa các câu */
+.mh-verse { margin: 6px 0 4px; max-width: 560px; font-family: "Playfair Display", Georgia, serif; font-style: italic; font-size: 19px; line-height: 1.45;
+  color: #ffe9b0; text-shadow: 0 2px 6px rgba(0, 0, 0, .7); }
+.mh-verse span { display: inline-block; margin-right: .5em; }
+.mh-spellbox { min-height: 132px; }
+@media (max-width: 480px) { .mh-verse { font-size: 16px; } .mh-spellbox { min-height: 120px; } }

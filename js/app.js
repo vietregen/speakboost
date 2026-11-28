@@ -8,6 +8,7 @@ import * as Challenge from './challenge.js';
 import * as Challenge2 from './challenge2.js';
 import * as Cloud from './cloud.js';
 import * as G from './grading.js';
+import * as Free from './freetalk.js';
 
 const root = document.getElementById('app');
 let unit = null;
@@ -56,6 +57,63 @@ const WORLDS = {
   2: { name: 'Rừng Ánh Sáng', sub: 'Mở rộng · Luyện phản xạ', img: 'assets/theme/island2.png' },
   3: { name: 'Thung Lũng Pha Lê', sub: 'Vận dụng · Tự tin hơn', img: 'assets/theme/island3.png' },
 };
+// Câu bùa trên bìa: tiếng Việt và tiếng Anh đan xen, đổi mỗi 15 giây. Câu tiếng Anh bấm 🔊 để nghe.
+// Câu tiếng Anh là câu thần chú có thật (ảo thuật, truyện cổ) hoặc tên bùa phép trong Harry Potter.
+// Câu tiếng Việt do thầy soạn (28/11/2026). Câu nhiều dòng: dòng đầu nằm trên dải ruy băng, các dòng sau hiện bên dưới.
+const SPELLS_VI = [
+  { lines: ['Úm ba la cà na xí muội!'] },
+  { lines: ['Úm ba la, ba đồng thành bảy!'] },
+  { lines: ['Úm ba la,', 'Gió gần gió xa,', 'Mây về tụ lại,', 'Mưa xuống đồng ta.'] },
+  { lines: ['Úm ba la,', 'Đất mở đường ra,', 'Núi cao cúi xuống,', 'Sông rộng tách làm ba.'] },
+  { lines: ['Úm ba la,', 'Tre già thức giấc,', 'Rễ bám lòng đất,', 'Ngọn chạm trời xanh.'] },
+  { lines: ['Úm ba la,', 'Một hóa thành ba,', 'Ba hóa thành chín,', 'Chín hóa muôn vàn.'] },
+  { lines: ['Úm ba la,', 'Cây khô nảy lộc,', 'Đất cằn nở hoa,', 'Suối nguồn lại chảy,', 'Sự sống chan hòa.'] },
+].map((s) => ({ text: s.lines[0], verse: s.lines.slice(1), note: '' }));
+const SPELLS_EN = [
+  { text: 'Abracadabra!', note: 'Câu thần chú cổ xưa nhất của ảo thuật gia' },
+  { text: 'Wingardium Leviosa!', note: 'Bùa bay lên · Harry Potter' },
+  { text: 'Hocus Pocus!', note: '“Biến!” của các nhà ảo thuật' },
+  { text: 'Lumos!', note: 'Bùa thắp sáng đầu đũa phép · Harry Potter' },
+  { text: 'Open Sesame!', note: '“Vừng ơi, mở ra!” · Ali Baba và bốn mươi tên cướp' },
+  { text: 'Alohomora!', note: 'Bùa mở khóa · Harry Potter' },
+  { text: 'Alakazam!', note: 'Câu thần chú của nhà ảo thuật' },
+  { text: 'Expecto Patronum!', note: 'Bùa gọi Thần Hộ Mệnh · Harry Potter' },
+  { text: 'Accio!', note: 'Bùa triệu hồi đồ vật · Harry Potter' },
+];
+// Thứ tự đan xen: Việt, Anh, Việt, Anh… (dài hơn danh sách nào thì quay vòng danh sách đó).
+const SPELLS = Array.from({ length: Math.max(SPELLS_VI.length, SPELLS_EN.length) * 2 }, (_, i) =>
+  (i % 2 === 0 ? { ...SPELLS_VI[(i / 2) % SPELLS_VI.length], en: false } : { ...SPELLS_EN[((i - 1) / 2) % SPELLS_EN.length], en: true }));
+const SPELL_MS = 15000;
+let spellIdx = 0;
+
+function spellBox() {
+  const ribbon = h('span', { class: 'mh-ribbon mh-spell' });
+  const note = h('span', { class: 'mh-spell-note' });
+  const say = h('button', { class: 'mh-spell-say', 'aria-label': 'Nghe câu bùa', title: 'Nghe câu bùa' }, '🔊');
+  say.addEventListener('click', () => { const sp = SPELLS[spellIdx]; if (sp.en) S.playModel(sp.text); });
+  const verse = h('p', { class: 'mh-verse' });
+  const box = h('div', { class: 'mh-spellbox', 'aria-live': 'off' }, ribbon, verse, h('p', { class: 'mh-tagline' }, note, ' ', say));
+  const show = () => {
+    const sp = SPELLS[spellIdx];
+    ribbon.textContent = sp.text;
+    ribbon.lang = sp.en ? 'en' : 'vi';
+    // Mỗi câu thơ là một khối riêng, xuống dòng giữa các câu chứ không cắt ngang câu.
+    verse.replaceChildren(...(sp.verse || []).map((l) => h('span', {}, l)));
+    verse.hidden = !(sp.verse && sp.verse.length);
+    note.textContent = sp.note || '';
+    say.hidden = !sp.en;
+  };
+  show();
+  const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const timer = setInterval(() => {
+    if (!box.isConnected) { clearInterval(timer); return; }   // đã rời trang chính
+    const next = () => { spellIdx = (spellIdx + 1) % SPELLS.length; show(); box.classList.remove('out'); };
+    if (reduce) return next();
+    box.classList.add('out');
+    setTimeout(next, 450);
+  }, SPELL_MS);
+  return box;
+}
 const ACT_ART = { vocabulary: 'assets/theme/icon-vocab.png', patterns: 'assets/theme/icon-patterns.png', dialogues: 'assets/theme/icon-dialogues.png', roleplays: 'assets/theme/icon-roleplays.png' };
 
 // ---- Mở khóa theo thứ tự: phần sau mở khi phần trước xong, mức sau mở khi mức trước xong ----
@@ -211,13 +269,14 @@ function renderHome() {
     h('header', { class: 'mh-top' }, logo(), h('div', { class: 'mh-top-right' }, unitPicker(), avatar())),
     h('section', { class: 'mh-hero' },
       h('img', { class: 'mh-castle', src: 'assets/theme/castle.jpg', alt: '' }),
+      // Bìa chung của ứng dụng (không gắn với Unit nào). Bài đang học chỉ hiện ở dòng nhỏ bên dưới.
       h('div', { class: 'mh-hero-text' },
-        h('span', { class: 'mh-ribbon' }, unit.meta.display_label || `Unit ${U()}`),
-        h('h1', {}, unit.meta.title),
-        h('p', { class: 'mh-tagline' }, unit.meta.title_vi ? `Luyện nói tiếng Anh · ${unit.meta.title_vi}` : 'Luyện nói tiếng Anh'),
+        h('h1', {}, 'Speak', h('span', { class: 'mh-h1-accent' }, 'Boost')),
+        spellBox(),
         h('div', { class: 'mh-pills' },
           h('span', { class: 'mh-pill' }, '🔥 ', h('b', {}, P.daysPractised()), ' ngày'),
-          h('span', { class: 'mh-pill' }, '⭐ ', h('b', {}, totalStars))))),
+          h('span', { class: 'mh-pill' }, '⭐ ', h('b', {}, totalStars))),
+        h('p', { class: 'mh-now' }, '📖 Đang học: ', h('b', {}, unit.meta.display_label || index?.units?.find((u) => u.unit === U())?.label || `Unit ${U()}`), ` · ${unit.meta.title}`))),
     supportNotice(),
     anyVisible ? null : emptyState('Thầy cô chưa duyệt nội dung bài này. Bạn chờ thầy cô nhé!'),
     anyVisible ? taskCard() : null,
@@ -502,17 +561,27 @@ function renderDialogue(id) {
   }
 }
 
-// ---------------- Đóng vai (kịch bản, chưa dùng AI) ----------------
+// ---------------- Đóng vai: học sinh trả lời TỰ DO, máy nhận xét theo từng câu ----------------
+// Câu gợi ý chỉ là một cách trả lời. Mỗi lượt lấy kết quả tốt nhất của bạn (được nói lại nhiều lần);
+// sao tổng kết tính từ tổng sao các lượt (lượt bỏ qua tính 0), nên luôn khớp với sao từng lượt.
+function freeOutcome(t, alts) {
+  const f = Free.evaluate(t, alts, level());
+  return { stars: f.stars, title: f.title, heard: f.heard, detail: f.detail,
+    body: [heardLine(f.heard),
+      f.notes.length ? h('ul', { class: 'free-notes' }, ...f.notes.map((x) => h('li', {}, '✓ ', x))) : null,
+      f.tip ? h('p', { class: 'free-tip' }, '💡 ', f.tip) : null].filter(Boolean) };
+}
+
 function renderRoleplay(id) {
   const r = items('roleplays').find((x) => x.id === id);
   if (!r) return renderList('roleplays', 'Đóng vai', 'roleplays', (x) => x.situation_vi);
   const log = h('div', { class: 'chat' });
   const stage = h('div', { class: 'stage' });
-  let okCount = 0;
+  const best = r.turns.map(() => ({ stars: 0, heard: '' }));
   let selfUsed = false;
   root.replaceChildren(shell('Đóng vai',
     h('div', { class: 'card' }, draftBadge(r), h('h2', {}, r.title), h('p', {}, r.situation_vi),
-      h('p', { class: 'note' }, 'Hội thoại theo kịch bản thầy cô duyệt · chưa dùng trí tuệ nhân tạo')),
+      h('p', { class: 'note' }, 'Bạn trả lời theo ý của mình, không cần giống câu gợi ý. Máy nhận xét câu bạn nói · không phải điểm phát âm.')),
     log, stage));
 
   const botSay = (text) => {
@@ -525,40 +594,47 @@ function renderRoleplay(id) {
     disposeAll();
     if (k >= r.turns.length) {
       botSay(r.closing);
-      const stars = okCount === r.turns.length ? 3 : okCount >= r.turns.length / 2 ? 2 : 1;
-      P.record({ ...meta('roleplays', r.id), source: selfUsed ? 'self_check' : 'asr_match', stars, detail: `tra_loi_phu_hop=${okCount}/${r.turns.length}` });
-      stage.replaceChildren(h('div', { class: 'card center' }, h('p', { class: 'big-emoji' }, '🎉'),
-        h('p', {}, `Máy nhận ra ${okCount}/${r.turns.length} câu trả lời đúng ý.`), h('p', { class: 'item-stars' }, starsText(stars)),
+      const n = r.turns.length;
+      const answered = best.filter((b) => b.stars > 0).length;
+      const sum = best.reduce((s, b) => s + b.stars, 0);
+      // ⭐⭐⭐ khi đạt từ 90% tổng số sao; ⭐⭐ khi trung bình mỗi câu từ 2 sao; còn lại ⭐.
+      const stars = !answered ? 0 : sum >= Math.ceil(0.9 * n * 3) ? 3 : sum >= 2 * n ? 2 : 1;
+      if (answered) P.record({ ...meta('roleplays', r.id), source: selfUsed ? 'self_check' : 'asr_match', stars, detail: `tu_do;da_tra_loi=${answered}/${n};tong_sao=${sum}/${n * 3}` });
+      stage.replaceChildren(h('div', { class: 'card center' }, h('p', { class: 'big-emoji' }, answered ? '🎉' : '🙂'),
+        h('p', {}, answered ? `Bạn đã trả lời ${answered}/${n} câu · tổng ${sum}/${n * 3} sao.` : 'Bạn chưa trả lời câu nào. Thử lại nhé!'),
+        h('p', { class: 'item-stars', 'aria-label': `${stars} trên 3 sao` }, starsText(stars)),
+        h('ul', { class: 'free-summary' }, ...r.turns.map((t, i) => h('li', {},
+          h('span', { class: 'muted' }, t.bot), h('br'),
+          best[i].stars ? h('span', {}, `${starsText(best[i].stars)} `, h('q', {}, best[i].heard || '(bạn tự đánh giá)')) : h('span', { class: 'muted' }, '— bỏ qua')))),
+        h('p', { class: 'note' }, `Sao chung: ⭐⭐⭐ khi có từ ${Math.ceil(0.9 * n * 3)}/${n * 3} sao, ⭐⭐ khi có từ ${2 * n}/${n * 3} sao (câu bỏ qua tính 0).` + ' Sao cho biết máy nghe được câu trả lời đầy đủ đến đâu, không phải điểm phát âm.'),
         h('div', { class: 'row center' }, h('button', { class: 'btn btn-soft', onclick: () => renderRoleplay(r.id) }, 'Chơi lại'),
           h('a', { class: 'btn btn-main', href: '#/roleplays' }, 'Tình huống khác'))));
       return;
     }
     const t = r.turns[k];
     const botBubble = botSay(t.bot);
-    const hint = h('p', { class: 'example', hidden: level() === 3 }, '💡 ', t.hint, ' ', h('button', { class: 'link-btn', onclick: () => S.playModel(t.hint) }, '🔊'));
-    let firstTry = true;
+    const hint = h('p', { class: 'example', hidden: level() > 1 }, '💡 Một cách trả lời: ', t.hint, ' ', h('button', { class: 'link-btn', onclick: () => S.playModel(t.hint) }, '🔊'));
+    let mineBubble = null;
     const next = h('button', { class: 'btn btn-soft', onclick: () => step(k + 1) }, 'Bỏ qua ›');
     stage.replaceChildren(h('div', { class: 'card' },
+      h('p', { class: 'task' }, 'Trả lời theo ý của bạn:'),
       h('div', { class: 'row' }, h('button', { class: 'btn btn-soft', onclick: () => S.playModel(t.bot) }, '🔊 Nghe lại câu hỏi'),
         level() === 3 ? h('button', { class: 'btn btn-soft', onclick: () => { botBubble.querySelector('p').textContent = t.bot; } }, '👀 Xem chữ') : null,
-        level() === 3 ? h('button', { class: 'btn btn-soft', onclick: () => { hint.hidden = false; } }, '💡 Gợi ý') : null),
-      hint,
+        level() > 1 && t.hint ? h('button', { class: 'btn btn-soft', onclick: (e) => { hint.hidden = false; e.target.remove(); } }, '💡 Gợi ý') : null),
+      t.hint ? hint : null,
       speakPanel({
         text: null, meta: meta('roleplays', `${r.id}#${k}`), vanish: () => botBubble,
-        evaluate: (alts) => {
-          const m = M.anyTerm(t.expect_any, alts);
-          return m.ok
-            ? { stars: 3, title: 'Câu trả lời đúng ý. Cùng nói tiếp nhé!', body: [heardLine(m.heard)], detail: 'dung_y' }
-            : { stars: 1, title: 'Máy chưa nghe ra ý trả lời cho câu hỏi này. Bạn xem gợi ý rồi thử lại nhé.', body: [heardLine(m.heard)], detail: 'chua_dung_y' };
-        },
+        evaluate: (alts) => freeOutcome(t, alts),
         onResult: (o, src) => {
           if (src === 'self_check') selfUsed = true;
-          if (o.stars >= 2) {
-            if (firstTry || src === 'self_check') okCount++;
-            log.append(h('div', { class: 'bubble me' }, h('b', {}, 'Bạn'), h('p', {}, src === 'self_check' ? '(bạn đã trả lời)' : o.body[0].querySelector('q').textContent)));
+          if (o.stars > best[k].stars) best[k] = { stars: o.stars, heard: src === 'self_check' ? '' : o.heard || '' };
+          if (o.stars >= 1) {
+            const said = src === 'self_check' ? '(bạn đã trả lời)' : o.heard;
+            if (mineBubble) mineBubble.querySelector('p').textContent = said;
+            else { mineBubble = h('div', { class: 'bubble me' }, h('b', {}, 'Bạn'), h('p', {}, said)); log.append(mineBubble); }
             next.textContent = 'Tiếp ›';
             next.className = 'btn btn-main';
-          } else { firstTry = false; hint.hidden = false; }
+          }
         },
       }),
       h('div', { class: 'row end' }, next)));
@@ -603,6 +679,9 @@ async function start() {
     unit = C.applyOverlay(imported && imported.meta && imported.meta.unit === entry.unit ? imported : await C.loadUnit(entry.file));
     fromExcel = Boolean(imported && imported.meta && imported.meta.unit === entry.unit);
     S.loadAudioManifest(unit.meta.unit);   // tệp âm thanh mẫu; thiếu thì dùng giọng máy
+    // Từ vựng của Unit giúp bộ chấm câu trả lời tự do nhận ra câu trả lời có liên quan chủ đề.
+    Free.setTopicWords([...(unit.vocabulary || []).map((v) => v.word), ...(unit.patterns || []).flatMap((p) => p.slot_options || []),
+      ...(unit.roleplays || []).flatMap((r) => (r.turns || []).flatMap((t) => [...(t.expect_any || []), t.hint || '']))]);
     const errors = C.validate(unit);
     if (errors.length) {
       root.replaceChildren(h('div', { class: 'card warn' }, h('h2', {}, 'Dữ liệu bài học có lỗi'), h('p', {}, 'Báo thầy cô kiểm tra trang giáo viên.'),

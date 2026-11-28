@@ -15,8 +15,30 @@ const SPELLING = [
   [/\bschoolbag\b/g, 'school bag'], [/\bbreaktime\b/g, 'break time'], [/\bok\b/g, 'okay'],
 ];
 
+// Máy nhận diện hay viết số bằng chữ số ("7:00", "2", "7 a.m.") trong khi câu mẫu viết bằng chữ ("seven").
+// Đổi chữ số thành chữ để so khớp đúng.
+const ONES = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve',
+  'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+const TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+const ORDINALS = ['', 'first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth', 'eleventh', 'twelfth',
+  'thirteenth', 'fourteenth', 'fifteenth', 'sixteenth', 'seventeenth', 'eighteenth', 'nineteenth', 'twentieth'];
+function numberWords(n) {
+  if (n < 20) return ONES[n];
+  if (n < 100) return TENS[Math.floor(n / 10)] + (n % 10 ? ` ${ONES[n % 10]}` : '');
+  if (n < 1000) return `${ONES[Math.floor(n / 100)]} hundred${n % 100 ? ` ${numberWords(n % 100)}` : ''}`;
+  return String(n);
+}
+function spellNumbers(s) {
+  return s
+    .replace(/\b(\d{1,2})[:.](\d{2})\b/g, (_, h, m) => `${numberWords(+h)}${+m ? ` ${+m < 10 ? `oh ${numberWords(+m)}` : numberWords(+m)}` : ''}`) // 7:00 → seven, 7:30 → seven thirty
+    .replace(/\b(\d{1,2})(st|nd|rd|th)\b/g, (_, d) => ORDINALS[+d] || `${numberWords(+d)}th`)   // 1st → first
+    .replace(/\b(\d{1,3})\b/g, (_, d) => numberWords(+d));
+}
+
 export function normalize(text) {
   let s = String(text || '').toLowerCase().replace(/[’`]/g, "'");
+  s = s.replace(/\b([ap])\.\s?m\.?/g, '$1m');   // 7 a.m. → 7 am
+  s = spellNumbers(s);
   s = s.replace(/[^a-z0-9'\s-]/g, ' ').replace(/-/g, ' ');
   for (const [re, rep] of CONTRACTIONS) s = s.replace(re, rep);
   for (const [re, rep] of SPELLING) s = s.replace(re, rep);

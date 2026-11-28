@@ -27,7 +27,7 @@ export function normAssignment(a) {
 const SECTION_ACT = { vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai' };
 export const challengeId = (lv) => `challenge-vocab-L${lv}`;
 export const challengeDialogId = (lv) => `challenge-dialog-L${lv}`;
-const hasQuestions = (unit) => (unit.roleplays || []).some((r) => r.review === 'approved' && (r.turns || []).some((t) => t.bot && (t.expect_any || []).length));
+const hasQuestions = (unit) => (unit.roleplays || []).some((r) => r.review === 'approved' && (r.turns || []).some((t) => t.bot));
 
 // Danh sách nhiệm vụ của bài được giao. Chỉ tính nội dung đã được giáo viên duyệt.
 export function tasksFor(unit, assignment) {

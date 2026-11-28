@@ -77,7 +77,7 @@ export function speakPanel({ text, audio, evaluate, meta, continuous = false, on
     listening = true;
     sayBtn.classList.add('active');
     sayBtn.textContent = continuous ? '⏹ Nói xong thì bấm dừng' : '👂 Máy đang nghe… (bấm để dừng)';
-    result.replaceChildren(h('p', { class: 'muted' }, continuous ? 'Bạn nói hết các câu, rồi bấm dừng.' : 'Bạn nói to, rõ nhé.'));
+    result.replaceChildren(h('p', { class: 'muted' }, continuous ? 'Bạn nói hết các câu, rồi bấm dừng.' : 'Bạn nói to, rõ nhé. Cứ nói hết câu, máy chỉ dừng khi bạn im lặng khoảng 2 giây.'));
     const res = await S.listen({ continuous });
     listening = false;
     sayBtn.classList.remove('active');

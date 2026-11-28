@@ -3,7 +3,7 @@
 Ứng dụng luyện nói tiếng Anh THCS (Global Success) cho sáng kiến kinh nghiệm của thầy Hồ Quỳnh Đức.
 Tệp này giúp bắt đầu một phiên làm việc mới mà không cần đọc lại lịch sử. **Khi mở phiên mới, hãy yêu cầu Claude đọc tệp này trước.**
 
-Cập nhật lần cuối: 28/11/2026.
+Cập nhật lần cuối: 28/11/2026 (tối: chống cắt ngang khi đọc câu dài, đọc số "7:00", câu bùa đổi mỗi 15 giây).
 
 ---
 
@@ -42,10 +42,11 @@ index.html            Trang học sinh (nạp css/app.css + css/magic.css, body.
 dashboard.html        Dashboard giáo viên (đăng nhập email)
 teacher.html          Duyệt nội dung, nhập Excel (chưa có đăng nhập; trạng thái duyệt lưu trên máy)
 js/
-  app.js              Trang học sinh: trang chính (bản đồ 3 vùng đất), các hoạt động, khóa/mở, đăng nhập lớp
+  app.js              Trang học sinh: trang chính (bìa chung + bản đồ 3 vùng đất), các hoạt động, khóa/mở, đăng nhập lớp
   ui.js               Thành phần dùng chung, speakPanel (nghe mẫu / nói / ghi âm) + gọi hiệu ứng biến mất
   speech.js           Nghe mẫu (ưu tiên tệp âm thanh), nhận diện lời nói (Web Speech API), ghi âm
   match.js            So khớp lời nói với từ/câu mẫu
+  freetalk.js         Chấm câu trả lời TỰ DO (Đóng vai + Thử thách Chương 2): nhận xét theo từng câu, chạy trên máy
   progress.js         Tiến độ trên máy (localStorage), tách theo học sinh
   cloud.js            Học sinh ↔ Supabase: đăng nhập ẩn danh + student_join, gửi lượt luyện (có hàng chờ)
   grading.js          Nhiệm vụ, hoàn thành, điểm gợi ý, luật khóa/mở (dùng chung học sinh + Dashboard)
@@ -102,7 +103,7 @@ Không có bước build. Máy của thầy **không có Node, Python, Git**.
 - Chế độ xem trước của giáo viên không khóa gì.
 
 **Thử thách** (một lượt chơi = một ván):
-- Chương 1: 10 từ (nhìn hình/emoji, nói từ). Chương 2: 8 câu hỏi lấy từ phần Đóng vai đã duyệt.
+- Chương 1: 10 từ (nhìn hình/emoji, nói từ). Chương 2: 8 câu hỏi lấy từ phần Đóng vai đã duyệt, học sinh trả lời tự do (xem dưới). Câu được tính khi đạt từ 2 sao **và đúng ý** câu hỏi; lạc đề thì nói lại.
 - Mỗi từ/câu 2 lần nói; đúng lần 1 = 3 điểm, lần 2 = 2 điểm, dùng gợi ý = 1 điểm.
 - Vượt chương khi **≥ 90% số từ/câu trong ván đạt ⭐⭐** (đúng ở lần 1 hoặc 2, không gợi ý): 9/10 và 7/8.
 - Mã ghi kết quả: `challenge-vocab-L{mức}` và `challenge-dialog-L{mức}`, tính riêng theo Unit.
@@ -110,6 +111,22 @@ Không có bước build. Máy của thầy **không có Node, Python, Git**.
 **Hiệu ứng:** đọc đúng (3 sao, máy nhận diện) thì từ/câu biến mất ngẫu nhiên 1 trong 6 kiểu (vò giấy + khói, lửa, hóa con vật chạy, mọc cánh bay, bụi sao, bong bóng), rồi hiện lại. Phần tử nào biến mất được đánh dấu `data-vanish`.
 
 **Học thử** (không đăng nhập) chỉ có **Lớp 6 · Unit 1**, không lưu kết quả.
+
+**Đóng vai: trả lời tự do** (`freetalk.js`, từ 28/11/2026):
+- Học sinh trả lời theo ý mình, **không cần giống câu gợi ý**. Cột "Từ chấp nhận" giờ chỉ giúp nhận ra từ đúng chủ đề, không còn là điều kiện bắt buộc.
+- **Máy nhận ra loại câu hỏi** (không dùng AI): tên, Where (nơi chốn), When/What time (thời gian), How often, How many/much/old (số), hỏi đường, Who (người), What do you do (hoạt động), What is … like (miêu tả), sở thích (favourite/like best/prefer), Yes/No, câu hỏi lựa chọn (… or …). Câu trả lời phải **đúng loại**; với câu hỏi Yes/No, lựa chọn và What/How chung thì phải có Yes/No hoặc **từ liên quan** (từ trong câu hỏi, câu gợi ý, cột Từ chấp nhận, từ vựng của Unit; động từ chung như like/go không tính).
+- Sao mỗi lượt: 3 = câu đầy đủ (có động từ) **và đúng ý**; 2 = câu đầy đủ nhưng lạc đề, hoặc câu ngắn đúng ý; 1 = câu ngắn lạc đề, hoặc chỉ nhắc lại câu hỏi; 0 = máy không nghe được. Đã thử: 48/48 câu gợi ý của 3 Unit đạt 3 sao; câu lạc đề (VD "I like pizza") chỉ còn 2 sao.
+- Nhận xét theo chính câu nói: có từ nối (because, and, but…), từ đúng chủ đề, trả lời Yes/No kèm câu, lịch sự, dùng nguyên câu gợi ý; kèm một lời khuyên (nói thành câu, thêm lý do…).
+- Mỗi lượt lấy kết quả tốt nhất (được nói lại). Sao cả bài: ⭐⭐⭐ khi tổng sao ≥ 90% tối đa, ⭐⭐ khi trung bình ≥ 2 sao/câu, lượt bỏ qua tính 0. Màn tổng kết liệt kê từng câu và sao của câu đó.
+- Gợi ý: Mức 1 hiện sẵn ("Một cách trả lời"), Mức 2–3 bấm 💡 mới hiện.
+- Giới hạn còn lại: máy chỉ xét loại câu hỏi và từ khóa, không hiểu nghĩa sâu (VD hỏi "How often…" mà trả lời "I play games every day" vẫn được 3 sao vì đúng loại). Muốn hiểu nghĩa thật cần AI (VD Claude qua Supabase Edge Function, cần khóa API và có chi phí).
+
+**Trang chủ** là **bìa chung**: "SpeakBoost" + dải ruy băng **câu bùa đổi mỗi 15 giây**, tiếng Việt và tiếng Anh đan xen (danh sách `SPELLS_VI`, `SPELLS_EN` trong app.js; 7 câu bùa tiếng Việt do thầy soạn, câu nhiều dòng thì dòng đầu nằm trên ruy băng, các dòng sau hiện bên dưới; câu tiếng Anh là thần chú có thật như Abracadabra, Open Sesame hoặc bùa Harry Potter như Lumos, Alohomora, bấm 🔊 để nghe), không còn tên Unit to; bài đang học hiện ở dòng nhỏ "📖 Đang học: …".
+
+**Nghe lời nói** (`speech.js`, bản `speech-2026-11-28a`):
+- Máy nghe liên tục và **chỉ dừng khi học sinh im lặng khoảng 2 giây** (iPhone 1,8 giây), tối đa 15 giây một lượt (iPhone 8 giây).
+- Chrome Android hay tự ngắt phiên nghe ở lần ngắt hơi đầu tiên: máy tự nghe tiếp (tối đa 6 lần) và ghép các đoạn lại; đoạn bị gửi lặp được gộp. Đây là lỗi "đọc câu dài bị cắt ngang rồi báo sai" học sinh báo ngày 28/11/2026.
+- Chữ số máy nghe được được đổi thành chữ trước khi so khớp: "7:00" → seven, "6:45 a.m." → six forty five am, "2" → two, "1st" → first (`match.js`).
 
 ---
 
@@ -173,6 +190,7 @@ Trạng thái duyệt hiện **chỉ lưu trên máy** đang mở; muốn học 
 - Trang duyệt nội dung chưa có đăng nhập và chưa lưu trạng thái duyệt lên máy chủ.
 - 4 hình giao diện chưa dùng: `flag.png`, `ribbon-blue.png`, `ribbon-purple.png`, `frame.png`.
 - Lớp thử "THU" trên Dashboard: xóa trước khi dùng dữ liệu thật cho thực nghiệm.
+- Giới hạn học sinh chỉ vào được Unit đã giao cho lớp: thầy đã yêu cầu nhưng **tạm hoãn** (28/11/2026), hiện ai có mã lớp + PIN vẫn chọn được mọi Unit.
 
 ---
 
