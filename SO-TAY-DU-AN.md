@@ -52,7 +52,8 @@ js/
   grading.js          Nhiệm vụ, hoàn thành, điểm gợi ý, luật khóa/mở (dùng chung học sinh + Dashboard)
   challenge.js        Thử thách Chương 1 · Từ vựng (nhìn hình nói từ)
   challenge2.js       Thử thách Chương 2 · Hội thoại nhanh (nghe câu hỏi, trả lời)
-  vanish.js           Hiệu ứng phép thuật khi đọc đúng (6 kiểu)
+  vanish.js           Hiệu ứng phép thuật khi đọc đúng (6 kiểu), mỗi kiểu có tiếng riêng
+  sound.js            Âm thanh tạo bằng Web Audio (không có tệp nhạc): nhạc nền + tiếng hiệu ứng, nút 🔊/🔇
   content.js          Nạp/kiểm tra dữ liệu bài, lọc nội dung đã duyệt
   excel.js            Excel ↔ JSON (SheetJS từ CDN)
   teacher.js          Trang duyệt nội dung
@@ -121,7 +122,14 @@ Không có bước build. Máy của thầy **không có Node, Python, Git**.
 - Gợi ý: Mức 1 hiện sẵn ("Một cách trả lời"), Mức 2–3 bấm 💡 mới hiện.
 - Giới hạn còn lại: máy chỉ xét loại câu hỏi và từ khóa, không hiểu nghĩa sâu (VD hỏi "How often…" mà trả lời "I play games every day" vẫn được 3 sao vì đúng loại). Muốn hiểu nghĩa thật cần AI (VD Claude qua Supabase Edge Function, cần khóa API và có chi phí).
 
-**Trang chủ** là **bìa chung**: "SpeakBoost" + dải ruy băng **câu bùa đổi mỗi 15 giây**, tiếng Việt và tiếng Anh đan xen (danh sách `SPELLS_VI`, `SPELLS_EN` trong app.js; 7 câu bùa tiếng Việt do thầy soạn, câu nhiều dòng thì dòng đầu nằm trên ruy băng, các dòng sau hiện bên dưới; câu tiếng Anh là thần chú có thật như Abracadabra, Open Sesame hoặc bùa Harry Potter như Lumos, Alohomora, bấm 🔊 để nghe), không còn tên Unit to; bài đang học hiện ở dòng nhỏ "📖 Đang học: …".
+**Trang chủ** là **bìa chung**: logo SpeakBoost trên cùng + dải ruy băng **câu bùa đổi mỗi 15 giây**, tiếng Việt và tiếng Anh đan xen (danh sách `SPELLS_VI`, `SPELLS_EN` trong app.js; 7 câu bùa tiếng Việt do thầy soạn, câu nhiều dòng thì dòng đầu nằm trên ruy băng, các dòng sau hiện bên dưới; câu tiếng Anh là thần chú có thật như Abracadabra, Open Sesame hoặc bùa Harry Potter như Lumos, Alohomora, bấm 🔊 để nghe), không còn tên Unit to; bài đang học hiện ở dòng nhỏ "📖 Đang học: …".
+
+**Âm thanh** (`sound.js`, 28/11/2026):
+- **Nhạc nền** nhẹ, du dương (hộp nhạc rải hợp âm + nền êm, tạo bằng máy, không bản quyền) chỉ phát ở **trang chính và màn đăng nhập**. Vào bài học hoặc thử thách thì tắt hẳn để không lẫn vào micro.
+- Trình duyệt chỉ cho phát âm thanh sau lần chạm/bấm đầu tiên, nên nhạc bắt đầu từ lúc đó.
+- **Tiếng hiệu ứng** khi đọc đúng, khớp với kiểu biến mất: vò giấy + "phụt" khói, lửa bùng lách tách, chạy lạch bạch + "vèo", đập cánh + vút lên, chuông leng keng (bụi sao), bong bóng "bloop" rồi "bốp".
+- Nút 🔊/🔇 ở góc trên trang chính tắt/bật **toàn bộ** âm thanh; lựa chọn lưu trên máy (`sb.sound`).
+- Bìa: đã bỏ chữ SpeakBoost lớn, chỉ giữ logo trên cùng (to hơn); dải ruy băng câu bùa là tâm điểm.
 
 **Nghe lời nói** (`speech.js`, bản `speech-2026-11-28a`):
 - Máy nghe liên tục và **chỉ dừng khi học sinh im lặng khoảng 2 giây** (iPhone 1,8 giây), tối đa 15 giây một lượt (iPhone 8 giây).

@@ -9,6 +9,7 @@ import * as Challenge2 from './challenge2.js';
 import * as Cloud from './cloud.js';
 import * as G from './grading.js';
 import * as Free from './freetalk.js';
+import * as Sound from './sound.js';
 
 const root = document.getElementById('app');
 let unit = null;
@@ -174,6 +175,22 @@ function unitPicker() {
   return h('label', { class: 'mh-unit-wrap' }, h('span', { class: 'mh-bars', 'aria-hidden': 'true' }, h('i'), h('i'), h('i')), sel);
 }
 
+// Nút bật / tắt toàn bộ âm thanh (nhạc nền + tiếng hiệu ứng).
+function soundToggle() {
+  if (!Sound.supported) return null;
+  const btn = h('button', { class: 'mh-sound', type: 'button' });
+  const draw = () => {
+    const on = Sound.isEnabled();
+    btn.textContent = on ? '🔊' : '🔇';
+    btn.setAttribute('aria-pressed', String(on));
+    btn.setAttribute('aria-label', on ? 'Đang bật âm thanh. Bấm để tắt' : 'Đang tắt âm thanh. Bấm để bật');
+    btn.title = on ? 'Tắt nhạc và âm thanh' : 'Bật nhạc và âm thanh';
+  };
+  btn.addEventListener('click', () => { Sound.setEnabled(!Sound.isEnabled()); draw(); });
+  draw();
+  return btn;
+}
+
 function avatar() {
   const st = Cloud.student();
   const menu = h('div', { class: 'mh-menu', hidden: true },
@@ -266,12 +283,11 @@ function renderHome() {
   root.replaceChildren(h('div', { class: 'mh' },
     preview ? h('div', { class: 'preview-banner' }, 'CHẾ ĐỘ XEM TRƯỚC CỦA GIÁO VIÊN · có cả nội dung chưa duyệt · không khóa phần nào',
       fromExcel ? ' · nội dung nhập từ Excel trên máy này, chưa đưa lên web' : '') : null,
-    h('header', { class: 'mh-top' }, logo(), h('div', { class: 'mh-top-right' }, unitPicker(), avatar())),
+    h('header', { class: 'mh-top' }, logo(), h('div', { class: 'mh-top-right' }, soundToggle(), unitPicker(), avatar())),
     h('section', { class: 'mh-hero' },
       h('img', { class: 'mh-castle', src: 'assets/theme/castle.jpg', alt: '' }),
       // Bìa chung của ứng dụng (không gắn với Unit nào). Bài đang học chỉ hiện ở dòng nhỏ bên dưới.
       h('div', { class: 'mh-hero-text' },
-        h('h1', {}, 'Speak', h('span', { class: 'mh-h1-accent' }, 'Boost')),
         spellBox(),
         h('div', { class: 'mh-pills' },
           h('span', { class: 'mh-pill' }, '🔥 ', h('b', {}, P.daysPractised()), ' ngày'),
@@ -643,10 +659,13 @@ function renderRoleplay(id) {
 }
 
 // ---------------- Điều hướng ----------------
+const PLAY_ROUTES = new Set(['vocab', 'patterns', 'dialogues', 'roleplays', 'challenge', 'challenge2']);
 function render() {
   disposeAll();
   const [, route = '', arg] = location.hash.split('/');
   window.scrollTo(0, 0);
+  // Nhạc nền chỉ ở trang chính và màn đăng nhập; vào bài học / thử thách thì tắt để không lẫn vào micro.
+  Sound.music(needLogin || !PLAY_ROUTES.has(route));
   if (needLogin) return renderLogin();
   const PART_OF = { vocab: 'vocabulary', patterns: 'patterns', dialogues: 'dialogues', roleplays: 'roleplays', challenge: 'challenge', challenge2: 'challenge2' };
   if (PART_OF[route]) { ensureLevelUnlocked(); if (isLocked(PART_OF[route])) return renderLocked(PART_OF[route]); }

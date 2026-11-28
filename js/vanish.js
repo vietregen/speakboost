@@ -7,6 +7,8 @@
 //   sparkle  – tan thành bụi sao lấp lánh
 //   bubble   – thành bong bóng xà phòng bay lên rồi vỡ
 
+import * as Sound from './sound.js';
+
 const EFFECTS = ['crumple', 'fire', 'run', 'fly', 'sparkle', 'bubble'];
 const RUNNERS = ['🐇', '🐿️', '🦊', '🐢', '🐁', '🦎', '🐈', '🐕', '🦔', '🐓'];
 const FLYERS = ['🕊️', '🦋', '🐦', '🦉', '🐝', '🦜'];
@@ -46,6 +48,7 @@ export function vanish(el, { effect } = {}) {
 
   let fx = effect || (reduceMotion() ? 'fade' : pick(EFFECTS.filter((e) => e !== last)));
   last = fx;
+  Sound.effect(fx);   // tiếng tương ứng với kiểu biến mất
 
   // Bản sao đặt đè lên chữ thật; chữ thật ẩn đi rồi hiện lại sau hiệu ứng.
   const ghost = el.cloneNode(true);
