@@ -13,6 +13,8 @@ const ROUNDS = 8;
 const TRIES = 2;
 const SECONDS = { 1: 20, 2: 15, 3: 12 };
 export const challengeId = (lv) => `challenge-dialog-L${lv}`;
+// Vượt chương khi ít nhất 90% số câu trong ván đạt từ 2 sao (làm tròn xuống, tối thiểu 1).
+const passNeed = (n) => (n ? Math.max(1, Math.floor(n * 0.9 + 1e-9)) : 0);
 
 function shuffle(list) {
   const a = list.slice();
@@ -51,7 +53,8 @@ export function render(ctx) {
         h('li', {}, `Có ${rounds} câu hỏi. Máy đọc câu hỏi, bạn bấm 🎤 và trả lời bằng tiếng Anh.`),
         h('li', {}, level === 1 ? 'Ở Mức 1 bạn được xem chữ của câu hỏi.' : level === 2 ? 'Ở Mức 2 câu hỏi ẩn chữ, bấm “👀 Xem chữ” nếu cần.' : 'Ở Mức 3 chỉ nghe, không xem chữ.'),
         h('li', {}, `Mỗi câu có ${seconds} giây và ${TRIES} lần trả lời.`),
-        h('li', {}, 'Đúng ở lần 1: 3 điểm · lần 2: 2 điểm · có dùng gợi ý: 1 điểm.')),
+        h('li', {}, 'Đúng ở lần 1: 3 điểm · lần 2: 2 điểm · có dùng gợi ý: 1 điểm.'),
+        h('li', {}, `Vượt chương khi có ít nhất ${passNeed(rounds)}/${rounds} câu đạt từ ⭐⭐ (trả lời đúng ý ở lần 1 hoặc 2, không dùng gợi ý).`)),
       h('p', { class: 'note' }, 'Máy kiểm tra câu trả lời có đúng ý câu hỏi không. Đây chưa phải chấm phát âm.'),
       h('button', { class: 'btn btn-main', onclick: () => play() }, '▶ Bắt đầu'))));
 
@@ -160,16 +163,21 @@ export function render(ctx) {
 
     const finish = () => {
       const correct = results.filter((r) => r.ok);
-      const ratio = max ? score / max : 0;
-      const stars = ratio >= 0.85 ? 3 : ratio >= 0.6 ? 2 : correct.length ? 1 : 0;
+      // Câu đạt từ 2 sao = trả lời đúng ý ở lần 1 (3 điểm) hoặc lần 2 (2 điểm), không dùng gợi ý.
+      const good = results.filter((r) => r.ok && r.pts >= 2).length;
+      const need = passNeed(results.length);
+      const stars = good >= need ? (good === results.length ? 3 : 2) : correct.length ? 1 : 0;
       P.record({ unit: unitNo, activity: 'challenge', item: challengeId(level), level, source: usedSelfCheck ? 'self_check' : 'asr_match',
-        stars, detail: `dung=${correct.length}/${results.length};diem=${score}/${max}` });
+        stars, detail: `dat2sao=${good}/${results.length};can=${need};dung=${correct.length};diem=${score}/${max}` });
       const missed = results.filter((r) => !r.ok);
       root.replaceChildren(shell(TITLE,
         h('div', { class: 'card center' },
           h('h2', {}, stars === 3 ? 'Xuất sắc! 🎉' : stars === 2 ? 'Làm tốt lắm! 👏' : 'Cố gắng thêm nhé! 💪'),
           h('p', { class: 'result-stars s' + stars }, starsText(stars)),
           h('p', { class: 'score' }, `${score} / ${max} điểm · đúng ý ${correct.length}/${results.length} câu`),
+          h('p', { class: good >= need ? 'ok-text' : 'warn' }, good >= need
+            ? `✓ ${good}/${results.length} câu đạt từ ⭐⭐ — bạn đã vượt chương này!`
+            : `${good}/${results.length} câu đạt từ ⭐⭐. Cần ${need} câu để vượt chương này, bạn chơi lại nhé!`),
           h('p', { class: 'note' }, 'Kết quả cho biết máy nhận ra câu trả lời đúng ý bao nhiêu lần. Đây chưa phải điểm phát âm.')),
         missed.length ? h('div', { class: 'card' }, h('h2', {}, 'Câu cần luyện thêm'),
           h('div', { class: 'list' }, ...missed.map((r) => h('div', { class: 'list-item' },

@@ -91,6 +91,7 @@ export function completion(unit, assignment, attempts) {
 export const PARTS = ['vocabulary', 'patterns', 'dialogues', 'roleplays', 'challenge', 'challenge2'];
 // Phần nào cần xong trước phần nào (ở cùng một mức).
 // Thử thách Chương 1 (từ vựng) mở ngay khi xong Từ vựng; Chương 2 (hội thoại nhanh) cần xong Đóng vai và Chương 1.
+export const UNLOCK_RATIO = 0.9;   // tỉ lệ bài cần đạt để mở phần tiếp theo
 export const REQUIRES = {
   vocabulary: [],
   patterns: ['vocabulary'],
@@ -117,7 +118,10 @@ export function gate(unit, attempts, pass = 2) {
     if (cache.has(key)) return cache.get(key);
     const tasks = tasksFor(unit, { levels: [L], challenge: true }).filter((t) => t.section === part);
     const done = tasks.filter((t) => (best.get(t.key) || 0) >= pass).length;
-    const s = { done, total: tasks.length, complete: done >= tasks.length };
+    // Một phần được tính là xong khi ít nhất 90% số bài đạt ngưỡng sao (làm tròn xuống),
+    // nhưng phần có bài thì luôn cần ít nhất 1 bài (VD thử thách chỉ có 1 lượt).
+    const need = tasks.length ? Math.max(1, Math.floor(tasks.length * UNLOCK_RATIO + 1e-9)) : 0;
+    const s = { done, total: tasks.length, need, complete: done >= need };
     cache.set(key, s);
     return s;
   };

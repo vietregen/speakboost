@@ -69,7 +69,9 @@ function lockReason(part, L = level()) {
   const b = g && g.blocker(L, part);
   if (!b) return '';
   const stars = '⭐'.repeat(g.pass);
-  return b.part ? `Hoàn thành phần ${G.PART_VI[b.part]} (mỗi bài đạt ${stars}) để mở.` : `Hoàn thành hết Mức ${b.level} để mở vùng đất này.`;
+  if (!b.part) return `Hoàn thành hết Mức ${b.level} để mở vùng đất này.`;
+  const s = g.status(L, b.part);
+  return `Hoàn thành phần ${G.PART_VI[b.part]}: cần ${s.need}/${s.total} bài đạt ${stars} (bạn đang có ${s.done}) để mở.`;
 }
 // Nếu mức đang chọn còn khóa (VD vừa đổi máy), đưa về mức cao nhất đã mở.
 function ensureLevelUnlocked() {

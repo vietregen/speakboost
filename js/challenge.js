@@ -28,6 +28,8 @@ export function status({ unitNo, words, preview, unit }) {
 }
 
 export const challengeId = (lv) => `challenge-vocab-L${lv}`;
+// Vượt chương khi ít nhất 90% số từ trong ván đạt từ 2 sao (làm tròn xuống, tối thiểu 1).
+export const passNeed = (n) => (n ? Math.max(1, Math.floor(n * 0.9 + 1e-9)) : 0);
 
 function shuffle(list) {
   const a = list.slice();
@@ -86,6 +88,7 @@ export function render(ctx) {
         h('li', {}, 'Nhìn hình rồi bấm 🎤 và nói từ tiếng Anh.'),
         h('li', {}, `Mỗi từ được nói ${tries} lần. Có ${seconds} giây để nghĩ trước khi bấm 🎤.`),
         h('li', {}, 'Đúng ở lần 1: 3 điểm · lần 2: 2 điểm · có dùng gợi ý: 1 điểm.'),
+        h('li', {}, `Vượt chương khi có ít nhất ${passNeed(rounds)}/${rounds} từ đạt từ ⭐⭐ (nói đúng ở lần 1 hoặc 2, không dùng gợi ý).`),
         showMeaning ? h('li', {}, 'Ở Mức 1 có nghĩa tiếng Việt đi kèm hình.') : null),
       h('p', { class: 'note' }, 'Máy kiểm tra bạn có nói ra đúng từ không. Đây chưa phải chấm phát âm chi tiết.'),
       h('button', { class: 'btn btn-main', onclick: () => play() }, '▶ Bắt đầu'))));
@@ -217,10 +220,12 @@ export function render(ctx) {
 
     const finish = () => {
       const correct = results.filter((r) => r.ok);
-      const ratio = max ? score / max : 0;
-      const stars = ratio >= 0.85 ? 3 : ratio >= 0.6 ? 2 : correct.length ? 1 : 0;
+      // Từ đạt từ 2 sao = nói đúng ở lần 1 (3 điểm) hoặc lần 2 (2 điểm), không dùng gợi ý.
+      const good = results.filter((r) => r.ok && r.pts >= 2).length;
+      const need = passNeed(results.length);
+      const stars = good >= need ? (good === results.length ? 3 : 2) : correct.length ? 1 : 0;
       P.record({ unit: unitNo, activity: 'challenge', item: challengeId(level), level, source: usedSelfCheck ? 'self_check' : 'asr_match',
-        stars, detail: `dung=${correct.length}/${results.length};diem=${score}/${max}` });
+        stars, detail: `dat2sao=${good}/${results.length};can=${need};dung=${correct.length};diem=${score}/${max}` });
       const missed = results.filter((r) => !r.ok);
       const title = stars === 3 ? 'Xuất sắc! 🎉' : stars === 2 ? 'Làm tốt lắm! 👏' : 'Cố gắng thêm nhé! 💪';
       root.replaceChildren(shell(cfg.title,
@@ -228,6 +233,9 @@ export function render(ctx) {
           h('h2', {}, title),
           h('p', { class: 'result-stars s' + stars }, starsText(stars)),
           h('p', { class: 'score' }, `${score} / ${max} điểm · đúng ${correct.length}/${results.length} từ`),
+          h('p', { class: good >= need ? 'ok-text' : 'warn' }, good >= need
+            ? `✓ ${good}/${results.length} từ đạt từ ⭐⭐ — bạn đã vượt chương này!`
+            : `${good}/${results.length} từ đạt từ ⭐⭐. Cần ${need} từ để vượt chương này, bạn chơi lại nhé!`),
           h('p', { class: 'note' }, 'Kết quả cho biết máy nhận ra đúng bao nhiêu từ bạn nói. Đây chưa phải điểm phát âm.')),
         correct.length ? h('div', { class: 'card' }, h('h2', {}, 'Từ bạn nói đúng'),
           h('div', { class: 'chips' }, ...correct.map((r) => h('span', { class: 'chip ok' }, thumb(r.v), r.v.word)))) : null,
