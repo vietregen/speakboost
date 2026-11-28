@@ -16,7 +16,17 @@ let sb = null;
 let session = null;
 let profile = null;
 let unit = null;
-let pendingSlips = null;   // phiếu PIN vừa tạo, chờ hiện sau khi vẽ lại trang
+let pendingSlips = null;
+let unitsIndex = [];
+const unitCache = new Map();
+// Nội dung một Unit (để tính nhiệm vụ / điểm theo đúng Unit lớp đang học)
+async function getUnit(n) {
+  if (unitCache.has(n)) return unitCache.get(n);
+  const e = unitsIndex.find((u) => u.unit === n) || unitsIndex[0];
+  const u = e ? await C.loadUnit(e.file) : null;
+  unitCache.set(n, u);
+  return u;
+}   // phiếu PIN vừa tạo, chờ hiện sau khi vẽ lại trang
 
 // ---------- Tiện ích ----------
 function h(tag, attrs = {}, ...children) {
@@ -161,6 +171,7 @@ async function renderClass(id) {
     attempts = await allRows(() => sb.from('attempts').select('student_id, unit, activity, item_id, level, source, stars, detail, is_simulated, created_at').eq('class_id', id).order('created_at'));
   } catch (e) { attempts = []; }
 
+  try { unit = await getUnit(G.normAssignment(cls.assignment).unit); } catch (_) { /* giữ Unit đang có */ }
   const link = `${STUDENT_URL}?lop=${encodeURIComponent(cls.code)}`;
   const tabs = { progress: 'Tiến độ & điểm', students: 'Học sinh & PIN', export: 'Xuất dữ liệu', settings: 'Giao bài & cài đặt' };
   const current = (location.hash.split('/')[3]) || (students.length ? 'progress' : 'students');
@@ -177,7 +188,7 @@ async function renderClass(id) {
 
 // ---- Tiến độ & điểm ----
 // Lượt luyện từ máy chủ → dạng dùng chung với trang học sinh.
-const asAttempts = (list) => list.map((a) => ({ item: a.item_id, level: a.level, stars: a.stars, t: a.created_at }));
+const asAttempts = (list) => list.map((a) => ({ item: a.item_id, level: a.level, stars: a.stars, t: a.created_at, unit: a.unit }));
 
 function progressView(cls, students, attempts) {
   if (!students.length) return h('div', { class: 'card' }, h('p', {}, 'Lớp chưa có học sinh. Vào thẻ “Học sinh & PIN” để thêm.'));
@@ -234,7 +245,11 @@ function progressView(cls, students, attempts) {
 }
 
 // Lớp tự luyện (không giao bài): chỉ số liệu luyện tập, không điểm.
-function practiceView(cls, students, real, by) {
+function practiceView(cls, students, realAll, byAll) {
+  // Chỉ tính lượt luyện của Unit lớp đang học
+  const uNo = unit?.meta?.unit;
+  const real = realAll.filter((a) => Number(a.unit) === uNo);
+  const by = new Map([...byAll.keys()].map((k) => [k, (byAll.get(k) || []).filter((a) => Number(a.unit) === uNo)]));
   const approved = (s) => (unit?.[s] || []).filter((x) => x.review === 'approved').map((x) => x.id);
   const SECT = [['vocab', 'vocabulary', 'Từ vựng'], ['pattern', 'patterns', 'Mẫu câu'], ['dialogue', 'dialogues', 'Hội thoại'], ['roleplay', 'roleplays', 'Đóng vai']];
   const totals = Object.fromEntries(SECT.map(([act, s]) => [act, new Set(approved(s))]));
@@ -417,7 +432,7 @@ function exportView(cls, students, attempts) {
       ...asg.levels.map((l) => `muc_${l}_dat`), 'lan_luyen_cuoi'];
     const rows = students.map((s) => {
       const mine = real.filter((a) => a.student_id === s.id);
-      const c = G.completion(unit, asg, mine.map((a) => ({ item: a.item_id, level: a.level, stars: a.stars, t: a.created_at })));
+      const c = G.completion(unit, asg, mine.map((a) => ({ item: a.item_id, level: a.level, stars: a.stars, t: a.created_at, unit: a.unit })));
       return [s.roster_no, s.nickname, cls.name, c.done, c.total, `${Math.round(c.pct * 100)}%`, String(c.grade).replace('.', ','),
         ...c.byLevel.map((b) => `${b.done}/${b.total}`), mine.length ? mine[mine.length - 1].created_at.slice(0, 10) : ''];
     });
@@ -464,28 +479,31 @@ function settingsView(cls, link) {
   const scale = h('select', { class: 'field', 'aria-label': 'Thang điểm' }, ...[10, 100].map((n) => h('option', { value: n, selected: n === asg.scale }, `Thang ${n}`)));
   const preview = h('p', { class: 'muted small' });
   const freeBox = h('input', { type: 'checkbox', id: 'asg-free', checked: asg.mode === 'free' });
+  const unitSel = h('select', { class: 'field', 'aria-label': 'Unit lớp đang học' }, ...unitsIndex.map((u) => h('option', { value: u.unit, selected: u.unit === asg.unit }, `Unit ${u.unit} · ${u.title}`)));
   const gradedPart = h('fieldset', { class: 'plain' });
-  const draft = () => G.normAssignment({ mode: freeBox.checked ? 'free' : 'graded', levels: [1, 2, 3].filter((l, i) => lvBox[i].checked), challenge: chBox.checked, pass_stars: Number(pass.value), due: due.value || null, scale: Number(scale.value) });
-  const refresh = () => {
+  const draft = () => G.normAssignment({ unit: Number(unitSel.value) || 1, mode: freeBox.checked ? 'free' : 'graded', levels: [1, 2, 3].filter((l, i) => lvBox[i].checked), challenge: chBox.checked, pass_stars: Number(pass.value), due: due.value || null, scale: Number(scale.value) });
+  const refresh = async () => {
     const d = draft();
     gradedPart.disabled = freeBox.checked;
+    const su = await getUnit(d.unit).catch(() => null);
     preview.textContent = freeBox.checked ? 'Học sinh tự luyện mọi nội dung đã duyệt; trang học sinh không hiện nhiệm vụ, Dashboard không tính điểm.'
-      : unit ? `Mỗi học sinh có ${G.tasksFor(unit, d).length} nhiệm vụ.` : '';
+      : su ? `Unit ${d.unit}: mỗi học sinh có ${G.tasksFor(su, d).length} nhiệm vụ (chỉ tính nội dung đã duyệt).` : '';
   };
-  [freeBox, ...lvBox, chBox, pass, due, scale].forEach((el) => el.addEventListener('change', refresh));
+  [unitSel, freeBox, ...lvBox, chBox, pass, due, scale].forEach((el) => el.addEventListener('change', refresh));
   const assignCard = h('section', { class: 'card' }, h('h2', {}, '📋 Bài được giao & cách tính điểm'),
+    h('p', {}, h('label', {}, h('b', {}, 'Unit lớp đang học: '), unitSel)),
     h('p', {}, h('label', { class: 'check' }, freeBox, h('b', {}, ' Không giao bài – học sinh tự luyện'))),
     gradedPart,
     preview,
     h('button', { class: 'btn btn-main', onclick: () => {
       const d = draft();
-      upd({ assignment: d }, `Đã lưu. Học sinh thấy thay đổi khi mở lại trang.`).then(() => { cls.assignment = d; });
+      upd({ assignment: d }, `Đã lưu. Học sinh thấy thay đổi khi mở lại trang.`).then(async () => { cls.assignment = d; unit = await getUnit(d.unit); });
     } }, 'Lưu'),
     h('p', { class: 'muted small' }, 'Giao bài không khóa nội dung: học sinh vẫn luyện mọi bài đã duyệt ở mọi mức, kể cả sau hạn chót. Lượt luyện sau hạn chót vẫn được ghi lại nhưng không tính vào điểm gợi ý.'));
   gradedPart.append(
     h('p', {}, 'Mức học sinh cần hoàn thành:'),
     h('div', { class: 'row wrap' }, ...[1, 2, 3].map((l, i) => h('label', { class: 'check' }, lvBox[i], ` Mức ${l} – ${(unit?.levels || []).find((x) => x.id === l)?.name || ''}`))),
-    h('p', {}, h('label', { class: 'check' }, chBox, ' Tính cả Thử thách từ vựng của mỗi mức')),
+    h('p', {}, h('label', { class: 'check' }, chBox, ' Tính cả Thử thách của mỗi mức (Chương 1 Từ vựng + Chương 2 Hội thoại nhanh)')),
     h('div', { class: 'row wrap' }, h('label', {}, 'Một bài đạt khi: ', pass), h('label', {}, 'Hạn chót: ', due), h('label', {}, scale)));
   refresh();
 
@@ -585,7 +603,7 @@ async function start() {
       if (location.hash.includes('access_token')) history.replaceState(null, '', location.pathname);
     }
     if (!unit) {
-      try { const idx = await C.loadIndex(); const e = idx.units.find((u) => u.file); unit = await C.loadUnit(e.file); } catch (_) { unit = null; }
+      try { unitsIndex = (await C.loadIndex()).units.filter((u) => u.file); unit = await getUnit(unitsIndex[0].unit); } catch (_) { unit = null; }
     }
     if (!session && urlErr) return renderSignIn(`Link đăng nhập không dùng được (${urlErr}). Gửi link mới nhé.`);
     route();

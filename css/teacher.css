@@ -18,3 +18,5 @@
 label.btn { cursor: pointer; }
 input.sr-only:focus-visible + label.btn { outline: 3px solid var(--brand); outline-offset: 2px; }
 @media (max-width: 560px) { .review-item { grid-template-columns: 1fr; } }
+
+.unit-select { font: inherit; font-weight: 600; padding: 6px 10px; border-radius: 10px; border: 2px solid var(--line); background: var(--card); color: var(--ink); }

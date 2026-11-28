@@ -7,6 +7,7 @@ import * as X from './excel.js';
 
 const root = document.getElementById('app');
 let unit, original, file, webOriginal, webFile;
+let unitsAvail = [];
 let fromExcel = false;
 let importErrors = [];
 let excelMsg = '';
@@ -158,7 +159,9 @@ function render() {
 
   root.replaceChildren(h('div', { class: 'screen wide' },
     h('header', { class: 'topbar' }, h('a', { class: 'back', href: 'index.html?preview=0', 'aria-label': 'Về trang học sinh' }, '‹'),
-      h('div', { class: 'topbar-title' }, `Duyệt nội dung · Unit ${unit.meta.unit}: ${unit.meta.title}`)),
+      h('div', { class: 'topbar-title' }, `Duyệt nội dung · Unit ${unit.meta.unit}: ${unit.meta.title}`),
+      unitsAvail.length > 1 ? h('select', { class: 'unit-select', 'aria-label': 'Chọn Unit để duyệt', onchange: (e) => { location.search = `?unit=${e.target.value}`; } },
+        ...unitsAvail.map((u) => h('option', { value: u.unit, selected: u.unit === unit.meta.unit }, `Unit ${u.unit} · ${u.title}`))) : null),
     h('p', { class: 'proto' }, h('b', {}, 'Bản mẫu giai đoạn 1: '),
       'trang này chưa có đăng nhập và trạng thái duyệt chỉ lưu trên máy này. Để học sinh ở mọi máy thấy nội dung, thầy cô bấm “Tải tệp JSON đã duyệt” rồi thay tệp ',
       h('code', {}, `data/units/${file}`), '. Phân quyền thật làm ở giai đoạn 2.'),
@@ -173,8 +176,8 @@ function render() {
       h('div', { class: 'card' }, h('b', {}, String(counts.draft)), 'mục chờ duyệt'),
       h('div', { class: 'card' }, h('b', {}, String(counts.needs_fix)), 'mục cần sửa')),
     h('div', { class: 'row' },
-      h('a', { class: 'btn btn-soft', href: 'index.html?preview=1', target: '_blank' }, '👀 Xem trước (có bản nháp)'),
-      h('a', { class: 'btn btn-soft', href: 'index.html?preview=0', target: '_blank' }, '🧒 Xem như học sinh'),
+      h('a', { class: 'btn btn-soft', href: `index.html?preview=1&unit=${unit.meta.unit}`, target: '_blank' }, '👀 Xem trước (có bản nháp)'),
+      h('a', { class: 'btn btn-soft', href: `index.html?preview=0&unit=${unit.meta.unit}`, target: '_blank' }, '🧒 Xem như học sinh'),
       h('button', { class: 'btn btn-main', onclick: exportJson, disabled: errors.length > 0, title: errors.length ? 'Sửa hết lỗi trước khi tải' : null }, '⬇ Tải tệp JSON đã duyệt'),
       h('button', { class: 'btn btn-soft', onclick: () => { if (confirm('Xóa mọi trạng thái duyệt đã chọn trên máy này?')) { C.setReviewOverlay(unit.meta.unit, {}); render(); } } }, 'Đặt lại trạng thái duyệt')),
     ...sections,
@@ -190,10 +193,16 @@ function render() {
 async function start() {
   try {
     const index = await C.loadIndex();
-    webFile = index.units.find((u) => u.file).file;
+    // Chọn Unit cần duyệt: ?unit=4 trên địa chỉ, hoặc Unit vừa xem lần trước.
+    unitsAvail = index.units.filter((u) => u.file);
+    let want = Number(new URLSearchParams(location.search).get('unit'));
+    if (!want) { try { want = Number(localStorage.getItem('sb.teacher.unit')); } catch (_) { want = 0; } }
+    const entry = unitsAvail.find((u) => u.unit === want) || unitsAvail[0];
+    try { localStorage.setItem('sb.teacher.unit', String(entry.unit)); } catch (_) { /* bỏ qua */ }
+    webFile = entry.file;
     webOriginal = await C.loadUnit(webFile);
     const imported = C.getImported();
-    if (imported && imported.meta && imported.meta.unit) {
+    if (imported && imported.meta && imported.meta.unit === entry.unit) {
       original = imported; file = unitFile(imported.meta.unit); fromExcel = true;
     } else {
       original = webOriginal; file = webFile;

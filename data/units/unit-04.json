@@ -1,0 +1,1904 @@
+{
+  "meta": {
+    "schema_version": 1,
+    "book": "Global Success 6",
+    "grade": 6,
+    "unit": 4,
+    "title": "My Neighbourhood",
+    "title_vi": "Khu phố của bạn",
+    "version": "1.1.0-draft",
+    "status": "approved",
+    "reviewed_by": "Giáo viên (điền tên khi lưu trữ)",
+    "reviewed_at": "2026-11-28",
+    "note": "Nguồn: Unit 4 - K6 Global Success_ GV.pdf, tr. 1–3, 7–8, 12–15. 57 thẻ từ vựng, 30 mẫu câu tự biên soạn, hội thoại và đóng vai. 8 ảnh minh họa từ vựng. Bỏ bài nói qua tranh; giữ sheet Tranh rỗng để tương thích. Giáo viên duyệt trước khi xuất bản."
+  },
+  "levels": [
+    {
+      "id": 1,
+      "name": "Khởi động",
+      "description": "Nghe và nhắc lại, có chữ, nghĩa tiếng Việt và phiên âm."
+    },
+    {
+      "id": 2,
+      "name": "Vững vàng",
+      "description": "Luyện các dạng bài tương tự mức 1 với từ vựng, câu và hội thoại khó hơn; giảm gợi ý."
+    },
+    {
+      "id": 3,
+      "name": "Bứt phá",
+      "description": "Tự tạo câu, trả lời tự do trong phạm vi bài học."
+    }
+  ],
+  "challenges": {
+    "vocabulary": {
+      "title": "Thử thách từ vựng",
+      "rounds": 10,
+      "tries_per_word": 2,
+      "seconds_by_level": {
+        "1": 20,
+        "2": 15,
+        "3": 10
+      },
+      "show_meaning_levels": [
+        1
+      ],
+      "unlock": "practised_at_least_rounds"
+    }
+  },
+  "vocabulary": [
+    {
+      "id": "u4-v-antique-shop",
+      "review": "approved",
+      "word": "antique shop",
+      "ipa": "/ænˈtiːk ʃɒp/",
+      "meaning_vi": "cửa hàng đồ cổ",
+      "emoji": "🏺",
+      "image": "assets/u4-antique-shop.webp",
+      "audio": null,
+      "example": "I like this antique shop.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-art-gallery",
+      "review": "approved",
+      "word": "art gallery",
+      "ipa": "/ˈɑːt ɡæləri/",
+      "meaning_vi": "phòng trưng bày nghệ thuật",
+      "emoji": "🖼️",
+      "image": "assets/u4-art-gallery.webp",
+      "audio": null,
+      "example": "There is an art gallery near here.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-backyard",
+      "review": "approved",
+      "word": "backyard",
+      "ipa": "/ˌbækˈjɑːd/",
+      "meaning_vi": "sân sau",
+      "emoji": "🏡",
+      "image": null,
+      "audio": null,
+      "example": "We play in the backyard.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-bakery",
+      "review": "approved",
+      "word": "bakery",
+      "ipa": "/ˈbeɪkəri/",
+      "meaning_vi": "tiệm bánh mì",
+      "emoji": "🥖",
+      "image": null,
+      "audio": null,
+      "example": "The bakery sells fresh bread.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-barbers",
+      "review": "approved",
+      "word": "barber's",
+      "ipa": "/ˈbɑːbəz/",
+      "meaning_vi": "tiệm cắt tóc nam",
+      "emoji": "💈",
+      "image": null,
+      "audio": null,
+      "example": "The barber's is next to the park.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-beauty-salon",
+      "review": "approved",
+      "word": "beauty salon",
+      "ipa": "/ˈbjuːti sælɒn/",
+      "meaning_vi": "thẩm mỹ viện",
+      "emoji": "💅",
+      "image": null,
+      "audio": null,
+      "example": "There is a beauty salon on this street.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-boring",
+      "review": "approved",
+      "word": "boring",
+      "ipa": "/ˈbɔːrɪŋ/",
+      "meaning_vi": "buồn tẻ, nhàm chán",
+      "emoji": "🥱",
+      "image": null,
+      "audio": null,
+      "example": "This place is boring.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-bus-stop",
+      "review": "approved",
+      "word": "bus stop",
+      "ipa": "/ˈbʌs stɒp/",
+      "meaning_vi": "trạm xe buýt",
+      "emoji": "🚏",
+      "image": null,
+      "audio": null,
+      "example": "Wait at the bus stop.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-cathedral",
+      "review": "approved",
+      "word": "cathedral",
+      "ipa": "/kəˈθiːdrəl/",
+      "meaning_vi": "nhà thờ lớn, thánh đường",
+      "emoji": "⛪",
+      "image": null,
+      "audio": null,
+      "example": "The cathedral is very old.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-cemetery",
+      "review": "approved",
+      "word": "cemetery",
+      "ipa": "/ˈsemətri/",
+      "meaning_vi": "nghĩa trang",
+      "emoji": "🪦",
+      "image": null,
+      "audio": null,
+      "example": "The cemetery is quiet.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-charity-shop",
+      "review": "approved",
+      "word": "charity shop",
+      "ipa": "/ˈtʃærəti ʃɒp/",
+      "meaning_vi": "cửa hàng từ thiện",
+      "emoji": "🤲",
+      "image": "assets/u4-charity-shop.webp",
+      "audio": null,
+      "example": "We donate clothes to the charity shop.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-chemists",
+      "review": "approved",
+      "word": "chemist's",
+      "ipa": "/ˈkemɪsts/",
+      "meaning_vi": "hiệu thuốc",
+      "emoji": "💊",
+      "image": null,
+      "audio": null,
+      "example": "The chemist's is near the hospital.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-pharmacy",
+      "review": "approved",
+      "word": "pharmacy",
+      "ipa": "/ˈfɑːməsi/",
+      "meaning_vi": "hiệu thuốc",
+      "emoji": "💊",
+      "image": null,
+      "audio": null,
+      "example": "The pharmacy is next to the hospital.",
+      "level": 2,
+      "accepted_variants": [
+        "pharmacies"
+      ]
+    },
+    {
+      "id": "u4-v-childrens-playground",
+      "review": "approved",
+      "word": "children's playground",
+      "ipa": "/ˈtʃɪldrənz ˈpleɪɡraʊnd/",
+      "meaning_vi": "sân chơi trẻ em",
+      "emoji": "🛝",
+      "image": null,
+      "audio": null,
+      "example": "There is a children's playground in the park.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-cinema",
+      "review": "approved",
+      "word": "cinema",
+      "ipa": "/ˈsɪnəmə/",
+      "meaning_vi": "rạp chiếu phim",
+      "emoji": "🎦",
+      "image": null,
+      "audio": null,
+      "example": "Let's go to the cinema.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-department-store",
+      "review": "approved",
+      "word": "department store",
+      "ipa": "/dɪˈpɑːtmənt stɔː/",
+      "meaning_vi": "cửa hàng bách hóa",
+      "emoji": "🏬",
+      "image": null,
+      "audio": null,
+      "example": "The department store is large.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-dress-shop",
+      "review": "approved",
+      "word": "dress shop",
+      "ipa": "/ˈdres ʃɒp/",
+      "meaning_vi": "cửa hàng quần áo",
+      "emoji": "👗",
+      "image": null,
+      "audio": null,
+      "example": "The dress shop is on the left.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-fire-station",
+      "review": "approved",
+      "word": "fire station",
+      "ipa": "/ˈfaɪə steɪʃn/",
+      "meaning_vi": "trạm cứu hỏa",
+      "emoji": "🚒",
+      "image": null,
+      "audio": null,
+      "example": "The fire station is near the school.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-general-store",
+      "review": "approved",
+      "word": "general store",
+      "ipa": "/ˈdʒenrəl stɔː/",
+      "meaning_vi": "cửa hàng tổng hợp",
+      "emoji": "🏪",
+      "image": "assets/u4-general-store.webp",
+      "audio": null,
+      "example": "We buy soap at the general store.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-gift-shop",
+      "review": "approved",
+      "word": "gift shop",
+      "ipa": "/ˈɡɪft ʃɒp/",
+      "meaning_vi": "cửa hàng quà tặng",
+      "emoji": "🎁",
+      "image": null,
+      "audio": null,
+      "example": "I buy a gift at the gift shop.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-greengrocers",
+      "review": "approved",
+      "word": "greengrocer's",
+      "ipa": "/ˈɡriːnɡrəʊsəz/",
+      "meaning_vi": "cửa hàng rau quả",
+      "emoji": "🥬",
+      "image": "assets/u4-greengrocers.webp",
+      "audio": null,
+      "example": "The greengrocer's sells vegetables.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-grocery",
+      "review": "approved",
+      "word": "grocery",
+      "ipa": "/ˈɡrəʊsəri/",
+      "meaning_vi": "cửa hàng tạp hóa",
+      "emoji": "🛒",
+      "image": null,
+      "audio": null,
+      "example": "The grocery is near my house.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-hairdressers",
+      "review": "approved",
+      "word": "hairdresser's",
+      "ipa": "/ˈheədresəz/",
+      "meaning_vi": "tiệm làm tóc",
+      "emoji": "💇",
+      "image": null,
+      "audio": null,
+      "example": "The hairdresser's is on this street.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-health-centre",
+      "review": "approved",
+      "word": "health centre",
+      "ipa": "/ˈhelθ sentə/",
+      "meaning_vi": "trung tâm y tế",
+      "emoji": "🩺",
+      "image": null,
+      "audio": null,
+      "example": "The health centre is next to the park.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-hospital",
+      "review": "approved",
+      "word": "hospital",
+      "ipa": "/ˈhɒspɪtl/",
+      "meaning_vi": "bệnh viện",
+      "emoji": "🏥",
+      "image": null,
+      "audio": null,
+      "example": "The hospital is on the right.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-hotel",
+      "review": "approved",
+      "word": "hotel",
+      "ipa": "/həʊˈtel/",
+      "meaning_vi": "khách sạn",
+      "emoji": "🏨",
+      "image": null,
+      "audio": null,
+      "example": "The hotel is near the river.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-lamp-post",
+      "review": "approved",
+      "word": "lamp post",
+      "ipa": "/ˈlæmp pəʊst/",
+      "meaning_vi": "cột đèn",
+      "emoji": "💡",
+      "image": null,
+      "audio": null,
+      "example": "There is a lamp post by the road.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-market",
+      "review": "approved",
+      "word": "market",
+      "ipa": "/ˈmɑːkɪt/",
+      "meaning_vi": "chợ",
+      "emoji": "🧺",
+      "image": null,
+      "audio": null,
+      "example": "My mother goes to the market.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-memorial",
+      "review": "approved",
+      "word": "memorial",
+      "ipa": "/məˈmɔːriəl/",
+      "meaning_vi": "đài tưởng niệm",
+      "emoji": "🕯️",
+      "image": "assets/u4-memorial.webp",
+      "audio": null,
+      "example": "The memorial is in the square.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-modern",
+      "review": "approved",
+      "word": "modern",
+      "ipa": "/ˈmɒdn/",
+      "meaning_vi": "hiện đại",
+      "emoji": "🏙️",
+      "image": null,
+      "audio": null,
+      "example": "This building is modern.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-palace",
+      "review": "approved",
+      "word": "palace",
+      "ipa": "/ˈpæləs/",
+      "meaning_vi": "cung điện",
+      "emoji": "🏰",
+      "image": null,
+      "audio": null,
+      "example": "The palace is beautiful.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-park",
+      "review": "approved",
+      "word": "park",
+      "ipa": "/pɑːk/",
+      "meaning_vi": "công viên",
+      "emoji": "🌳",
+      "image": null,
+      "audio": null,
+      "example": "We walk in the park.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-pedestrian-subway",
+      "review": "approved",
+      "word": "pedestrian subway",
+      "ipa": "/pəˈdestriən ˈsʌbweɪ/",
+      "meaning_vi": "đường hầm dành cho người đi bộ",
+      "emoji": "🚶",
+      "image": "assets/u4-pedestrian-subway.webp",
+      "audio": null,
+      "example": "Use the pedestrian subway to cross the road.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-petrol-station",
+      "review": "approved",
+      "word": "petrol station",
+      "ipa": "/ˈpetrəl steɪʃn/",
+      "meaning_vi": "trạm xăng",
+      "emoji": "⛽",
+      "image": null,
+      "audio": null,
+      "example": "There is a petrol station ahead.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-police-station",
+      "review": "approved",
+      "word": "police station",
+      "ipa": "/pəˈliːs steɪʃn/",
+      "meaning_vi": "đồn cảnh sát",
+      "emoji": "👮",
+      "image": null,
+      "audio": null,
+      "example": "The police station is near the market.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-railway-station",
+      "review": "approved",
+      "word": "railway station",
+      "ipa": "/ˈreɪlweɪ steɪʃn/",
+      "meaning_vi": "nhà ga xe lửa",
+      "emoji": "🚉",
+      "image": null,
+      "audio": null,
+      "example": "The railway station is busy.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-restaurant",
+      "review": "approved",
+      "word": "restaurant",
+      "ipa": "/ˈrestrɒnt/",
+      "meaning_vi": "nhà hàng",
+      "emoji": "🍽️",
+      "image": null,
+      "audio": null,
+      "example": "We eat at this restaurant.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-shoe-shop",
+      "review": "approved",
+      "word": "shoe shop",
+      "ipa": "/ˈʃuː ʃɒp/",
+      "meaning_vi": "cửa hàng giày",
+      "emoji": "👟",
+      "image": null,
+      "audio": null,
+      "example": "The shoe shop is opposite the cinema.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-sports-shop",
+      "review": "approved",
+      "word": "sports shop",
+      "ipa": "/ˈspɔːts ʃɒp/",
+      "meaning_vi": "cửa hàng thể thao",
+      "emoji": "🏀",
+      "image": null,
+      "audio": null,
+      "example": "I buy a ball at the sports shop.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-statue",
+      "review": "approved",
+      "word": "statue",
+      "ipa": "/ˈstætʃuː/",
+      "meaning_vi": "tượng",
+      "emoji": "🗿",
+      "image": null,
+      "audio": null,
+      "example": "There is a statue in the park.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-suburb",
+      "review": "approved",
+      "word": "suburb",
+      "ipa": "/ˈsʌbɜːb/",
+      "meaning_vi": "ngoại ô",
+      "emoji": "🏘️",
+      "image": null,
+      "audio": null,
+      "example": "I live in a suburb.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-temple",
+      "review": "approved",
+      "word": "temple",
+      "ipa": "/ˈtempl/",
+      "meaning_vi": "đền, chùa",
+      "emoji": "🛕",
+      "image": null,
+      "audio": null,
+      "example": "The temple is peaceful.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-town-square",
+      "review": "approved",
+      "word": "town square",
+      "ipa": "/ˈtaʊn skweə/",
+      "meaning_vi": "quảng trường thị trấn",
+      "emoji": "⛲",
+      "image": "assets/u4-town-square.webp",
+      "audio": null,
+      "example": "We meet in the town square.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-cheap",
+      "review": "approved",
+      "word": "cheap",
+      "ipa": "/tʃiːp/",
+      "meaning_vi": "rẻ",
+      "emoji": "🏷️",
+      "image": null,
+      "audio": null,
+      "example": "The food here is cheap.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-comfortable",
+      "review": "approved",
+      "word": "comfortable",
+      "ipa": "/ˈkʌmftəbl/",
+      "meaning_vi": "thoải mái, tiện nghi",
+      "emoji": "🛋️",
+      "image": null,
+      "audio": null,
+      "example": "This hotel is comfortable.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-convenient",
+      "review": "approved",
+      "word": "convenient",
+      "ipa": "/kənˈviːniənt/",
+      "meaning_vi": "tiện lợi",
+      "emoji": "✅",
+      "image": null,
+      "audio": null,
+      "example": "Living near school is convenient.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-crowded",
+      "review": "approved",
+      "word": "crowded",
+      "ipa": "/ˈkraʊdɪd/",
+      "meaning_vi": "đông đúc",
+      "emoji": "👥",
+      "image": null,
+      "audio": null,
+      "example": "The market is crowded.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-expensive",
+      "review": "approved",
+      "word": "expensive",
+      "ipa": "/ɪkˈspensɪv/",
+      "meaning_vi": "đắt tiền",
+      "emoji": "💸",
+      "image": null,
+      "audio": null,
+      "example": "This restaurant is expensive.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-fantastic",
+      "review": "approved",
+      "word": "fantastic",
+      "ipa": "/fænˈtæstɪk/",
+      "meaning_vi": "tuyệt vời",
+      "emoji": "🤩",
+      "image": null,
+      "audio": null,
+      "example": "The view is fantastic.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-fast",
+      "review": "approved",
+      "word": "fast",
+      "ipa": "/fɑːst/",
+      "meaning_vi": "nhanh",
+      "emoji": "🏎️",
+      "image": null,
+      "audio": null,
+      "example": "The train is fast.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-friendly",
+      "review": "approved",
+      "word": "friendly",
+      "ipa": "/ˈfrendli/",
+      "meaning_vi": "thân thiện",
+      "emoji": "😊",
+      "image": null,
+      "audio": null,
+      "example": "The people here are friendly.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-heavy",
+      "review": "approved",
+      "word": "heavy",
+      "ipa": "/ˈhevi/",
+      "meaning_vi": "nặng",
+      "emoji": "🏋️",
+      "image": null,
+      "audio": null,
+      "example": "This bag is heavy.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-historic",
+      "review": "approved",
+      "word": "historic",
+      "ipa": "/hɪˈstɒrɪk/",
+      "meaning_vi": "mang tính lịch sử, cổ kính",
+      "emoji": "🏛️",
+      "image": null,
+      "audio": null,
+      "example": "This is a historic building.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-narrow",
+      "review": "approved",
+      "word": "narrow",
+      "ipa": "/ˈnærəʊ/",
+      "meaning_vi": "hẹp",
+      "emoji": "↔️",
+      "image": null,
+      "audio": null,
+      "example": "The street is narrow.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-noisy",
+      "review": "approved",
+      "word": "noisy",
+      "ipa": "/ˈnɔɪzi/",
+      "meaning_vi": "ồn ào",
+      "emoji": "🔊",
+      "image": null,
+      "audio": null,
+      "example": "The main road is noisy.",
+      "level": 1,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-peaceful",
+      "review": "approved",
+      "word": "peaceful",
+      "ipa": "/ˈpiːsfl/",
+      "meaning_vi": "yên bình",
+      "emoji": "🌿",
+      "image": null,
+      "audio": null,
+      "example": "The village is peaceful.",
+      "level": 2,
+      "accepted_variants": []
+    },
+    {
+      "id": "u4-v-polluted",
+      "review": "approved",
+      "word": "polluted",
+      "ipa": "/pəˈluːtɪd/",
+      "meaning_vi": "ô nhiễm",
+      "emoji": "🏭",
+      "image": null,
+      "audio": null,
+      "example": "The river is polluted.",
+      "level": 2,
+      "accepted_variants": []
+    }
+  ],
+  "patterns": [
+    {
+      "id": "u4-p-01",
+      "review": "approved",
+      "level": 1,
+      "text": "There is a park near my house.",
+      "meaning_vi": "Có một công viên gần nhà em.",
+      "audio": null,
+      "frame": "There is a ___ near my house.",
+      "slot_options": [
+        "park",
+        "bakery",
+        "market",
+        "cinema"
+      ],
+      "free_prompt_vi": "Nói về một địa điểm gần nhà.",
+      "free_required": [
+        [
+          "there is"
+        ],
+        [
+          "park",
+          "bakery",
+          "market",
+          "cinema"
+        ]
+      ],
+      "free_example": "There is a bakery near my house."
+    },
+    {
+      "id": "u4-p-02",
+      "review": "approved",
+      "level": 1,
+      "text": "There are two shops on this street.",
+      "meaning_vi": "Có hai cửa hàng trên phố này.",
+      "audio": null,
+      "frame": "There are two ___ on this street.",
+      "slot_options": [
+        "shops",
+        "restaurants",
+        "hotels"
+      ],
+      "free_prompt_vi": "Nói về các địa điểm trên phố.",
+      "free_required": [
+        [
+          "there are"
+        ],
+        [
+          "shops",
+          "restaurants",
+          "hotels"
+        ]
+      ],
+      "free_example": "There are two restaurants on this street."
+    },
+    {
+      "id": "u4-p-03",
+      "review": "approved",
+      "level": 1,
+      "text": "The bakery is next to the market.",
+      "meaning_vi": "Tiệm bánh cạnh chợ.",
+      "audio": null,
+      "frame": "The bakery is next to the ___.",
+      "slot_options": [
+        "market",
+        "park",
+        "cinema"
+      ],
+      "free_prompt_vi": "Miêu tả vị trí tiệm bánh.",
+      "free_required": [
+        [
+          "bakery"
+        ],
+        [
+          "next to"
+        ]
+      ],
+      "free_example": "The bakery is next to the park."
+    },
+    {
+      "id": "u4-p-04",
+      "review": "approved",
+      "level": 1,
+      "text": "The hotel is opposite the park.",
+      "meaning_vi": "Khách sạn đối diện công viên.",
+      "audio": null,
+      "frame": "The hotel is opposite the ___.",
+      "slot_options": [
+        "park",
+        "cinema",
+        "market"
+      ],
+      "free_prompt_vi": "Miêu tả vị trí khách sạn.",
+      "free_required": [
+        [
+          "hotel"
+        ],
+        [
+          "opposite"
+        ]
+      ],
+      "free_example": "The hotel is opposite the cinema."
+    },
+    {
+      "id": "u4-p-05",
+      "review": "approved",
+      "level": 2,
+      "text": "Where is the nearest bus stop?",
+      "meaning_vi": "Trạm xe buýt gần nhất ở đâu?",
+      "audio": null,
+      "frame": "Where is the nearest ___?",
+      "slot_options": [
+        "bus stop",
+        "hospital",
+        "pharmacy"
+      ],
+      "free_prompt_vi": "Hỏi vị trí một địa điểm.",
+      "free_required": [
+        [
+          "where"
+        ],
+        [
+          "nearest"
+        ]
+      ],
+      "free_example": "Where is the nearest hospital?"
+    },
+    {
+      "id": "u4-p-06",
+      "review": "approved",
+      "level": 2,
+      "text": "Could you tell me the way to the cinema?",
+      "meaning_vi": "Bạn chỉ đường tới rạp phim được không?",
+      "audio": null,
+      "frame": "Could you tell me the way to the ___?",
+      "slot_options": [
+        "cinema",
+        "market",
+        "park"
+      ],
+      "free_prompt_vi": "Hỏi đường lịch sự.",
+      "free_required": [
+        [
+          "way to"
+        ],
+        [
+          "cinema",
+          "market",
+          "park"
+        ]
+      ],
+      "free_example": "Could you tell me the way to the park?"
+    },
+    {
+      "id": "u4-p-07",
+      "review": "approved",
+      "level": 2,
+      "text": "Go straight and turn left.",
+      "meaning_vi": "Đi thẳng rồi rẽ trái.",
+      "audio": null,
+      "frame": "Go straight and turn ___.",
+      "slot_options": [
+        "left",
+        "right"
+      ],
+      "free_prompt_vi": "Chỉ đường bằng hai bước.",
+      "free_required": [
+        [
+          "go straight"
+        ],
+        [
+          "turn"
+        ]
+      ],
+      "free_example": "Go straight and turn right."
+    },
+    {
+      "id": "u4-p-08",
+      "review": "approved",
+      "level": 2,
+      "text": "It is on your right.",
+      "meaning_vi": "Nó ở bên phải bạn.",
+      "audio": null,
+      "frame": "It is on your ___.",
+      "slot_options": [
+        "left",
+        "right"
+      ],
+      "free_prompt_vi": "Nói địa điểm ở bên nào.",
+      "free_required": [
+        [
+          "on your"
+        ],
+        [
+          "left",
+          "right"
+        ]
+      ],
+      "free_example": "It is on your left."
+    },
+    {
+      "id": "u4-p-09",
+      "review": "approved",
+      "level": 2,
+      "text": "The market is cheaper than the department store.",
+      "meaning_vi": "Chợ rẻ hơn cửa hàng bách hóa.",
+      "audio": null,
+      "frame": "The market is ___ than the department store.",
+      "slot_options": [
+        "cheaper",
+        "smaller",
+        "noisier"
+      ],
+      "free_prompt_vi": "So sánh hai nơi mua sắm.",
+      "free_required": [
+        [
+          "than"
+        ],
+        [
+          "cheaper",
+          "smaller",
+          "noisier"
+        ]
+      ],
+      "free_example": "The market is noisier than the department store."
+    },
+    {
+      "id": "u4-p-10",
+      "review": "approved",
+      "level": 2,
+      "text": "This street is narrower than that street.",
+      "meaning_vi": "Phố này hẹp hơn phố kia.",
+      "audio": null,
+      "frame": "This street is ___ than that street.",
+      "slot_options": [
+        "narrower",
+        "wider",
+        "quieter"
+      ],
+      "free_prompt_vi": "So sánh hai con phố.",
+      "free_required": [
+        [
+          "street"
+        ],
+        [
+          "than"
+        ]
+      ],
+      "free_example": "This street is quieter than that street."
+    },
+    {
+      "id": "u4-p-11",
+      "review": "approved",
+      "level": 2,
+      "text": "The city is more crowded than the village.",
+      "meaning_vi": "Thành phố đông đúc hơn làng quê.",
+      "audio": null,
+      "frame": "The city is more ___ than the village.",
+      "slot_options": [
+        "crowded",
+        "modern",
+        "polluted"
+      ],
+      "free_prompt_vi": "So sánh thành phố và làng quê.",
+      "free_required": [
+        [
+          "more"
+        ],
+        [
+          "than"
+        ]
+      ],
+      "free_example": "The city is more modern than the village."
+    },
+    {
+      "id": "u4-p-12",
+      "review": "approved",
+      "level": 2,
+      "text": "My neighbourhood is more peaceful than the city centre.",
+      "meaning_vi": "Khu phố em yên bình hơn trung tâm thành phố.",
+      "audio": null,
+      "frame": "My neighbourhood is more ___ than the city centre.",
+      "slot_options": [
+        "peaceful",
+        "convenient",
+        "comfortable"
+      ],
+      "free_prompt_vi": "So sánh nơi em sống với trung tâm.",
+      "free_required": [
+        [
+          "my neighbourhood"
+        ],
+        [
+          "than"
+        ]
+      ],
+      "free_example": "My neighbourhood is more peaceful than the city centre."
+    },
+    {
+      "id": "u4-p-13",
+      "review": "approved",
+      "level": 2,
+      "text": "The food here is better than the food there.",
+      "meaning_vi": "Đồ ăn ở đây ngon hơn ở kia.",
+      "audio": null,
+      "frame": "The food here is ___ than the food there.",
+      "slot_options": [
+        "better",
+        "cheaper",
+        "worse"
+      ],
+      "free_prompt_vi": "So sánh đồ ăn ở hai nơi.",
+      "free_required": [
+        [
+          "food"
+        ],
+        [
+          "than"
+        ]
+      ],
+      "free_example": "The food here is cheaper than the food there."
+    },
+    {
+      "id": "u4-p-14",
+      "review": "approved",
+      "level": 2,
+      "text": "I like my neighbourhood because it is friendly.",
+      "meaning_vi": "Em thích khu phố vì nơi đó thân thiện.",
+      "audio": null,
+      "frame": "I like my neighbourhood because it is ___.",
+      "slot_options": [
+        "friendly",
+        "peaceful",
+        "convenient"
+      ],
+      "free_prompt_vi": "Nói lý do em thích khu phố.",
+      "free_required": [
+        [
+          "like"
+        ],
+        [
+          "because"
+        ]
+      ],
+      "free_example": "I like my neighbourhood because it is peaceful."
+    },
+    {
+      "id": "u4-p-15",
+      "review": "approved",
+      "level": 1,
+      "text": "Is there a supermarket near here?",
+      "meaning_vi": "Có siêu thị nào gần đây không?",
+      "audio": null,
+      "frame": "Is there a ___ near here?",
+      "slot_options": [
+        "supermarket",
+        "park",
+        "pharmacy"
+      ],
+      "free_prompt_vi": "Hỏi xem gần đây có địa điểm nào không.",
+      "free_required": [
+        [
+          "is there"
+        ],
+        [
+          "near here"
+        ]
+      ],
+      "free_example": "Is there a park near here?"
+    },
+    {
+      "id": "u4-p-16",
+      "review": "approved",
+      "level": 1,
+      "text": "Are there any shops in your neighbourhood?",
+      "meaning_vi": "Có cửa hàng nào trong khu phố của bạn không?",
+      "audio": null,
+      "frame": "Are there any ___ in your neighbourhood?",
+      "slot_options": [
+        "shops",
+        "parks",
+        "restaurants"
+      ],
+      "free_prompt_vi": "Hỏi về các địa điểm trong khu phố.",
+      "free_required": [
+        [
+          "are there any"
+        ],
+        [
+          "neighbourhood"
+        ]
+      ],
+      "free_example": "Are there any parks in your neighbourhood?"
+    },
+    {
+      "id": "u4-p-17",
+      "review": "approved",
+      "level": 1,
+      "text": "The post office is at the corner of the street.",
+      "meaning_vi": "Bưu điện nằm ở góc phố.",
+      "audio": null,
+      "frame": "The ___ is at the corner of the street.",
+      "slot_options": [
+        "post office",
+        "bakery",
+        "pharmacy"
+      ],
+      "free_prompt_vi": "Nói địa điểm nằm ở góc phố.",
+      "free_required": [
+        [
+          "at the corner of"
+        ],
+        [
+          "street"
+        ]
+      ],
+      "free_example": "The bakery is at the corner of the street."
+    },
+    {
+      "id": "u4-p-18",
+      "review": "approved",
+      "level": 1,
+      "text": "The cinema is between the bank and the hotel.",
+      "meaning_vi": "Rạp phim nằm giữa ngân hàng và khách sạn.",
+      "audio": null,
+      "frame": "The cinema is between the ___ and the hotel.",
+      "slot_options": [
+        "bank",
+        "market",
+        "bakery"
+      ],
+      "free_prompt_vi": "Miêu tả vị trí nằm giữa hai địa điểm.",
+      "free_required": [
+        [
+          "between"
+        ],
+        [
+          "and"
+        ]
+      ],
+      "free_example": "The cinema is between the market and the hotel."
+    },
+    {
+      "id": "u4-p-19",
+      "review": "approved",
+      "level": 1,
+      "text": "How can I get to the bus stop?",
+      "meaning_vi": "Tôi có thể đến trạm xe buýt bằng cách nào?",
+      "audio": null,
+      "frame": "How can I get to the ___?",
+      "slot_options": [
+        "bus stop",
+        "market",
+        "park"
+      ],
+      "free_prompt_vi": "Hỏi cách đi đến một địa điểm.",
+      "free_required": [
+        [
+          "how can i get to"
+        ]
+      ],
+      "free_example": "How can I get to the market?"
+    },
+    {
+      "id": "u4-p-20",
+      "review": "approved",
+      "level": 2,
+      "text": "Take the second turning on the left.",
+      "meaning_vi": "Rẽ ở lối rẽ thứ hai bên trái.",
+      "audio": null,
+      "frame": "Take the ___ turning on the left.",
+      "slot_options": [
+        "first",
+        "second",
+        "third"
+      ],
+      "free_prompt_vi": "Chỉ đường bằng số thứ tự của lối rẽ.",
+      "free_required": [
+        [
+          "turning"
+        ],
+        [
+          "left",
+          "right"
+        ]
+      ],
+      "free_example": "Take the first turning on the left."
+    },
+    {
+      "id": "u4-p-21",
+      "review": "approved",
+      "level": 2,
+      "text": "Cross the road and go straight.",
+      "meaning_vi": "Băng qua đường rồi đi thẳng.",
+      "audio": null,
+      "frame": "Cross the road and ___.",
+      "slot_options": [
+        "go straight",
+        "turn left",
+        "turn right"
+      ],
+      "free_prompt_vi": "Chỉ đường qua đường phố.",
+      "free_required": [
+        [
+          "cross the road"
+        ]
+      ],
+      "free_example": "Cross the road and turn right."
+    },
+    {
+      "id": "u4-p-22",
+      "review": "approved",
+      "level": 2,
+      "text": "This park is bigger than that park.",
+      "meaning_vi": "Công viên này lớn hơn công viên kia.",
+      "audio": null,
+      "frame": "This park is ___ than that park.",
+      "slot_options": [
+        "bigger",
+        "smaller",
+        "larger"
+      ],
+      "free_prompt_vi": "So sánh kích thước hai công viên.",
+      "free_required": [
+        [
+          "than"
+        ],
+        [
+          "bigger",
+          "smaller",
+          "larger"
+        ]
+      ],
+      "free_example": "This park is larger than that park."
+    },
+    {
+      "id": "u4-p-23",
+      "review": "approved",
+      "level": 2,
+      "text": "This street is busier than that street.",
+      "meaning_vi": "Phố này nhộn nhịp hơn phố kia.",
+      "audio": null,
+      "frame": "This street is ___ than that street.",
+      "slot_options": [
+        "busier",
+        "noisier",
+        "quieter"
+      ],
+      "free_prompt_vi": "So sánh mức độ nhộn nhịp của hai phố.",
+      "free_required": [
+        [
+          "than"
+        ],
+        [
+          "busier",
+          "noisier",
+          "quieter"
+        ]
+      ],
+      "free_example": "This street is noisier than that street."
+    },
+    {
+      "id": "u4-p-24",
+      "review": "approved",
+      "level": 2,
+      "text": "The air here is worse than the air there.",
+      "meaning_vi": "Không khí ở đây tệ hơn ở kia.",
+      "audio": null,
+      "frame": "The air here is ___ than the air there.",
+      "slot_options": [
+        "worse",
+        "better",
+        "cleaner"
+      ],
+      "free_prompt_vi": "So sánh chất lượng không khí.",
+      "free_required": [
+        [
+          "air"
+        ],
+        [
+          "than"
+        ],
+        [
+          "worse",
+          "better",
+          "cleaner"
+        ]
+      ],
+      "free_example": "The air here is better than the air there."
+    },
+    {
+      "id": "u4-p-25",
+      "review": "approved",
+      "level": 3,
+      "text": "The hospital is farther from my house than the market.",
+      "meaning_vi": "Bệnh viện xa nhà em hơn chợ.",
+      "audio": null,
+      "frame": "The hospital is ___ from my house than the market.",
+      "slot_options": [
+        "farther",
+        "further"
+      ],
+      "free_prompt_vi": "So sánh khoảng cách đến hai địa điểm.",
+      "free_required": [
+        [
+          "farther",
+          "further"
+        ],
+        [
+          "than"
+        ]
+      ],
+      "free_example": "The hospital is further from my house than the market."
+    },
+    {
+      "id": "u4-p-26",
+      "review": "approved",
+      "level": 3,
+      "text": "The suburbs are less crowded than the city centre.",
+      "meaning_vi": "Vùng ngoại ô ít đông đúc hơn trung tâm thành phố.",
+      "audio": null,
+      "frame": "The suburbs are less ___ than the city centre.",
+      "slot_options": [
+        "crowded",
+        "noisy",
+        "polluted"
+      ],
+      "free_prompt_vi": "So sánh theo mức độ ít hơn.",
+      "free_required": [
+        [
+          "less"
+        ],
+        [
+          "than"
+        ]
+      ],
+      "free_example": "The suburbs are less polluted than the city centre."
+    },
+    {
+      "id": "u4-p-27",
+      "review": "approved",
+      "level": 3,
+      "text": "Is your neighbourhood quieter than mine?",
+      "meaning_vi": "Khu phố của bạn yên tĩnh hơn khu phố của tôi không?",
+      "audio": null,
+      "frame": "Is your neighbourhood ___ than mine?",
+      "slot_options": [
+        "quieter",
+        "cleaner",
+        "busier"
+      ],
+      "free_prompt_vi": "Đặt câu hỏi so sánh hai khu phố.",
+      "free_required": [
+        [
+          "is your neighbourhood"
+        ],
+        [
+          "than"
+        ]
+      ],
+      "free_example": "Is your neighbourhood cleaner than mine?"
+    },
+    {
+      "id": "u4-p-28",
+      "review": "approved",
+      "level": 2,
+      "text": "What do you like about your neighbourhood?",
+      "meaning_vi": "Bạn thích điều gì ở khu phố của mình?",
+      "audio": null,
+      "frame": "What do you ___ about your neighbourhood?",
+      "slot_options": [
+        "like",
+        "dislike"
+      ],
+      "free_prompt_vi": "Hỏi bạn về điều thích hoặc không thích ở khu phố.",
+      "free_required": [
+        [
+          "what do you"
+        ],
+        [
+          "like",
+          "dislike"
+        ],
+        [
+          "neighbourhood"
+        ]
+      ],
+      "free_example": "What do you dislike about your neighbourhood?"
+    },
+    {
+      "id": "u4-p-29",
+      "review": "approved",
+      "level": 2,
+      "text": "I don't like my neighbourhood because it is noisy.",
+      "meaning_vi": "Em không thích khu phố vì nó ồn ào.",
+      "audio": null,
+      "frame": "I don't like my neighbourhood because it is ___ .",
+      "slot_options": [
+        "noisy",
+        "crowded",
+        "polluted"
+      ],
+      "free_prompt_vi": "Nêu lý do không thích khu phố.",
+      "free_required": [
+        [
+          "don't like"
+        ],
+        [
+          "because"
+        ]
+      ],
+      "free_example": "I don't like my neighbourhood because it is crowded."
+    },
+    {
+      "id": "u4-p-30",
+      "review": "approved",
+      "level": 2,
+      "text": "Shall we go to the cinema this evening?",
+      "meaning_vi": "Tối nay chúng ta đi xem phim nhé?",
+      "audio": null,
+      "frame": "Shall we go to the ___ this evening?",
+      "slot_options": [
+        "cinema",
+        "park",
+        "restaurant"
+      ],
+      "free_prompt_vi": "Rủ bạn đi đến một địa điểm.",
+      "free_required": [
+        [
+          "shall we"
+        ],
+        [
+          "go to"
+        ]
+      ],
+      "free_example": "Shall we go to the park this evening?"
+    }
+  ],
+  "dialogues": [
+    {
+      "id": "u4-d-1",
+      "review": "approved",
+      "level": 1,
+      "title": "Asking for directions",
+      "title_vi": "Hỏi đường",
+      "roles": [
+        "Mai",
+        "Nam"
+      ],
+      "turns": [
+        {
+          "speaker": "Mai",
+          "text": "Excuse me, where is the bakery?",
+          "hint_vi": "Xin lỗi, tiệm bánh ở đâu?",
+          "audio": null
+        },
+        {
+          "speaker": "Nam",
+          "text": "Go straight and turn left.",
+          "hint_vi": "Đi thẳng rồi rẽ trái.",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "Is it near the park?",
+          "hint_vi": "Nó có gần công viên không?",
+          "audio": null
+        },
+        {
+          "speaker": "Nam",
+          "text": "Yes, it is opposite the park.",
+          "hint_vi": "Có, nó đối diện công viên.",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "Thank you very much.",
+          "hint_vi": "Cảm ơn bạn rất nhiều.",
+          "audio": null
+        }
+      ]
+    },
+    {
+      "id": "u4-d-2",
+      "review": "approved",
+      "level": 1,
+      "title": "My neighbourhood",
+      "title_vi": "Khu phố của em",
+      "roles": [
+        "Ben",
+        "Lan"
+      ],
+      "turns": [
+        {
+          "speaker": "Ben",
+          "text": "What is your neighbourhood like?",
+          "hint_vi": "Khu phố của bạn thế nào?",
+          "audio": null
+        },
+        {
+          "speaker": "Lan",
+          "text": "It is quiet and peaceful.",
+          "hint_vi": "Nơi đó yên tĩnh và thanh bình.",
+          "audio": null
+        },
+        {
+          "speaker": "Ben",
+          "text": "Is there a market near your house?",
+          "hint_vi": "Có chợ gần nhà bạn không?",
+          "audio": null
+        },
+        {
+          "speaker": "Lan",
+          "text": "Yes, and there is a park, too.",
+          "hint_vi": "Có, và còn có công viên nữa.",
+          "audio": null
+        },
+        {
+          "speaker": "Ben",
+          "text": "That sounds great!",
+          "hint_vi": "Nghe tuyệt quá!",
+          "audio": null
+        }
+      ]
+    },
+    {
+      "id": "u4-d-3",
+      "review": "approved",
+      "level": 1,
+      "title": "Going shopping",
+      "title_vi": "Đi mua sắm",
+      "roles": [
+        "Lan",
+        "Nam"
+      ],
+      "turns": [
+        {
+          "speaker": "Lan",
+          "text": "Shall we go to the market?",
+          "hint_vi": "Chúng ta đi chợ nhé?",
+          "audio": null
+        },
+        {
+          "speaker": "Nam",
+          "text": "Why not go to the department store?",
+          "hint_vi": "Sao không đến cửa hàng bách hóa?",
+          "audio": null
+        },
+        {
+          "speaker": "Lan",
+          "text": "The market is cheaper.",
+          "hint_vi": "Chợ rẻ hơn.",
+          "audio": null
+        },
+        {
+          "speaker": "Nam",
+          "text": "But the store is more comfortable.",
+          "hint_vi": "Nhưng cửa hàng tiện nghi hơn.",
+          "audio": null
+        },
+        {
+          "speaker": "Lan",
+          "text": "Let’s go to the market today.",
+          "hint_vi": "Hôm nay đi chợ nhé.",
+          "audio": null
+        }
+      ]
+    },
+    {
+      "id": "u4-d-4",
+      "review": "approved",
+      "level": 1,
+      "title": "City or suburb",
+      "title_vi": "Thành phố hay ngoại ô",
+      "roles": [
+        "Mai",
+        "Ben"
+      ],
+      "turns": [
+        {
+          "speaker": "Mai",
+          "text": "Do you like the city centre?",
+          "hint_vi": "Bạn thích trung tâm thành phố không?",
+          "audio": null
+        },
+        {
+          "speaker": "Ben",
+          "text": "Yes, it is convenient.",
+          "hint_vi": "Có, nơi đó tiện lợi.",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "My suburb is quieter than the city centre.",
+          "hint_vi": "Ngoại ô của mình yên tĩnh hơn trung tâm.",
+          "audio": null
+        },
+        {
+          "speaker": "Ben",
+          "text": "Is the air cleaner there?",
+          "hint_vi": "Không khí ở đó sạch hơn không?",
+          "audio": null
+        },
+        {
+          "speaker": "Mai",
+          "text": "Yes, and the streets are less crowded.",
+          "hint_vi": "Có, và đường phố ít đông đúc hơn.",
+          "audio": null
+        }
+      ]
+    }
+  ],
+  "roleplays": [
+    {
+      "id": "u4-r-1",
+      "review": "approved",
+      "level": 2,
+      "title": "Help a visitor",
+      "situation_vi": "Một du khách hỏi đường tới công viên.",
+      "bot_name": "Alex",
+      "ai_role": "a visitor",
+      "goal": "Give simple directions.",
+      "mode": "scripted",
+      "turns": [
+        {
+          "bot": "Excuse me, where is the park?",
+          "expect_any": [
+            "park",
+            "near",
+            "next to"
+          ],
+          "hint": "The park is near the market."
+        },
+        {
+          "bot": "How can I get there?",
+          "expect_any": [
+            "straight",
+            "turn"
+          ],
+          "hint": "Go straight and turn left."
+        },
+        {
+          "bot": "Is it on my left or right?",
+          "expect_any": [
+            "left",
+            "right"
+          ],
+          "hint": "It is on your right."
+        },
+        {
+          "bot": "Is it far from here?",
+          "expect_any": [
+            "near",
+            "far",
+            "minutes"
+          ],
+          "hint": "No, it is near here."
+        }
+      ],
+      "closing": "Thank you for your help!"
+    },
+    {
+      "id": "u4-r-2",
+      "review": "approved",
+      "level": 2,
+      "title": "Show your neighbourhood",
+      "situation_vi": "Giới thiệu khu phố cho bạn mới.",
+      "bot_name": "Lucy",
+      "ai_role": "a new neighbour",
+      "goal": "Describe local places.",
+      "mode": "scripted",
+      "turns": [
+        {
+          "bot": "What is your neighbourhood like?",
+          "expect_any": [
+            "quiet",
+            "peaceful",
+            "busy",
+            "friendly"
+          ],
+          "hint": "It is peaceful."
+        },
+        {
+          "bot": "What places are near your house?",
+          "expect_any": [
+            "park",
+            "market",
+            "shop",
+            "bakery"
+          ],
+          "hint": "There is a park near my house."
+        },
+        {
+          "bot": "Where do you go at weekends?",
+          "expect_any": [
+            "park",
+            "cinema",
+            "market"
+          ],
+          "hint": "I go to the park."
+        },
+        {
+          "bot": "Why do you like living here?",
+          "expect_any": [
+            "because",
+            "friendly",
+            "convenient",
+            "peaceful"
+          ],
+          "hint": "I like it because it is peaceful."
+        }
+      ],
+      "closing": "Your neighbourhood sounds lovely!"
+    },
+    {
+      "id": "u4-r-3",
+      "review": "approved",
+      "level": 2,
+      "title": "Choose a place to shop",
+      "situation_vi": "So sánh chợ và cửa hàng bách hóa.",
+      "bot_name": "Sam",
+      "ai_role": "a friend",
+      "goal": "Use comparative adjectives.",
+      "mode": "scripted",
+      "turns": [
+        {
+          "bot": "Where can we buy some food?",
+          "expect_any": [
+            "market",
+            "store",
+            "grocery"
+          ],
+          "hint": "We can go to the market."
+        },
+        {
+          "bot": "Which place is cheaper?",
+          "expect_any": [
+            "market",
+            "cheaper"
+          ],
+          "hint": "The market is cheaper."
+        },
+        {
+          "bot": "Which place is more comfortable?",
+          "expect_any": [
+            "store",
+            "comfortable"
+          ],
+          "hint": "The department store is more comfortable."
+        },
+        {
+          "bot": "Where shall we go today?",
+          "expect_any": [
+            "market",
+            "store"
+          ],
+          "hint": "Let’s go to the market."
+        }
+      ],
+      "closing": "Great! Let’s go shopping!"
+    },
+    {
+      "id": "u4-r-4",
+      "review": "approved",
+      "level": 2,
+      "title": "City and suburb",
+      "situation_vi": "So sánh trung tâm và ngoại ô.",
+      "bot_name": "Anna",
+      "ai_role": "a friend",
+      "goal": "Compare two neighbourhoods.",
+      "mode": "scripted",
+      "turns": [
+        {
+          "bot": "Do you live in the city or the suburbs?",
+          "expect_any": [
+            "city",
+            "suburb",
+            "suburbs"
+          ],
+          "hint": "I live in the suburbs."
+        },
+        {
+          "bot": "Which place is noisier?",
+          "expect_any": [
+            "city",
+            "noisier"
+          ],
+          "hint": "The city is noisier."
+        },
+        {
+          "bot": "Which place is more peaceful?",
+          "expect_any": [
+            "suburb",
+            "suburbs",
+            "peaceful"
+          ],
+          "hint": "The suburbs are more peaceful."
+        },
+        {
+          "bot": "Which place do you prefer and why?",
+          "expect_any": [
+            "prefer",
+            "like",
+            "because"
+          ],
+          "hint": "I prefer the suburbs because they are quiet."
+        }
+      ],
+      "closing": "Thanks for telling me about your neighbourhood!"
+    }
+  ]
+}

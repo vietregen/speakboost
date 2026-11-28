@@ -79,8 +79,11 @@ function ensureLevelUnlocked() {
   P.setLevel(open.length ? open[open.length - 1] : 1);
 }
 
+// Xem trước của giáo viên: tính cả bản nháp để thấy đủ số bài.
+const gateUnit = () => (preview ? { ...unit, ...Object.fromEntries(C.SECTIONS.map((s) => [s, (unit[s] || []).map((x) => ({ ...x, review: 'approved' }))])) } : unit);
+
 function levelProgress(lv) {
-  const g = G.gate(unit, P.attempts(), PASS());
+  const g = G.gate(gateUnit(), P.attempts(), PASS());
   let done = 0, total = 0;
   for (const p of G.PARTS) { const s = g.status(lv, p); done += s.done; total += s.total; }
   return { done, total, pct: total ? Math.round((done / total) * 100) : 0, trophy: g.levelDone(lv) };
@@ -96,7 +99,13 @@ function logo() {
 const isGuestUser = () => !preview && !Cloud.student();
 function unitPicker() {
   const guest = isGuestUser();
-  const sel = h('select', { class: 'mh-unit', 'aria-label': 'Chọn Unit', onchange: (e) => { if (Number(e.target.value) !== U()) e.target.value = U(); } },
+  const sel = h('select', { class: 'mh-unit', 'aria-label': 'Chọn Unit', onchange: (e) => {
+    const n = Number(e.target.value);
+    if (n === U()) return;
+    try { localStorage.setItem('sb.unit', String(n)); } catch (_) { /* bỏ qua */ }
+    const q = new URLSearchParams(location.search); q.set('unit', String(n));
+    location.href = `${location.pathname}?${q}#/`;
+  } },
     ...(index?.units || [{ unit: U(), file: true }]).map((u) => {
       const blocked = !u.file || (guest && u.unit !== 1);
       return h('option', { value: u.unit, disabled: blocked, selected: u.unit === U() },
@@ -151,7 +160,7 @@ function worldMap() {
 
 function renderHome() {
   ensureLevelUnlocked();
-  const g = G.gate(unit, P.attempts(), PASS());
+  const g = G.gate(gateUnit(), P.attempts(), PASS());
   const L = level();
   const cards = ACTIVITIES.map((a) => {
     const list = a.key === 'vocabulary' || a.key === 'patterns' ? byLevel(items(a.key)) : items(a.key);
@@ -237,6 +246,7 @@ const SECTION_ROUTE = { vocabulary: '#/vocab', patterns: '#/patterns', dialogues
 function taskCard() {
   const st = Cloud.student();
   if (!st || preview || G.isFree(st.assignment)) return null;   // lớp tự luyện: không hiện nhiệm vụ
+  if (G.normAssignment(st.assignment).unit !== U()) return null;  // bài giao thuộc Unit khác
   const c = G.completion(unit, st.assignment, P.attempts());
   if (!c.total) return null;
   const a = c.assignment;
@@ -576,21 +586,26 @@ function render() {
 async function start() {
   try {
     index = await C.loadIndex();
-    const entry = index.units.find((u) => u.file);
+    if (!preview && Cloud.configured() && !Cloud.isGuest()) {
+      root.replaceChildren(h('p', { class: 'loading' }, 'Đang vào lớp…'));
+      try { needLogin = !(await Promise.race([Cloud.restore(), new Promise((r) => setTimeout(() => r(null), 12000))])); }
+      catch (_) { needLogin = true; }
+    }
+    // Chọn Unit: ?unit=4 trên địa chỉ, hoặc Unit học lần trước. Học thử (chưa đăng nhập lớp) chỉ có Unit 1.
+    const avail = index.units.filter((u) => u.file);
+    let want = Number(new URLSearchParams(location.search).get('unit'));
+    if (!want) { try { want = Number(localStorage.getItem('sb.unit')); } catch (_) { want = 0; } }
+    if (!preview && !Cloud.student()) want = 1;
+    const entry = avail.find((u) => u.unit === want) || avail.find((u) => u.unit === 1) || avail[0];
     const imported = preview ? C.getImported() : null;
-    unit = C.applyOverlay(imported || await C.loadUnit(entry.file));
-    fromExcel = Boolean(imported);
+    unit = C.applyOverlay(imported && imported.meta && imported.meta.unit === entry.unit ? imported : await C.loadUnit(entry.file));
+    fromExcel = Boolean(imported && imported.meta && imported.meta.unit === entry.unit);
     S.loadAudioManifest(unit.meta.unit);   // tệp âm thanh mẫu; thiếu thì dùng giọng máy
     const errors = C.validate(unit);
     if (errors.length) {
       root.replaceChildren(h('div', { class: 'card warn' }, h('h2', {}, 'Dữ liệu bài học có lỗi'), h('p', {}, 'Báo thầy cô kiểm tra trang giáo viên.'),
         h('ul', {}, ...errors.slice(0, 10).map((e) => h('li', {}, e)))));
       return;
-    }
-    if (!preview && Cloud.configured() && !Cloud.isGuest()) {
-      root.replaceChildren(h('p', { class: 'loading' }, 'Đang vào lớp…'));
-      try { needLogin = !(await Promise.race([Cloud.restore(), new Promise((r) => setTimeout(() => r(null), 12000))])); }
-      catch (_) { needLogin = true; }
     }
     window.addEventListener('hashchange', render);
     window.addEventListener('sb-progress', () => { if (!needLogin && !location.hash.replace(/^#\/?/, '')) render(); });

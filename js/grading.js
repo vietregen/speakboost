@@ -9,7 +9,7 @@
 // trước hoặc trong ngày hạn chót (nếu có).
 
 // mode: 'graded' = giao bài, tính hoàn thành và điểm gợi ý; 'free' = không giao bài, học sinh tự luyện.
-export const DEFAULT_ASSIGNMENT = { mode: 'graded', levels: [1], challenge: true, pass_stars: 2, due: null, scale: 10 };
+export const DEFAULT_ASSIGNMENT = { mode: 'graded', unit: 1, levels: [1], challenge: true, pass_stars: 2, due: null, scale: 10 };
 
 export const isFree = (a) => Boolean(a && a.mode === 'free');
 
@@ -20,6 +20,7 @@ export function normAssignment(a) {
   if (!x.levels.length) x.levels = [1];
   x.pass_stars = Math.min(3, Math.max(1, Number(x.pass_stars) || 2));
   x.scale = Number(x.scale) || 10;
+  x.unit = Number(x.unit) || 1;
   return x;
 }
 
@@ -58,8 +59,10 @@ export function completion(unit, assignment, attempts) {
   const tasks = tasksFor(unit, a);
   const dueEnd = a.due ? `${a.due}T23:59:59.999+07:00` : null;
   const best = new Map();
+  const unitNo = Number(unit.meta && unit.meta.unit);
   for (const x of attempts) {
     if (!x || !x.item) continue;
+    if (x.unit != null && Number(x.unit) !== unitNo) continue;
     if (dueEnd && new Date(x.t) > new Date(dueEnd)) continue;
     const k = `${x.item}@${x.level}`;
     best.set(k, Math.max(best.get(k) || 0, x.stars || 0));
@@ -90,8 +93,10 @@ export const PART_VI = { vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dial
 
 export function gate(unit, attempts, pass = 2) {
   const best = new Map();
+  const unitNo = Number(unit.meta && unit.meta.unit);
   for (const x of attempts || []) {
     if (!x || !x.item) continue;
+    if (x.unit != null && Number(x.unit) !== unitNo) continue;
     const k = `${x.item}@${x.level}`;
     best.set(k, Math.max(best.get(k) || 0, x.stars || 0));
   }

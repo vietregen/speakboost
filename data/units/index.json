@@ -4,7 +4,7 @@
     { "unit": 1, "title": "My New School", "file": "unit-01.json" },
     { "unit": 2, "title": "My House", "file": null },
     { "unit": 3, "title": "My Friends", "file": null },
-    { "unit": 4, "title": "My Neighbourhood", "file": null },
+    { "unit": 4, "title": "My Neighbourhood", "file": "unit-04.json" },
     { "unit": 5, "title": "Natural Wonders of Viet Nam", "file": null },
     { "unit": 6, "title": "Our Tet Holiday", "file": null }
   ]
