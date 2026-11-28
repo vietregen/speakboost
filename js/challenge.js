@@ -1,6 +1,7 @@
 // Thử thách từ vựng: nhìn hình, nói từ tiếng Anh.
 // Kiểm tra: học sinh có nhớ ra từ không, và máy có NHẬN DIỆN được đúng từ đó không.
 // Đây không phải chấm phát âm chi tiết (trọng âm, từng âm) — phần đó cần dịch vụ đánh giá phát âm ở giai đoạn 4.
+import { levelName } from './grades.js';
 import * as S from './speech.js';
 import * as M from './match.js';
 import * as P from './progress.js';
@@ -58,8 +59,8 @@ export function render(ctx) {
     root.replaceChildren(shell(cfg.title,
       h('div', { class: 'card center' },
         h('p', { class: 'big-emoji' }, '🔒'),
-        h('h2', {}, `Thử thách Mức ${level} đang khóa`),
-        h('p', {}, `Bạn luyện nói ít nhất ${st.need} từ của Mức ${level} để mở khóa nhé.`),
+        h('h2', {}, `Thử thách ${levelName(level)} đang khóa`),
+        h('p', {}, `Bạn luyện nói ít nhất ${st.need} từ của ${levelName(level)} để mở khóa nhé.`),
         h('div', { class: 'meter', role: 'progressbar', 'aria-valuemin': '0', 'aria-valuemax': String(st.need), 'aria-valuenow': String(st.done) },
           h('span', { style: `width:${st.need ? Math.min(100, Math.round((st.done / st.need) * 100)) : 0}%` })),
         h('p', { class: 'muted' }, `Đã luyện ${st.done}/${st.need} từ`),
@@ -79,7 +80,7 @@ export function render(ctx) {
   root.replaceChildren(shell(cfg.title,
     h('div', { class: 'card center game-intro' },
       h('p', { class: 'big-emoji' }, '🏆'),
-      h('h2', {}, `${cfg.title} · Mức ${level}`),
+      h('h2', {}, `${cfg.title} · ${levelName(level)}`),
       best ? h('p', { class: 'item-stars' }, `Kết quả tốt nhất: ${starsText(best)}`) : null,
       h('ul', { class: 'rules' },
         h('li', {}, previewAll
@@ -89,7 +90,7 @@ export function render(ctx) {
         h('li', {}, `Mỗi từ được nói ${tries} lần. Có ${seconds} giây để nghĩ trước khi bấm 🎤.`),
         h('li', {}, 'Đúng ở lần 1: 3 điểm · lần 2: 2 điểm · có dùng gợi ý: 1 điểm.'),
         h('li', {}, `Vượt chương khi có ít nhất ${passNeed(rounds)}/${rounds} từ đạt từ ⭐⭐ (nói đúng ở lần 1 hoặc 2, không dùng gợi ý).`),
-        showMeaning ? h('li', {}, 'Ở Mức 1 có nghĩa tiếng Việt đi kèm hình.') : null),
+        showMeaning ? h('li', {}, 'Ở SpeakUp có nghĩa tiếng Việt đi kèm hình.') : null),
       h('p', { class: 'note' }, 'Máy kiểm tra bạn có nói ra đúng từ không. Đây chưa phải chấm phát âm chi tiết.'),
       h('button', { class: 'btn btn-main', onclick: () => play() }, '▶ Bắt đầu'))));
 
@@ -246,7 +247,7 @@ export function render(ctx) {
         h('div', { class: 'row center' },
           h('button', { class: 'btn btn-main', onclick: () => play() }, '🔁 Chơi lại'),
           h('a', { class: 'btn btn-soft', href: '#/vocab' }, '🔤 Luyện từ vựng'),
-          h('a', { class: 'btn btn-soft', href: '#/' }, 'Về trang chính'))));
+          h('a', { class: 'btn btn-soft', href: '#/hub' }, 'Về trang bài học'))));
     };
 
     round(0);

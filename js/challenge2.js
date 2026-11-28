@@ -2,6 +2,7 @@
 // Câu hỏi lấy từ các lượt nói của máy trong phần Đóng vai (đã được giáo viên duyệt),
 // học sinh trả lời TỰ DO; câu được tính khi máy nghe được một câu trả lời rõ ý (từ 2 sao, xem freetalk.js).
 // Máy chỉ nhận xét câu trả lời nghe được, không chấm phát âm.
+import { levelName } from './grades.js';
 import * as S from './speech.js';
 import * as Free from './freetalk.js';
 import * as P from './progress.js';
@@ -47,11 +48,11 @@ export function render(ctx) {
   root.replaceChildren(shell(TITLE,
     h('div', { class: 'card center game-intro' },
       h('p', { class: 'big-emoji' }, '💬⚡'),
-      h('h2', {}, `${TITLE} · Mức ${level}`),
+      h('h2', {}, `${TITLE} · ${levelName(level)}`),
       best ? h('p', { class: 'item-stars' }, `Kết quả tốt nhất: ${starsText(best)}`) : null,
       h('ul', { class: 'rules' },
         h('li', {}, `Có ${rounds} câu hỏi. Máy đọc câu hỏi, bạn bấm 🎤 và trả lời bằng tiếng Anh.`),
-        h('li', {}, level === 1 ? 'Ở Mức 1 bạn được xem chữ của câu hỏi.' : level === 2 ? 'Ở Mức 2 câu hỏi ẩn chữ, bấm “👀 Xem chữ” nếu cần.' : 'Ở Mức 3 chỉ nghe, không xem chữ.'),
+        h('li', {}, level === 1 ? 'Ở SpeakUp bạn được xem chữ của câu hỏi.' : level === 2 ? 'Ở SpeakBoost câu hỏi ẩn chữ, bấm “👀 Xem chữ” nếu cần.' : 'Ở SpeakSmart chỉ nghe, không xem chữ.'),
         h('li', {}, `Mỗi câu có ${seconds} giây và ${TRIES} lần trả lời.`),
         h('li', {}, 'Đúng ở lần 1: 3 điểm · lần 2: 2 điểm · có dùng gợi ý: 1 điểm.'),
         h('li', {}, `Vượt chương khi có ít nhất ${passNeed(rounds)}/${rounds} câu đạt từ ⭐⭐ (trả lời rõ ý ở lần 1 hoặc 2, không dùng gợi ý).`)),
@@ -190,7 +191,7 @@ export function render(ctx) {
         h('div', { class: 'row center' },
           h('button', { class: 'btn btn-main', onclick: () => play() }, '🔁 Chơi lại'),
           h('a', { class: 'btn btn-soft', href: '#/roleplays' }, '🎭 Luyện đóng vai'),
-          h('a', { class: 'btn btn-soft', href: '#/' }, 'Về trang chính'))));
+          h('a', { class: 'btn btn-soft', href: '#/hub' }, 'Về trang bài học'))));
     };
 
     round(0);

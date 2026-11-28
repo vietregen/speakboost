@@ -10,6 +10,7 @@ import * as Cloud from './cloud.js';
 import * as G from './grading.js';
 import * as Free from './freetalk.js';
 import * as Sound from './sound.js';
+import * as GR from './grades.js';
 
 const root = document.getElementById('app');
 let unit = null;
@@ -36,9 +37,9 @@ function shell(title, ...content) {
     preview ? h('div', { class: 'preview-banner' }, 'CHẾ ĐỘ XEM TRƯỚC CỦA GIÁO VIÊN · có cả nội dung chưa duyệt',
       fromExcel ? ' · nội dung nhập từ Excel trên máy này, chưa đưa lên web' : '') : null,
     h('header', { class: 'topbar' },
-      title ? h('a', { class: 'back', href: '#/' , 'aria-label': 'Về trang chính' }, '‹') : null,
+      title ? h('a', { class: 'back', href: '#/hub', 'aria-label': 'Về trang bài học' }, '‹') : null,
       h('div', { class: 'topbar-title' }, title || 'SpeakBoost'),
-      h('div', { class: 'level-pill', title: 'Mức độ đang luyện' }, `Mức ${level()}`),
+      h('div', { class: 'level-pill', title: 'Cấp độ đang luyện' }, GR.levelName(level())),
     ),
     h('main', {}, ...content),
   );
@@ -51,13 +52,10 @@ function draftBadge(item) {
 
 function emptyState(msg) { return h('div', { class: 'card center' }, h('p', { class: 'big-emoji' }, '⏳'), h('p', {}, msg)); }
 
-// ---------------- Trang chính (giao diện "phép thuật") ----------------
-// Mỗi mức là một vùng đất trên bản đồ. Tên vùng chỉ để tạo hứng thú; nội dung vẫn là Mức 1 – 2 – 3.
-const WORLDS = {
-  1: { name: 'Vương quốc Phù Thủy', sub: 'Làm quen · Giao tiếp cơ bản', img: 'assets/theme/island1.png' },
-  2: { name: 'Rừng Ánh Sáng', sub: 'Mở rộng · Luyện phản xạ', img: 'assets/theme/island2.png' },
-  3: { name: 'Thung Lũng Pha Lê', sub: 'Vận dụng · Tự tin hơn', img: 'assets/theme/island3.png' },
-};
+// ---------------- Điều hướng theo tầng (28/11/2026) ----------------
+// Trang chủ (chọn khối) → Bản đồ Unit của khối → Trang 3 cấp độ (SpeakUp – SpeakBoost – SpeakSmart)
+// → Trang bài học của cấp độ (Từ vựng, Mẫu câu, Hội thoại, Đóng vai, Thử thách) → các hoạt động.
+// Chỉ thay lớp giao diện; chấm điểm, mở khóa, tiến độ, đăng nhập lớp giữ nguyên.
 // Câu bùa trên bìa: tiếng Việt và tiếng Anh đan xen, đổi mỗi 15 giây. Câu tiếng Anh bấm 🔊 để nghe.
 // Câu tiếng Anh là câu thần chú có thật (ảo thuật, truyện cổ) hoặc tên bùa phép trong Harry Potter.
 // Câu tiếng Việt do thầy soạn (28/11/2026). Câu nhiều dòng: dòng đầu nằm trên dải ruy băng, các dòng sau hiện bên dưới.
@@ -128,7 +126,7 @@ function lockReason(part, L = level()) {
   const b = g && g.blocker(L, part);
   if (!b) return '';
   const stars = '⭐'.repeat(g.pass);
-  if (!b.part) return `Hoàn thành hết Mức ${b.level} để mở vùng đất này.`;
+  if (!b.part) return `Hoàn thành hết ${GR.levelName(b.level)} để mở ${GR.levelName(L)}.`;
   const s = g.status(L, b.part);
   return `Hoàn thành phần ${G.PART_VI[b.part]}: cần ${s.need}/${s.total} bài đạt ${stars} (bạn đang có ${s.done}) để mở.`;
 }
@@ -158,23 +156,6 @@ function logo() {
 
 // Học thử (không đăng nhập) chỉ dùng được Unit 1 lớp 6. Các Unit khác cần đăng nhập lớp.
 const isGuestUser = () => !preview && !Cloud.student();
-function unitPicker() {
-  const guest = isGuestUser();
-  const sel = h('select', { class: 'mh-unit', 'aria-label': 'Chọn Unit', onchange: (e) => {
-    const n = Number(e.target.value);
-    if (n === U()) return;
-    try { localStorage.setItem('sb.unit', String(n)); } catch (_) { /* bỏ qua */ }
-    const q = new URLSearchParams(location.search); q.set('unit', String(n));
-    location.href = `${location.pathname}?${q}#/`;
-  } },
-    ...(index?.units || [{ unit: U(), file: true }]).map((u) => {
-      const blocked = !u.file || (guest && u.unit !== 1);
-      return h('option', { value: u.unit, disabled: blocked, selected: u.unit === U() },
-        `${u.label || `Unit ${u.unit}`}${!u.file ? ' · sắp có' : guest && u.unit !== 1 ? ' · đăng nhập lớp để học' : ''}`);
-    }));
-  return h('label', { class: 'mh-unit-wrap' }, h('span', { class: 'mh-bars', 'aria-hidden': 'true' }, h('i'), h('i'), h('i')), sel);
-}
-
 // Nút bật / tắt toàn bộ âm thanh (nhạc nền + tiếng hiệu ứng).
 function soundToggle() {
   if (!Sound.supported) return null;
@@ -205,38 +186,188 @@ function avatar() {
 
 async function switchStudent() { await Cloud.signOut(); needLogin = true; location.hash = '#/'; render(); }
 
-function worldMap() {
-  const cur = level();
-  const g = gating();
-  const say = h('p', { class: 'mh-map-msg', 'aria-live': 'polite', hidden: true });
-  const stations = unit.levels.map((l) => {
-    const w = WORLDS[l.id] || { name: `Mức ${l.id}`, sub: l.name, img: '' };
-    const pg = levelProgress(l.id);
-    const on = l.id === cur;
-    const lockedLv = g ? !g.levelUnlocked(l.id) : false;
-    return h('button', {
-      class: `mh-world w${l.id} ${on ? 'on' : ''} ${lockedLv ? 'locked' : ''}`, 'aria-pressed': String(on),
-      'aria-label': `Mức ${l.id}: ${w.name}. ${lockedLv ? 'Đang khóa.' : `Đã xong ${pg.done}/${pg.total}`}${pg.trophy ? ', đã chinh phục' : ''}`,
-      onclick: () => {
-        if (lockedLv) { say.textContent = `🔒 ${w.name} đang khóa. Hoàn thành hết Mức ${l.id - 1} để mở nhé!`; say.hidden = false; return; }
-        P.setLevel(l.id); render();
-      },
-    },
-      h('span', { class: 'mh-island' }, w.img ? h('img', { src: w.img, alt: '' }) : null,
-        on ? h('span', { class: 'mh-here' }, 'Bạn ở đây') : null,
-        lockedLv ? h('span', { class: 'mh-lock', 'aria-hidden': 'true' }, '🔒') : null,
-        pg.trophy ? h('img', { class: 'mh-cup', src: 'assets/theme/shield.png', alt: 'Đã chinh phục', title: 'Đã chinh phục vùng đất này' }) : null),
-      h('span', { class: 'mh-scroll' }, h('span', { class: 'mh-num' }, l.id), w.name),
-      h('span', { class: 'mh-sub' }, lockedLv ? '🔒 Chưa mở' : w.sub),
-      h('span', { class: 'mh-prog', 'aria-hidden': 'true' }, h('span', { style: `width:${pg.pct}%` })));
-  });
-  return h('section', { class: 'mh-map', 'aria-label': 'Bản đồ 3 mức' },
-    h('img', { class: 'mh-cat', src: 'assets/theme/cat.png', alt: '' }),
-    h('div', { class: 'mh-worlds' }, ...stations), say);
+// ---------------- Khung chung của các trang điều hướng ----------------
+function previewBanner() {
+  return preview ? h('div', { class: 'preview-banner' }, 'CHẾ ĐỘ XEM TRƯỚC CỦA GIÁO VIÊN · có cả nội dung chưa duyệt · không khóa phần nào',
+    fromExcel ? ' · nội dung nhập từ Excel trên máy này, chưa đưa lên web' : '') : null;
+}
+// Lớp hạt sáng trôi nhẹ phía sau (chỉ trang trí; tắt khi máy đặt "giảm chuyển động").
+function ambient() {
+  const dots = Array.from({ length: 14 }, (_, i) => h('i', { style: `--x:${(i * 37) % 100}%;--y:${(i * 53) % 100}%;--d:${(i % 7) * 0.9}s;--s:${0.6 + (i % 4) * 0.25}` }));
+  return h('div', { class: 'nv-ambient', 'aria-hidden': 'true' }, ...dots);
+}
+function navTop(backHref, backLabel, cfg) {
+  return h('header', { class: 'nv-top' },
+    backHref ? h('a', { class: 'nv-back', href: backHref, 'aria-label': backLabel, title: backLabel },
+      cfg && cfg.back ? h('img', { src: cfg.back, alt: '' }) : '‹') : h('span', { class: 'nv-back nv-back-space', 'aria-hidden': 'true' }),
+    logo(),
+    h('div', { class: 'nv-right' }, soundToggle(), avatar()));
+}
+// Mỗi trang điều hướng: đặt màu theo khối (body[data-theme]) + hiệu ứng chuyển trang.
+function page(theme, ...content) {
+  document.body.dataset.theme = theme || 'g6';
+  return h('div', { class: `nv nv-enter theme-${theme || 'g6'}` }, ambient(), ...content);
+}
+function footLinks() {
+  const st = Cloud.student();
+  return h('footer', { class: 'mh-foot nv-foot' },
+    st ? h('span', { class: 'mh-foot-item' }, '👥 ', `${st.nickname} · Lớp ${st.class_name}`)
+      : (preview || !Cloud.configured() ? null : h('button', { class: 'mh-foot-item link', onclick: () => { Cloud.setGuest(false); needLogin = true; render(); } }, '🏫 Đăng nhập lớp')),
+    st ? h('button', { class: 'mh-foot-item link', onclick: switchStudent }, '🔄 Đổi bạn') : null,
+    h('span', { class: 'mh-foot-item' }, '🎙️ Không lưu giọng nói'),
+    h('a', { class: 'mh-foot-item link', href: 'dashboard.html' }, '🎓 Giáo viên'));
+}
+const indexEntry = (code) => (index?.units || []).find((u) => Number(u.unit) === code && u.file);
+const unitLabel = (code) => indexEntry(code)?.label || `Lớp ${GR.gradeOf(code)} · Unit ${GR.unitNo(code)}`;
+
+// Mở một Unit. Unit đang mở thì chỉ đổi trang; Unit khác thì tải lại trang với ?unit=… (giữ cách nạp bài hiện có).
+function goUnit(code, target = 'levels') {
+  if (code === U()) { location.hash = `#/${target}`; return; }
+  try { localStorage.setItem('sb.unit', String(code)); } catch (_) { /* bỏ qua */ }
+  const q = new URLSearchParams(location.search); q.set('unit', String(code));
+  location.href = `${location.pathname}?${q}#/${target}`;
 }
 
-function renderHome() {
+// ---------------- Tầng 1: Trang chủ — chọn khối ----------------
+function assignedShortcut() {
+  const st = Cloud.student();
+  if (!st || preview || G.isFree(st.assignment)) return null;
+  const code = G.normAssignment(st.assignment).unit;
+  if (!indexEntry(code)) return null;
+  return h('button', { class: 'nv-assigned', type: 'button', onclick: () => goUnit(code, 'hub') }, '📋 Bài thầy cô giao: ', h('b', {}, unitLabel(code)), ' ›');
+}
+function renderHomeGrades() {
+  const books = [6, 7, 8, 9].map((gr) => {
+    const cfg = GR.GRADES[gr];
+    const img = h('img', { src: cfg.book, alt: `Grade ${gr}`, width: 320, height: 320, decoding: 'async' });
+    if (cfg.soon) return h('div', { class: 'nv-book soon', 'aria-label': `Grade ${gr} · sắp có` }, img, h('span', { class: 'nv-soon' }, 'Sắp có'));
+    return h('a', { class: `nv-book g${gr}`, href: `#/grade/${gr}`, 'aria-label': `Grade ${gr}: ${cfg.world}` }, img);
+  });
+  root.replaceChildren(page('g6',
+    previewBanner(),
+    navTop(null),
+    h('section', { class: 'nv-hero' }, spellBox()),
+    h('div', { class: 'nv-decor', 'aria-hidden': 'true' },
+      h('img', { class: 'nv-hat', src: 'assets/grades/home/wizard-hat.png', alt: '' }),
+      h('img', { class: 'nv-magicbook', src: 'assets/grades/home/magic-book.png', alt: '' }),
+      h('img', { class: 'nv-ball', src: 'assets/grades/home/crystal-ball.png', alt: '' })),
+    h('h2', { class: 'nv-script nv-peek' }, 'Peekaboo!'),
+    h('nav', { class: 'nv-books', 'aria-label': 'Chọn khối lớp' }, ...books),
+    assignedShortcut(),
+    isGuestUser() ? h('p', { class: 'nv-note' }, 'Bạn đang học thử: chỉ mở được Lớp 6 · Unit 1 và không lưu kết quả. Đăng nhập lớp để học các Unit khác.') : null,
+    h('div', { class: 'mh-pills nv-pills' },
+      h('span', { class: 'mh-pill' }, '🔥 ', h('b', {}, P.daysPractised()), ' ngày'),
+      h('span', { class: 'mh-pill' }, '⭐ ', h('b', {}, P.totalStars()))),
+    h('p', { class: 'nv-script nv-alo' }, 'Alohomora!'),
+    h('img', { class: 'nv-footer-art', src: GR.GRADES[6].footer, alt: '', loading: 'lazy' }),
+    footLinks()));
+}
+
+// ---------------- Tầng 2: Bản đồ Unit của một khối ----------------
+// Unit có học liệu: tiến độ thật (3 chấm = 3 cấp độ đã hoàn thành). Unit chưa có: thẻ "Sắp có" dùng chung.
+const asGateUnit = (u) => (preview ? { ...u, ...Object.fromEntries(C.SECTIONS.map((s) => [s, (u[s] || []).map((x) => ({ ...x, review: 'approved' }))])) } : u);
+async function gateFor(code, entry) {
+  const u = code === U() ? unit : C.applyOverlay(await C.loadUnit(entry.file));
+  return G.gate(asGateUnit(u), P.attempts(), PASS());
+}
+function renderMap(gr) {
+  const cfg = GR.GRADES[gr];
+  if (!cfg || cfg.soon) { location.hash = '#/'; return; }
+  const guest = isGuestUser();
+  const say = h('p', { class: 'nv-msg', 'aria-live': 'polite', hidden: true });
+  const cards = cfg.units.map(({ n, topic }) => {
+    const code = GR.unitCode(gr, n);
+    const entry = indexEntry(code);
+    const head = [h('span', { class: 'nv-unit-no' }, `Unit ${n}`), h('span', { class: 'nv-unit-topic' }, topic)];
+    if (!entry) {
+      return h('div', { class: 'nv-unit soon', 'aria-label': `Unit ${n}: ${topic} · sắp có` },
+        h('img', { class: 'nv-unit-icon', src: cfg.comingSoon, alt: '', loading: 'lazy', decoding: 'async' }),
+        h('span', { class: 'nv-unit-card' }, ...head, h('span', { class: 'nv-unit-state' }, 'Sắp có')));
+    }
+    const locked = guest && code !== 1;
+    const dots = h('span', { class: 'nv-dots', 'aria-hidden': 'true' }, h('i'), h('i'), h('i'));
+    const state = h('span', { class: 'nv-unit-state' }, locked ? '🔒 Đăng nhập lớp' : '…');
+    const card = h('button', { class: `nv-unit ${code === U() ? 'cur' : ''} ${locked ? 'locked' : ''}`, type: 'button',
+      'aria-label': `Unit ${n}: ${topic}${locked ? ' · cần đăng nhập lớp' : ''}`,
+      onclick: () => {
+        if (locked) { say.textContent = '🔒 Bạn đang học thử, chỉ mở được Lớp 6 · Unit 1. Đăng nhập lớp để học Unit này nhé!'; say.hidden = false; return; }
+        card.classList.add('picked');
+        setTimeout(() => goUnit(code), 180);
+      } },
+      h('img', { class: 'nv-unit-icon', src: cfg.unitIcon(n), alt: '', loading: 'lazy', decoding: 'async' }),
+      h('span', { class: 'nv-unit-card' }, ...head, dots, state));
+    if (!locked) {
+      gateFor(code, entry).then((g) => {
+        const done = [1, 2, 3].map((L) => g.levelDone(L));
+        [...dots.children].forEach((d, i) => d.classList.toggle('on', done[i]));
+        const started = P.attempts().some((a) => Number(a.unit) === code);
+        state.textContent = done.every(Boolean) ? '✓ Hoàn thành' : started ? 'Đang học' : 'Chưa học';
+        card.setAttribute('aria-label', `Unit ${n}: ${topic} · ${state.textContent}`);
+      }).catch(() => { state.textContent = ''; });
+    }
+    return card;
+  });
+  root.replaceChildren(page(cfg.theme,
+    previewBanner(),
+    navTop('#/', 'Về trang chủ', cfg),
+    h('header', { class: 'nv-title' },
+      cfg.banner ? h('img', { class: 'nv-banner', src: cfg.banner, alt: `Grade ${gr}` }) : h('h1', { class: 'mh-ribbon nv-ribbon' }, `Grade ${gr}`)),
+    h('nav', { class: 'nv-map', 'aria-label': `Bản đồ Unit · Grade ${gr}` }, ...cards),
+    say,
+    h('img', { class: 'nv-footer-art', src: cfg.footer, alt: '', loading: 'lazy' }),
+    footLinks()));
+}
+
+// ---------------- Tầng 3: Trang 3 cấp độ của Unit ----------------
+function renderLevels() {
+  const gr = GR.gradeOf(U());
+  const cfg = GR.GRADES[gr] && !GR.GRADES[gr].soon ? GR.GRADES[gr] : GR.GRADES[6];
   ensureLevelUnlocked();
+  const g = gating();
+  const say = h('p', { class: 'nv-msg', 'aria-live': 'polite', hidden: true });
+  const cards = unit.levels.map((l) => l.id).filter((L) => GR.LEVELS[L]).map((L) => {
+    const pg = levelProgress(L);
+    const locked = g ? !g.levelUnlocked(L) : false;
+    const info = GR.LEVELS[L];
+    const btn = h('button', { class: `nv-level l${L} ${locked ? 'locked' : ''} ${pg.trophy ? 'done' : ''} ${L === level() ? 'cur' : ''}`, type: 'button',
+      'aria-label': `${info.name}: ${info.desc}. ${locked ? 'Đang khóa.' : `Đã đạt ${pg.done}/${pg.total} bài.`}`,
+      onclick: () => {
+        if (locked) { say.textContent = `🔒 ${info.name} đang khóa. Hoàn thành hết ${GR.levelName(L - 1)} để mở nhé!`; say.hidden = false; return; }
+        btn.classList.add('picked');
+        P.setLevel(L);
+        setTimeout(() => { location.hash = '#/hub'; }, 180);
+      } },
+      h('img', { class: 'nv-level-icon', src: cfg.levelIcon(L), alt: '', decoding: 'async' }),
+      h('span', { class: 'nv-level-text' },
+        h('b', { class: 'nv-level-name' }, info.name),
+        h('span', { class: 'nv-level-desc' }, info.desc),
+        h('span', { class: 'nv-level-prog' },
+          ...(locked ? [`🔒 Hoàn thành hết ${GR.levelName(L - 1)} để mở`]
+            : [h('span', { class: 'mh-bar' }, h('span', { style: `width:${pg.pct}%` })), ` ${pg.done}/${pg.total} bài đạt ${'⭐'.repeat(PASS())}${pg.trophy ? ' · ✓ Hoàn thành' : ''}`]))),
+      h('span', { class: 'nv-level-go', 'aria-hidden': 'true' }, locked ? '🔒' : '›'));
+    return btn;
+  });
+  const unitStars = P.summary(U(), ACTIVITIES.flatMap((a) => items(a.key).map((x) => x.id))).stars;
+  root.replaceChildren(page(cfg.theme,
+    previewBanner(),
+    navTop(`#/grade/${gr}`, 'Về bản đồ Unit', cfg),
+    h('header', { class: 'nv-title nv-unit-title' },
+      h('span', { class: 'nv-grade-pill' }, `Grade ${gr}`),
+      h('h1', { class: 'mh-ribbon nv-ribbon' }, `Unit ${GR.unitNo(U())}`),
+      h('p', { class: 'nv-topic' }, unit.meta.title)),
+    h('div', { class: 'mh-pills nv-pills' },
+      h('span', { class: 'mh-pill' }, '🔥 ', h('b', {}, P.daysPractised()), ' ngày'),
+      h('span', { class: 'mh-pill' }, '⭐ ', h('b', {}, unitStars), ' sao')),
+    h('nav', { class: 'nv-levels', 'aria-label': 'Ba cấp độ' }, ...cards),
+    say,
+    h('img', { class: 'nv-footer-art', src: cfg.footer, alt: '', loading: 'lazy' }),
+    footLinks()));
+}
+
+// ---------------- Trang bài học của một cấp độ (các hoạt động + thử thách) ----------------
+function renderHub() {
+  ensureLevelUnlocked();
+  document.body.dataset.theme = 'g6';
   const g = G.gate(gateUnit(), P.attempts(), PASS());
   const L = level();
   const cards = ACTIVITIES.map((a) => {
@@ -273,39 +404,26 @@ function renderHome() {
     h('div', { class: 'mh-quest-text' },
       h('h2', {}, 'Thử thách hôm nay'),
       h('p', {}, questLocked ? lockReason('challenge')
-        : 'Chương 1: nhìn hình nói từ · Chương 2: nghe câu hỏi, trả lời thật nhanh. Vượt cả hai để mở vùng đất tiếp theo!')),
+        : 'Chương 1: nhìn hình nói từ · Chương 2: nghe câu hỏi, trả lời thật nhanh. Vượt cả hai để mở cấp độ tiếp theo!')),
     h('img', { class: 'mh-crystal', src: 'assets/theme/crystal.png', alt: '' }),
     h('div', { class: 'mh-chapters' }, ch1, ch2)) : null;
 
   const anyVisible = ACTIVITIES.some((a) => items(a.key).length);
-  const totalStars = P.summary(U(), ACTIVITIES.flatMap((a) => items(a.key).map((x) => x.id))).stars;
-  const st = Cloud.student();
-  root.replaceChildren(h('div', { class: 'mh' },
-    preview ? h('div', { class: 'preview-banner' }, 'CHẾ ĐỘ XEM TRƯỚC CỦA GIÁO VIÊN · có cả nội dung chưa duyệt · không khóa phần nào',
-      fromExcel ? ' · nội dung nhập từ Excel trên máy này, chưa đưa lên web' : '') : null,
-    h('header', { class: 'mh-top' }, logo(), h('div', { class: 'mh-top-right' }, soundToggle(), unitPicker(), avatar())),
-    h('section', { class: 'mh-hero' },
-      h('img', { class: 'mh-castle', src: 'assets/theme/castle.jpg', alt: '' }),
-      // Bìa chung của ứng dụng (không gắn với Unit nào). Bài đang học chỉ hiện ở dòng nhỏ bên dưới.
-      h('div', { class: 'mh-hero-text' },
-        spellBox(),
-        h('div', { class: 'mh-pills' },
-          h('span', { class: 'mh-pill' }, '🔥 ', h('b', {}, P.daysPractised()), ' ngày'),
-          h('span', { class: 'mh-pill' }, '⭐ ', h('b', {}, totalStars))),
-        h('p', { class: 'mh-now' }, '📖 Đang học: ', h('b', {}, unit.meta.display_label || index?.units?.find((u) => u.unit === U())?.label || `Unit ${U()}`), ` · ${unit.meta.title}`))),
+  const gr = GR.gradeOf(U());
+  root.replaceChildren(h('div', { class: 'mh nv-enter' },
+    previewBanner(),
+    navTop('#/levels', 'Về trang 3 cấp độ', GR.GRADES[gr] && !GR.GRADES[gr].soon ? GR.GRADES[gr] : GR.GRADES[6]),
+    h('header', { class: 'nv-hub-title' },
+      h('span', { class: 'nv-grade-pill' }, `Grade ${gr} · Unit ${GR.unitNo(U())}`),
+      h('h1', {}, unit.meta.title),
+      h('span', { class: `nv-level-badge l${L}` }, GR.levelName(L), ' · ', GR.LEVELS[L] ? GR.LEVELS[L].desc : '')),
     supportNotice(),
     anyVisible ? null : emptyState('Thầy cô chưa duyệt nội dung bài này. Bạn chờ thầy cô nhé!'),
     anyVisible ? taskCard() : null,
-    worldMap(),
     h('div', { class: 'mh-cards-wrap' }, h('img', { class: 'mh-lantern', src: 'assets/theme/lantern.png', alt: '' }),
       h('nav', { class: 'mh-cards', 'aria-label': 'Hoạt động' }, ...cards)),
     quest,
-    h('footer', { class: 'mh-foot' },
-      st ? h('span', { class: 'mh-foot-item' }, '👥 ', `${st.nickname} · Lớp ${st.class_name}`)
-        : (preview || !Cloud.configured() ? null : h('button', { class: 'mh-foot-item link', onclick: () => { Cloud.setGuest(false); needLogin = true; render(); } }, '🏫 Đăng nhập lớp')),
-      st ? h('button', { class: 'mh-foot-item link', onclick: switchStudent }, '🔄 Đổi bạn') : null,
-      h('span', { class: 'mh-foot-item' }, '🎙️ Không lưu giọng nói'),
-      h('a', { class: 'mh-foot-item link', href: 'dashboard.html' }, '🎓 Giáo viên')),
+    footLinks(),
   ));
 }
 
@@ -314,9 +432,9 @@ function renderLocked(part) {
   root.replaceChildren(shell(G.PART_VI[part],
     h('div', { class: 'card center' },
       h('p', { class: 'big-emoji' }, '🔒'),
-      h('h2', {}, `${G.PART_VI[part]} · Mức ${level()} đang khóa`),
+      h('h2', {}, `${G.PART_VI[part]} · ${GR.levelName(level())} đang khóa`),
       h('p', {}, lockReason(part)),
-      h('a', { class: 'btn btn-main', href: '#/' }, 'Về bản đồ'))));
+      h('a', { class: 'btn btn-main', href: '#/hub' }, 'Về trang bài học'))));
 }
 
 const SECTION_ROUTE = { vocabulary: '#/vocab', patterns: '#/patterns', dialogues: '#/dialogues', roleplays: '#/roleplays', challenge: '#/challenge', challenge2: '#/challenge2' };
@@ -329,12 +447,12 @@ function taskCard() {
   const a = c.assignment;
   const stars = '⭐'.repeat(a.pass_stars);
   const list = h('div', { hidden: true },
-    h('p', { class: 'muted' }, `Mỗi bài cần đạt từ ${stars} khi luyện ở đúng mức. Bạn đổi mức ở lộ trình bên dưới.`),
+    h('p', { class: 'muted' }, `Mỗi bài cần đạt từ ${stars} khi luyện ở đúng mức. Bạn chọn cấp độ ở trang Unit (nút ‹ trên cùng).`),
     ...a.levels.map((L) => {
       const miss = c.missing.filter((m) => m.level === L);
       const groups = {};
       for (const m of miss) (groups[m.section] = groups[m.section] || []).push(m);
-      return h('div', {}, h('b', {}, `Mức ${L}: `), miss.length ? `còn ${miss.length} bài` : h('span', { class: 'task-done' }, 'xong rồi ✓'),
+      return h('div', {}, h('b', {}, `${GR.levelName(L)}: `), miss.length ? `còn ${miss.length} bài` : h('span', { class: 'task-done' }, 'xong rồi ✓'),
         miss.length ? h('ul', { class: 'task-list' }, ...Object.entries(groups).map(([s, ms]) =>
           h('li', {}, h('a', { href: SECTION_ROUTE[s], onclick: () => { if (level() !== L) P.setLevel(L); } }, ms[0].section.startsWith('challenge') ? ms[0].label : `${ms.length} bài ${({ vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai' })[s]}`),
             s === 'vocabulary' || s === 'patterns' ? h('span', { class: 'muted' }, `: ${ms.slice(0, 6).map((m) => m.label).join(', ')}${ms.length > 6 ? '…' : ''}`) : null))) : null);
@@ -344,7 +462,7 @@ function taskCard() {
   return h('section', { class: 'card task-card' },
     h('div', { class: 'task-head' },
       h('b', {}, done ? '🎉 Bạn đã hoàn thành bài được giao!' : '📋 Bài thầy cô giao'),
-      h('span', { class: 'muted' }, a.levels.map((l) => `Mức ${l}`).join(' + '), a.due ? ` · hạn ${new Date(`${a.due}T00:00:00`).toLocaleDateString('vi-VN')}` : '')),
+      h('span', { class: 'muted' }, a.levels.map((l) => GR.levelName(l)).join(' + '), a.due ? ` · hạn ${new Date(`${a.due}T00:00:00`).toLocaleDateString('vi-VN')}` : '')),
     h('div', { class: 'task-bar', role: 'progressbar', 'aria-valuenow': c.done, 'aria-valuemax': c.total, 'aria-label': 'Tiến độ bài được giao' },
       h('span', { style: `width:${Math.round(c.pct * 100)}%` })),
     h('div', { class: 'task-head' }, h('span', {}, `${c.done}/${c.total} bài đạt ${stars}`), done ? null : toggle),
@@ -461,7 +579,7 @@ function renderChallenge() {
   Challenge.render({ root, shell, unitNo: U(), level: level(), preview, unit, words: byLevel(items('vocabulary')) });
 }
 
-function pager(k, n, href, end = { href: '#/', label: 'Xong ✓' }) {
+function pager(k, n, href, end = { href: '#/hub', label: 'Xong ✓' }) {
   return h('nav', { class: 'pager' },
     k > 0 ? h('a', { class: 'btn btn-soft', href: href(k - 1) }, '‹ Trước') : h('span'),
     h('span', { class: 'muted' }, `${k + 1} / ${n}`),
@@ -666,6 +784,7 @@ function render() {
   window.scrollTo(0, 0);
   // Nhạc nền chỉ ở trang chính và màn đăng nhập; vào bài học / thử thách thì tắt để không lẫn vào micro.
   Sound.music(needLogin || !PLAY_ROUTES.has(route));
+  document.body.dataset.theme = 'g6';   // trang học dùng giao diện tím chung; trang bản đồ / cấp độ tự đổi màu theo khối
   if (needLogin) return renderLogin();
   const PART_OF = { vocab: 'vocabulary', patterns: 'patterns', dialogues: 'dialogues', roleplays: 'roleplays', challenge: 'challenge', challenge2: 'challenge2' };
   if (PART_OF[route]) { ensureLevelUnlocked(); if (isLocked(PART_OF[route])) return renderLocked(PART_OF[route]); }
@@ -676,7 +795,10 @@ function render() {
     case 'challenge2': return Challenge2.render({ root, shell, unitNo: U(), level: level(), roleplays: items('roleplays') });
     case 'dialogues': return arg ? renderDialogue(decodeURIComponent(arg)) : renderList('dialogues', 'Hội thoại', 'dialogues', (x) => x.title_vi);
     case 'roleplays': return arg ? renderRoleplay(decodeURIComponent(arg)) : renderList('roleplays', 'Đóng vai', 'roleplays', (x) => x.situation_vi);
-    default: return renderHome();
+    case 'grade': return renderMap(Number(arg));
+    case 'levels': return renderLevels();
+    case 'hub': return renderHub();
+    default: return renderHomeGrades();
   }
 }
 
@@ -708,7 +830,8 @@ async function start() {
       return;
     }
     window.addEventListener('hashchange', render);
-    window.addEventListener('sb-progress', () => { if (!needLogin && !location.hash.replace(/^#\/?/, '')) render(); });
+    // Tiến độ vừa đồng bộ từ máy chủ: vẽ lại nếu đang ở trang điều hướng (không làm gián đoạn bài đang luyện).
+    window.addEventListener('sb-progress', () => { if (!needLogin && ['', 'grade', 'levels', 'hub'].includes(location.hash.split('/')[1] || '')) render(); });
     render();
   } catch (err) {
     root.replaceChildren(h('div', { class: 'card warn' }, h('h2', {}, 'Chưa mở được bài học'), h('p', {}, err.message),

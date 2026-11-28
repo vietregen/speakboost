@@ -3,7 +3,7 @@
 Ứng dụng luyện nói tiếng Anh THCS (Global Success) cho sáng kiến kinh nghiệm của thầy Hồ Quỳnh Đức.
 Tệp này giúp bắt đầu một phiên làm việc mới mà không cần đọc lại lịch sử. **Khi mở phiên mới, hãy yêu cầu Claude đọc tệp này trước.**
 
-Cập nhật lần cuối: 28/11/2026 (tối: chống cắt ngang khi đọc câu dài, đọc số "7:00", câu bùa đổi mỗi 15 giây).
+Cập nhật lần cuối: 28/11/2026 (giao diện mới: trang chủ chọn khối, bản đồ Unit, 3 cấp độ SpeakUp – SpeakBoost – SpeakSmart).
 
 ---
 
@@ -42,7 +42,8 @@ index.html            Trang học sinh (nạp css/app.css + css/magic.css, body.
 dashboard.html        Dashboard giáo viên (đăng nhập email)
 teacher.html          Duyệt nội dung, nhập Excel (chưa có đăng nhập; trạng thái duyệt lưu trên máy)
 js/
-  app.js              Trang học sinh: trang chính (bìa chung + bản đồ 3 vùng đất), các hoạt động, khóa/mở, đăng nhập lớp
+  app.js              Trang học sinh: điều hướng theo tầng (trang chủ chọn khối → bản đồ Unit → 3 cấp độ → trang bài học), các hoạt động, khóa/mở, đăng nhập lớp
+  grades.js           Cấu hình giao diện từng khối (ảnh, màu, 12 chủ đề Unit, tên 3 cấp độ SpeakUp/SpeakBoost/SpeakSmart)
   ui.js               Thành phần dùng chung, speakPanel (nghe mẫu / nói / ghi âm) + gọi hiệu ứng biến mất
   speech.js           Nghe mẫu (ưu tiên tệp âm thanh), nhận diện lời nói (Web Speech API), ghi âm
   match.js            So khớp lời nói với từ/câu mẫu
@@ -59,12 +60,14 @@ js/
   teacher.js          Trang duyệt nội dung
   dashboard.js        Dashboard giáo viên
   config.js           Địa chỉ + khóa CÔNG KHAI Supabase (không bao giờ đặt khóa secret ở đây)
-css/  app.css (nền), magic.css (giao diện học sinh + hiệu ứng), dashboard.css, teacher.css
+css/  app.css (nền), magic.css (giao diện học sinh + hiệu ứng), worlds.css (trang chủ / bản đồ / cấp độ, màu theo khối), dashboard.css, teacher.css
 data/units/index.json        Danh sách bài
 data/units/unit-NN.json      Nội dung từng bài
 data/audio/unit-NN.json      Bảng tra câu → tệp âm thanh
 assets/                      Ảnh từ vựng (*.webp)
 assets/theme/                Hình giao diện phép thuật (PNG nền trong suốt + castle.jpg)
+assets/grades/home/          Hình trang chủ (sách Grade 6–9, mũ, sách phép, quả cầu)
+assets/grades/g6, g8/        Hình theo khối: units/ (12 biểu tượng + coming-soon), levels/ (3 cấp độ), common/ (nút quay lại, cảnh chân trang, khung)
 assets/audio/uNN/            Tệp âm thanh mẫu (.wav)
 supabase/01…05-*.sql         Cấu trúc cơ sở dữ liệu (đã chạy hết trên Supabase)
 tools/make-audio.ps1         Tạo âm thanh mẫu bằng giọng Windows
@@ -92,7 +95,9 @@ Không có bước build. Máy của thầy **không có Node, Python, Git**.
 
 ## 5. Luật học tập (trang học sinh)
 
-**3 mức** = 3 vùng đất: ① Vương quốc Phù Thủy, ② Rừng Ánh Sáng, ③ Thung Lũng Pha Lê.
+**3 cấp độ** (từ 28/11/2026, thay cho 3 vùng đất cũ): ① **SpeakUp** – nghe và nhắc lại, ② **SpeakBoost** – nói theo gợi ý, ③ **SpeakSmart** – tự nói, máy nhận xét. Trong mã vẫn là mức 1–2–3 (`level`); Dashboard giáo viên vẫn ghi "Mức".
+
+**Điều hướng** (giao diện mới theo thiết kế ChatGPT, 28/11/2026): Trang chủ (câu bùa, 4 sách Grade 6–9, Peekaboo!, Alohomora!) → `#/grade/6` bản đồ 12 Unit của khối → `#/levels` 3 cấp độ của Unit → `#/hub` trang bài học (4 hoạt động + thử thách + bài thầy cô giao) → các hoạt động. Mỗi khối một "thế giới": Lớp 6 phù thủy tím–vàng, Lớp 8 Thung lũng ánh sáng xanh ngọc (màu trong `worlds.css`, ảnh trong `grades.js`). Lớp 7, 9 hiện "Sắp có" cho tới khi có ảnh và học liệu. Unit có học liệu khi `index.json` có dòng cùng mã và có tệp; chấm tròn trên bản đồ = cấp độ đã hoàn thành thật. Học thử: chỉ Lớp 6 · Unit 1.
 Ở mức L học sinh làm Từ vựng và Mẫu câu có `level ≤ L`, cùng mọi Hội thoại và Đóng vai (đề tự khó dần theo mức).
 
 **Mở khóa** (`grading.js` → `REQUIRES`, `UNLOCK_RATIO = 0.9`):
@@ -197,6 +202,8 @@ Trạng thái duyệt hiện **chỉ lưu trên máy** đang mở; muốn học 
 - Lớp 6 Unit 2, 3, 5, 6 chưa có nội dung.
 - Trang duyệt nội dung chưa có đăng nhập và chưa lưu trạng thái duyệt lên máy chủ.
 - 4 hình giao diện chưa dùng: `flag.png`, `ribbon-blue.png`, `ribbon-purple.png`, `frame.png`.
+- Ảnh thiết kế mới cần ChatGPT làm lại: `assets/grades/g6/levels/level-speaksmart.png` có chữ "AI" (ứng dụng không chấm bằng AI); vài biểu tượng còn viền nền (Lớp 6: unit-6-04, 05, 06, 12; Lớp 8: nền trời quanh hình). Chưa có ảnh cho Lớp 7, Lớp 9.
+- Hình giao diện cũ không còn dùng ở trang chủ: castle.jpg, island1–3.png, cat.png, shield.png (vẫn để trong assets/theme).
 - Lớp thử "THU" trên Dashboard: xóa trước khi dùng dữ liệu thật cho thực nghiệm.
 - Giới hạn học sinh chỉ vào được Unit đã giao cho lớp: thầy đã yêu cầu nhưng **tạm hoãn** (28/11/2026), hiện ai có mã lớp + PIN vẫn chọn được mọi Unit.
 

@@ -75,3 +75,8 @@ export function toCsv() {
   const rows = state.attempts.map((a) => [a.t, a.unit, a.activity, a.item, a.level, a.source, a.stars, a.detail, 'false'].map(esc).join(','));
   return '﻿' + [head.join(','), ...rows].join('\r\n');
 }
+
+// Tổng số sao tốt nhất của mọi bài ở mọi Unit (không tính từng lượt trong bài, VD "id#2").
+export function totalStars() {
+  return Object.entries(state.best).reduce((s, [k, v]) => (k.includes('#') ? s : s + (v || 0)), 0);
+}
