@@ -89,6 +89,16 @@ export function completion(unit, assignment, attempts) {
 // Phần sau chỉ mở khi phần trước đã xong (mọi mục đạt từ `pass` sao, luyện ở đúng mức đó).
 // Mức sau chỉ mở khi mức trước đã xong hết các phần.
 export const PARTS = ['vocabulary', 'patterns', 'dialogues', 'roleplays', 'challenge', 'challenge2'];
+// Phần nào cần xong trước phần nào (ở cùng một mức).
+// Thử thách Chương 1 (từ vựng) mở ngay khi xong Từ vựng; Chương 2 (hội thoại nhanh) cần xong Đóng vai và Chương 1.
+export const REQUIRES = {
+  vocabulary: [],
+  patterns: ['vocabulary'],
+  dialogues: ['vocabulary', 'patterns'],
+  roleplays: ['vocabulary', 'patterns', 'dialogues'],
+  challenge: ['vocabulary'],
+  challenge2: ['vocabulary', 'patterns', 'dialogues', 'roleplays', 'challenge'],
+};
 export const PART_VI = { vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai', challenge: 'Thử thách Chương 1', challenge2: 'Thử thách Chương 2' };
 
 export function gate(unit, attempts, pass = 2) {
@@ -113,11 +123,11 @@ export function gate(unit, attempts, pass = 2) {
   };
   const levelDone = (L) => PARTS.every((p) => status(L, p).complete);
   const levelUnlocked = (L) => { const i = levels.indexOf(L); return i <= 0 || (levelUnlocked(levels[i - 1]) && levelDone(levels[i - 1])); };
-  const partUnlocked = (L, part) => levelUnlocked(L) && PARTS.slice(0, PARTS.indexOf(part)).every((p) => status(L, p).complete);
+  const partUnlocked = (L, part) => levelUnlocked(L) && (REQUIRES[part] || []).every((p) => status(L, p).complete);
   // Phần còn dở gần nhất đang chặn (để nhắc học sinh)
   const blocker = (L, part) => {
     if (!levelUnlocked(L)) return { level: levels[levels.indexOf(L) - 1], part: null };
-    const p = PARTS.slice(0, PARTS.indexOf(part)).find((x) => !status(L, x).complete);
+    const p = (REQUIRES[part] || []).find((x) => !status(L, x).complete);
     return p ? { level: L, part: p } : null;
   };
   return { status, levelDone, levelUnlocked, partUnlocked, blocker, levels, pass };
