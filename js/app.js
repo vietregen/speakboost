@@ -5,6 +5,7 @@ import * as M from './match.js';
 import * as P from './progress.js';
 import { h, speakPanel, listenButtons, sentenceOutcome, heardLine, starsText, disposeAll } from './ui.js';
 import * as Challenge from './challenge.js';
+import * as Challenge2 from './challenge2.js';
 import * as Cloud from './cloud.js';
 import * as G from './grading.js';
 
@@ -57,11 +58,32 @@ const WORLDS = {
 };
 const ACT_ART = { vocabulary: 'assets/theme/icon-vocab.png', patterns: 'assets/theme/icon-patterns.png', dialogues: 'assets/theme/icon-dialogues.png', roleplays: 'assets/theme/icon-roleplays.png' };
 
-// Tiến độ của một vùng: số từ vựng + mẫu câu ĐÚNG mức đó đã luyện, và thử thách của mức đó.
+// ---- Mở khóa theo thứ tự: phần sau mở khi phần trước xong, mức sau mở khi mức trước xong ----
+// Ngưỡng "xong": mỗi bài đạt từ 2 sao (hoặc ngưỡng thầy cô đặt cho lớp) khi luyện ở đúng mức đó.
+// Chế độ xem trước của giáo viên không khóa gì.
+const PASS = () => { const st = Cloud.student(); return st && st.assignment ? G.normAssignment(st.assignment).pass_stars : 2; };
+const gating = () => (preview ? null : G.gate(unit, P.attempts(), PASS()));
+const isLocked = (part, L = level()) => { const g = gating(); return g ? !g.partUnlocked(L, part) : false; };
+function lockReason(part, L = level()) {
+  const g = gating();
+  const b = g && g.blocker(L, part);
+  if (!b) return '';
+  const stars = '⭐'.repeat(g.pass);
+  return b.part ? `Hoàn thành phần ${G.PART_VI[b.part]} (mỗi bài đạt ${stars}) để mở.` : `Hoàn thành hết Mức ${b.level} để mở vùng đất này.`;
+}
+// Nếu mức đang chọn còn khóa (VD vừa đổi máy), đưa về mức cao nhất đã mở.
+function ensureLevelUnlocked() {
+  const g = gating();
+  if (!g || g.levelUnlocked(level())) return;
+  const open = g.levels.filter((L) => g.levelUnlocked(L));
+  P.setLevel(open.length ? open[open.length - 1] : 1);
+}
+
 function levelProgress(lv) {
-  const list = [...items('vocabulary'), ...items('patterns')].filter((x) => (x.level || 1) === lv);
-  const done = list.filter((x) => P.bestStars(U(), x.id) > 0).length;
-  return { done, total: list.length, pct: list.length ? Math.round((done / list.length) * 100) : 0, trophy: P.bestStars(U(), Challenge.challengeId(lv)) };
+  const g = G.gate(unit, P.attempts(), PASS());
+  let done = 0, total = 0;
+  for (const p of G.PARTS) { const s = g.status(lv, p); done += s.done; total += s.total; }
+  return { done, total, pct: total ? Math.round((done / total) * 100) : 0, trophy: g.levelDone(lv) };
 }
 
 function logo() {
@@ -70,16 +92,23 @@ function logo() {
     h('span', { class: 'mh-logo-text' }, 'Speak', h('b', {}, 'Boost')));
 }
 
+// Học thử (không đăng nhập) chỉ dùng được Unit 1 lớp 6. Các Unit khác cần đăng nhập lớp.
+const isGuestUser = () => !preview && !Cloud.student();
 function unitPicker() {
+  const guest = isGuestUser();
   const sel = h('select', { class: 'mh-unit', 'aria-label': 'Chọn Unit', onchange: (e) => { if (Number(e.target.value) !== U()) e.target.value = U(); } },
-    ...(index?.units || [{ unit: U(), file: true }]).map((u) => h('option', { value: u.unit, disabled: !u.file, selected: u.unit === U() }, `Unit ${u.unit}${u.file ? '' : ' · sắp có'}`)));
+    ...(index?.units || [{ unit: U(), file: true }]).map((u) => {
+      const blocked = !u.file || (guest && u.unit !== 1);
+      return h('option', { value: u.unit, disabled: blocked, selected: u.unit === U() },
+        `Unit ${u.unit}${!u.file ? ' · sắp có' : guest && u.unit !== 1 ? ' · đăng nhập lớp để học' : ''}`);
+    }));
   return h('label', { class: 'mh-unit-wrap' }, h('span', { class: 'mh-bars', 'aria-hidden': 'true' }, h('i'), h('i'), h('i')), sel);
 }
 
 function avatar() {
   const st = Cloud.student();
   const menu = h('div', { class: 'mh-menu', hidden: true },
-    st ? h('p', {}, h('b', {}, st.nickname), h('br'), `Số ${st.roster_no} · Lớp ${st.class_name}`) : h('p', {}, 'Bạn đang học thử (không lưu kết quả).'),
+    st ? h('p', {}, h('b', {}, st.nickname), h('br'), `Số ${st.roster_no} · Lớp ${st.class_name}`) : h('p', {}, 'Bạn đang học thử Unit 1 (không lưu kết quả).'),
     st ? h('button', { class: 'btn btn-soft', onclick: switchStudent }, '🔄 Đổi bạn')
       : (Cloud.configured() && !preview ? h('button', { class: 'btn btn-main', onclick: () => { Cloud.setGuest(false); needLogin = true; render(); } }, '🏫 Đăng nhập lớp') : null));
   const btn = h('button', { class: 'mh-avatar', 'aria-label': 'Tài khoản', 'aria-expanded': 'false', onclick: () => {
@@ -92,62 +121,81 @@ async function switchStudent() { await Cloud.signOut(); needLogin = true; locati
 
 function worldMap() {
   const cur = level();
+  const g = gating();
+  const say = h('p', { class: 'mh-map-msg', 'aria-live': 'polite', hidden: true });
   const stations = unit.levels.map((l) => {
     const w = WORLDS[l.id] || { name: `Mức ${l.id}`, sub: l.name, img: '' };
     const pg = levelProgress(l.id);
     const on = l.id === cur;
+    const lockedLv = g ? !g.levelUnlocked(l.id) : false;
     return h('button', {
-      class: `mh-world w${l.id} ${on ? 'on' : ''}`, 'aria-pressed': String(on),
-      'aria-label': `Mức ${l.id}: ${w.name}. Đã luyện ${pg.done}/${pg.total}${pg.trophy ? ', đã vượt thử thách' : ''}`,
-      onclick: () => { P.setLevel(l.id); render(); },
+      class: `mh-world w${l.id} ${on ? 'on' : ''} ${lockedLv ? 'locked' : ''}`, 'aria-pressed': String(on),
+      'aria-label': `Mức ${l.id}: ${w.name}. ${lockedLv ? 'Đang khóa.' : `Đã xong ${pg.done}/${pg.total}`}${pg.trophy ? ', đã chinh phục' : ''}`,
+      onclick: () => {
+        if (lockedLv) { say.textContent = `🔒 ${w.name} đang khóa. Hoàn thành hết Mức ${l.id - 1} để mở nhé!`; say.hidden = false; return; }
+        P.setLevel(l.id); render();
+      },
     },
       h('span', { class: 'mh-island' }, w.img ? h('img', { src: w.img, alt: '' }) : null,
         on ? h('span', { class: 'mh-here' }, 'Bạn ở đây') : null,
-        pg.trophy ? h('img', { class: 'mh-cup', src: 'assets/theme/shield.png', alt: 'Đã vượt thử thách', title: 'Đã vượt thử thách' }) : null),
+        lockedLv ? h('span', { class: 'mh-lock', 'aria-hidden': 'true' }, '🔒') : null,
+        pg.trophy ? h('img', { class: 'mh-cup', src: 'assets/theme/shield.png', alt: 'Đã chinh phục', title: 'Đã chinh phục vùng đất này' }) : null),
       h('span', { class: 'mh-scroll' }, h('span', { class: 'mh-num' }, l.id), w.name),
-      h('span', { class: 'mh-sub' }, w.sub),
+      h('span', { class: 'mh-sub' }, lockedLv ? '🔒 Chưa mở' : w.sub),
       h('span', { class: 'mh-prog', 'aria-hidden': 'true' }, h('span', { style: `width:${pg.pct}%` })));
   });
   return h('section', { class: 'mh-map', 'aria-label': 'Bản đồ 3 mức' },
     h('img', { class: 'mh-cat', src: 'assets/theme/cat.png', alt: '' }),
-    h('div', { class: 'mh-worlds' }, ...stations));
+    h('div', { class: 'mh-worlds' }, ...stations), say);
 }
 
 function renderHome() {
+  ensureLevelUnlocked();
+  const g = G.gate(unit, P.attempts(), PASS());
+  const L = level();
   const cards = ACTIVITIES.map((a) => {
     const list = a.key === 'vocabulary' || a.key === 'patterns' ? byLevel(items(a.key)) : items(a.key);
-    const sum = P.summary(U(), list.map((x) => x.id));
-    const disabled = list.length === 0;
-    return h(disabled ? 'div' : 'a', { class: `mh-card ${disabled ? 'off' : ''}`, href: disabled ? null : `#/${a.route}` },
+    const s = g.status(L, a.key);
+    const empty = list.length === 0;
+    const locked = !empty && isLocked(a.key);
+    const pct = s.total ? Math.round((s.done / s.total) * 100) : 0;
+    return h(empty || locked ? 'div' : 'a', { class: `mh-card ${empty ? 'off' : ''} ${locked ? 'locked' : ''} ${s.total && s.complete ? 'done' : ''}`, href: empty || locked ? null : `#/${a.route}`,
+      title: locked ? lockReason(a.key) : null, tabindex: locked ? 0 : null },
       h('span', { class: 'mh-card-art' }, h('img', { src: ACT_ART[a.key], alt: '' })),
+      locked ? h('span', { class: 'mh-card-lock', 'aria-hidden': 'true' }, '🔒') : null,
+      s.total && s.complete ? h('span', { class: 'mh-card-check', 'aria-label': 'Đã xong' }, '✓') : null,
       h('span', { class: 'mh-card-name' }, a.name),
-      h('span', { class: 'mh-bar' }, h('span', { style: `width:${sum.total ? Math.round((sum.done / sum.total) * 100) : 0}%` })),
-      h('span', { class: 'mh-count' }, disabled ? '—' : `${sum.done} / ${sum.total}`));
+      h('span', { class: 'mh-bar' }, h('span', { style: `width:${pct}%` })),
+      h('span', { class: 'mh-count' }, empty ? '—' : locked ? 'Chưa mở' : `${s.done} / ${s.total}`));
   });
 
-  // Thử thách: mở khi đã luyện đủ số từ ở mức hiện tại.
-  const words = byLevel(items('vocabulary'));
-  let quest = null;
-  if (words.length) {
-    const st = Challenge.status({ unitNo: U(), words, preview, unit });
-    const best = P.bestStars(U(), Challenge.challengeId(level()));
-    quest = h('section', { class: `mh-quest ${st.unlocked ? '' : 'locked'}` },
-      h('img', { class: 'mh-chest', src: 'assets/theme/chest.png', alt: '' }),
-      h('div', { class: 'mh-quest-text' },
-        h('h2', {}, 'Thử thách hôm nay'),
-        h('p', {}, st.unlocked
-          ? (best ? `Kỷ lục của bạn: ${starsText(best)} · Thử lại để thu thêm pha lê!` : 'Luyện nói nhanh · Thu thập pha lê · Mở khóa vùng đất tiếp theo!')
-          : `Luyện thêm ${Math.max(0, st.need - st.done)} từ ở mức này để mở rương báu (${st.done}/${st.need}).`)),
-      h('img', { class: 'mh-crystal', src: 'assets/theme/crystal.png', alt: '' }),
-      st.unlocked ? h('a', { class: 'mh-go', href: '#/challenge' }, 'Vào ngay ', h('span', { 'aria-hidden': 'true' }, '»'))
-        : h('span', { class: 'mh-go locked', 'aria-label': 'Chưa mở' }, '🔒'));
-  }
+  // Thử thách: Chương 1 Từ vựng → Chương 2 Hội thoại nhanh.
+  const chapter = (part, route, label) => {
+    const s = g.status(L, part);
+    if (!s.total) return null;
+    const locked = isLocked(part);
+    const best = P.bestStars(U(), part === 'challenge' ? Challenge.challengeId(L) : Challenge2.challengeId(L));
+    return locked
+      ? h('span', { class: 'mh-go locked', title: lockReason(part) }, '🔒 ', label)
+      : h('a', { class: `mh-go ${s.complete ? 'cleared' : ''}`, href: route }, s.complete ? '✓ ' : '', label, best ? h('small', {}, ` ${starsText(best)}`) : ' »');
+  };
+  const ch1 = chapter('challenge', '#/challenge', 'Chương 1');
+  const ch2 = chapter('challenge2', '#/challenge2', 'Chương 2');
+  const questLocked = isLocked('challenge');
+  const quest = ch1 || ch2 ? h('section', { class: `mh-quest ${questLocked ? 'locked' : ''}` },
+    h('img', { class: 'mh-chest', src: 'assets/theme/chest.png', alt: '' }),
+    h('div', { class: 'mh-quest-text' },
+      h('h2', {}, 'Thử thách hôm nay'),
+      h('p', {}, questLocked ? lockReason('challenge')
+        : 'Chương 1: nhìn hình nói từ · Chương 2: nghe câu hỏi, trả lời thật nhanh. Vượt cả hai để mở vùng đất tiếp theo!')),
+    h('img', { class: 'mh-crystal', src: 'assets/theme/crystal.png', alt: '' }),
+    h('div', { class: 'mh-chapters' }, ch1, ch2)) : null;
 
   const anyVisible = ACTIVITIES.some((a) => items(a.key).length);
   const totalStars = P.summary(U(), ACTIVITIES.flatMap((a) => items(a.key).map((x) => x.id))).stars;
   const st = Cloud.student();
   root.replaceChildren(h('div', { class: 'mh' },
-    preview ? h('div', { class: 'preview-banner' }, 'CHẾ ĐỘ XEM TRƯỚC CỦA GIÁO VIÊN · có cả nội dung chưa duyệt',
+    preview ? h('div', { class: 'preview-banner' }, 'CHẾ ĐỘ XEM TRƯỚC CỦA GIÁO VIÊN · có cả nội dung chưa duyệt · không khóa phần nào',
       fromExcel ? ' · nội dung nhập từ Excel trên máy này, chưa đưa lên web' : '') : null,
     h('header', { class: 'mh-top' }, logo(), h('div', { class: 'mh-top-right' }, unitPicker(), avatar())),
     h('section', { class: 'mh-hero' },
@@ -175,7 +223,17 @@ function renderHome() {
   ));
 }
 
-const SECTION_ROUTE = { vocabulary: '#/vocab', patterns: '#/patterns', dialogues: '#/dialogues', roleplays: '#/roleplays', challenge: '#/challenge' };
+// Trang báo phần đang khóa (khi học sinh mở thẳng đường link).
+function renderLocked(part) {
+  root.replaceChildren(shell(G.PART_VI[part],
+    h('div', { class: 'card center' },
+      h('p', { class: 'big-emoji' }, '🔒'),
+      h('h2', {}, `${G.PART_VI[part]} · Mức ${level()} đang khóa`),
+      h('p', {}, lockReason(part)),
+      h('a', { class: 'btn btn-main', href: '#/' }, 'Về bản đồ'))));
+}
+
+const SECTION_ROUTE = { vocabulary: '#/vocab', patterns: '#/patterns', dialogues: '#/dialogues', roleplays: '#/roleplays', challenge: '#/challenge', challenge2: '#/challenge2' };
 function taskCard() {
   const st = Cloud.student();
   if (!st || preview || G.isFree(st.assignment)) return null;   // lớp tự luyện: không hiện nhiệm vụ
@@ -191,7 +249,7 @@ function taskCard() {
       for (const m of miss) (groups[m.section] = groups[m.section] || []).push(m);
       return h('div', {}, h('b', {}, `Mức ${L}: `), miss.length ? `còn ${miss.length} bài` : h('span', { class: 'task-done' }, 'xong rồi ✓'),
         miss.length ? h('ul', { class: 'task-list' }, ...Object.entries(groups).map(([s, ms]) =>
-          h('li', {}, h('a', { href: SECTION_ROUTE[s], onclick: () => { if (level() !== L) P.setLevel(L); } }, ms[0].section === 'challenge' ? ms[0].label : `${ms.length} bài ${({ vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai' })[s]}`),
+          h('li', {}, h('a', { href: SECTION_ROUTE[s], onclick: () => { if (level() !== L) P.setLevel(L); } }, ms[0].section.startsWith('challenge') ? ms[0].label : `${ms.length} bài ${({ vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai' })[s]}`),
             s === 'vocabulary' || s === 'patterns' ? h('span', { class: 'muted' }, `: ${ms.slice(0, 6).map((m) => m.label).join(', ')}${ms.length > 6 ? '…' : ''}`) : null))) : null);
     }));
   const toggle = h('button', { class: 'link-btn', onclick: () => { list.hidden = !list.hidden; toggle.textContent = list.hidden ? 'Xem bài còn thiếu' : 'Ẩn'; } }, 'Xem bài còn thiếu');
@@ -287,15 +345,15 @@ function renderVocab(i) {
   };
 
   if (lv === 1) {
-    wordBox.append(h('p', { class: 'word' }, v.word), h('p', { class: 'ipa' }, v.ipa), h('p', { class: 'meaning' }, v.meaning_vi));
+    wordBox.append(h('p', { class: 'word', 'data-vanish': true }, v.word), h('p', { class: 'ipa' }, v.ipa), h('p', { class: 'meaning' }, v.meaning_vi));
   } else if (lv === 2) {
-    const hidden = h('p', { class: 'word hidden-word' }, '? ? ?');
+    const hidden = h('p', { class: 'word hidden-word', 'data-vanish': true }, '? ? ?');
     wordBox.append(h('p', { class: 'meaning' }, v.meaning_vi), hidden,
       h('button', { class: 'link-btn', onclick: (e) => { hidden.textContent = v.word; hidden.classList.remove('hidden-word'); e.target.remove(); wordBox.append(h('p', { class: 'ipa' }, v.ipa)); } }, 'Xem từ'));
   } else {
     target = v.example;
     wordBox.append(h('p', { class: 'word' }, v.word), h('p', { class: 'ipa' }, v.ipa),
-      h('p', { class: 'task' }, 'Nói cả câu ví dụ:'), h('p', { class: 'example' }, v.example));
+      h('p', { class: 'task' }, 'Nói cả câu ví dụ:'), h('p', { class: 'example', 'data-vanish': true }, v.example));
     evaluate = (alts) => sentenceOutcome(M.bestSentenceMatch(v.example, alts));
   }
 
@@ -334,12 +392,12 @@ function renderPatterns(i) {
 
   if (lv === 1) {
     text = p.text;
-    body = [h('p', { class: 'task' }, 'Nghe rồi nói lại cả câu:'), h('p', { class: 'sentence' }, p.text), h('p', { class: 'meaning' }, p.meaning_vi)];
+    body = [h('p', { class: 'task' }, 'Nghe rồi nói lại cả câu:'), h('p', { class: 'sentence', 'data-vanish': true }, p.text), h('p', { class: 'meaning' }, p.meaning_vi)];
     evaluate = (alts) => sentenceOutcome(M.bestSentenceMatch(p.text, alts));
   } else if (lv === 2) {
     text = p.text;
     const candidates = p.slot_options.map((o) => p.frame.replace('___', o));
-    body = [h('p', { class: 'task' }, 'Nói cả câu, điền vào chỗ trống một từ bạn chọn:'), h('p', { class: 'sentence' }, p.frame),
+    body = [h('p', { class: 'task' }, 'Nói cả câu, điền vào chỗ trống một từ bạn chọn:'), h('p', { class: 'sentence', 'data-vanish': true }, p.frame),
       h('div', { class: 'chips' }, ...p.slot_options.map((o) => h('span', { class: 'chip' }, o))), h('p', { class: 'meaning' }, p.meaning_vi)];
     evaluate = (alts) => sentenceOutcome(M.bestSentenceMatch(candidates, alts));
   } else {
@@ -418,7 +476,7 @@ function renderDialogue(id) {
       if (mine) {
         stage.replaceChildren(h('div', { class: 'card' }, h('p', { class: 'task' }, 'Đến lượt bạn nói:'),
           speakPanel({
-            text: t.text, audio: t.audio, meta: meta('dialogues', `${d.id}#${k}`),
+            text: t.text, audio: t.audio, meta: meta('dialogues', `${d.id}#${k}`), vanish: () => bubble,
             evaluate: (alts) => sentenceOutcome(M.bestSentenceMatch(t.text, alts)),
             onResult: (o, src) => { turnStars.push(o.stars); sources.add(src); },
           }), h('div', { class: 'row end' }, next)));
@@ -474,7 +532,7 @@ function renderRoleplay(id) {
         level() === 3 ? h('button', { class: 'btn btn-soft', onclick: () => { hint.hidden = false; } }, '💡 Gợi ý') : null),
       hint,
       speakPanel({
-        text: null, meta: meta('roleplays', `${r.id}#${k}`),
+        text: null, meta: meta('roleplays', `${r.id}#${k}`), vanish: () => botBubble,
         evaluate: (alts) => {
           const m = M.anyTerm(t.expect_any, alts);
           return m.ok
@@ -502,10 +560,13 @@ function render() {
   const [, route = '', arg] = location.hash.split('/');
   window.scrollTo(0, 0);
   if (needLogin) return renderLogin();
+  const PART_OF = { vocab: 'vocabulary', patterns: 'patterns', dialogues: 'dialogues', roleplays: 'roleplays', challenge: 'challenge', challenge2: 'challenge2' };
+  if (PART_OF[route]) { ensureLevelUnlocked(); if (isLocked(PART_OF[route])) return renderLocked(PART_OF[route]); }
   switch (route) {
     case 'vocab': return renderVocab(Number(arg) || 0);
     case 'patterns': return renderPatterns(Number(arg) || 0);
     case 'challenge': return renderChallenge();
+    case 'challenge2': return Challenge2.render({ root, shell, unitNo: U(), level: level(), roleplays: items('roleplays') });
     case 'dialogues': return arg ? renderDialogue(decodeURIComponent(arg)) : renderList('dialogues', 'Hội thoại', 'dialogues', (x) => x.title_vi);
     case 'roleplays': return arg ? renderRoleplay(decodeURIComponent(arg)) : renderList('roleplays', 'Đóng vai', 'roleplays', (x) => x.situation_vi);
     default: return renderHome();

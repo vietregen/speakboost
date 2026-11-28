@@ -1,6 +1,7 @@
 // Thành phần giao diện dùng chung. Mọi chữ đưa vào trang đều qua textContent để an toàn.
 import * as S from './speech.js';
 import * as P from './progress.js';
+import * as Fx from './vanish.js';
 
 export function h(tag, attrs = {}, ...children) {
   const el = document.createElement(tag);
@@ -43,13 +44,19 @@ export function listenButtons(text, audio) {
  * Khu luyện nói: nghe mẫu, nói để máy nhận diện, ghi âm và nghe lại.
  * evaluate(alternatives) -> { stars, title, body: Node[] , detail }
  */
-export function speakPanel({ text, audio, evaluate, meta, continuous = false, onResult }) {
+export function speakPanel({ text, audio, evaluate, meta, continuous = false, onResult, vanish = null }) {
   const result = h('div', { class: 'result', 'aria-live': 'polite' });
   const rec = new S.Recorder(continuous ? 60 : 15);
   live.add(rec);
+  let panel = null;
 
   const finish = (outcome, source) => {
     P.record({ ...meta, source, stars: outcome.stars, detail: outcome.detail || '' });
+    // Đọc đúng (máy nghe rõ, 3 sao): từ/câu biến mất theo kiểu phép thuật rồi hiện lại.
+    if (outcome.stars === 3 && source === 'asr_match') {
+      const target = typeof vanish === 'function' ? vanish() : vanish || (panel && panel.closest('.card') && panel.closest('.card').querySelector('[data-vanish]'));
+      if (target) Fx.vanish(target);
+    }
     if (onResult) onResult(outcome, source);
   };
 
@@ -128,7 +135,8 @@ export function speakPanel({ text, audio, evaluate, meta, continuous = false, on
     S.support.recorder ? playBtn : null,
   );
 
-  return h('div', { class: 'speak-panel' }, listenButtons(text, audio), controls, selfCheck, result);
+  panel = h('div', { class: 'speak-panel' }, listenButtons(text, audio), controls, selfCheck, result);
+  return panel;
 }
 
 // Hiển thị câu mục tiêu với từ máy đã nghe / chưa nghe.

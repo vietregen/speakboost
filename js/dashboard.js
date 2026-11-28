@@ -265,7 +265,7 @@ function practiceView(cls, students, real, by) {
     hardWords(real));
 }
 
-const G_SECTION = { vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai', challenge: 'Thử thách' };
+const G_SECTION = { vocabulary: 'Từ vựng', patterns: 'Mẫu câu', dialogues: 'Hội thoại', roleplays: 'Đóng vai', challenge: 'Thử thách Ch.1', challenge2: 'Thử thách Ch.2' };
 
 // Từ máy hay chưa nghe rõ: tỉ lệ lượt nhận diện < 3 sao trên từng từ.
 function hardWords(real) {

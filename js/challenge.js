@@ -5,6 +5,7 @@ import * as S from './speech.js';
 import * as M from './match.js';
 import * as P from './progress.js';
 import { h, starsText, addCleanup } from './ui.js';
+import * as Fx from './vanish.js';
 
 const DEFAULTS = { title: 'Thử thách từ vựng', rounds: 10, tries_per_word: 2, seconds_by_level: { 1: 20, 2: 15, 3: 10 }, show_meaning_levels: [1], unlock: 'practised_at_least_rounds' };
 
@@ -47,7 +48,7 @@ const maskWord = (w) => w.split(' ').map((part) => part[0] + ' _'.repeat(Math.ma
  */
 export function render(ctx) {
   const { root, shell, unitNo, level, words, preview, unit } = ctx;
-  const cfg = config(unit);
+  const cfg = { ...config(unit), title: 'Chương 1 · Thử thách từ vựng' };
   const st = status({ unitNo, words, preview, unit });
   const best = P.bestStars(unitNo, challengeId(level));
 
@@ -146,6 +147,7 @@ export function render(ctx) {
         results.push({ v, ok: true, pts, heard });
         drawHud(k);
         stage.classList.add('flash-ok');
+        Fx.vanish(stage.querySelector('.game-pic'));
         setFeedback(
           h('p', { class: 'result-title ok-text' }, `✓ Đúng rồi: ${v.word}  (+${pts})`),
           h('p', { class: 'ipa' }, v.ipa),
